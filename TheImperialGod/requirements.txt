@@ -1,0 +1,9 @@
+discord.py~=1.4.1
+asyncio
+youtube_dl
+praw
+pillow
+time
+sqlite
+datetime
+tracebackw
