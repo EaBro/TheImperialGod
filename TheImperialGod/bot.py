@@ -32,10 +32,17 @@ import traceback
 #image manipulation
 from PIL import Image
 from io import BytesIO
+import praw
+
+reddit = praw.Reddit(client_id = "e9i9IueslHQ7HA",
+    client_secret = "lQA_L-C19Em7h2MPR8CVNuK3gd6-Xw",
+    username = "Foreign_Demand_5496",
+    user_agent = "pythonpraw128982"    
+)
 
 #constants
 CLIENT_ID = 768695035092271124 
-BOT_TOKEN = "NzczNzYxODY5NTk2NzIxMTYy.X6N75Q.0onzTOcjtbHnkQCiUT7eVBII4AA"
+BOT_TOKEN = "NzY4Njk1MDM1MDkyMjcxMTI0.X5ENCg.ZviCIjncL8iHwlU5QxeXAZ8IQCg"
 CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
 INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
@@ -183,7 +190,6 @@ async def help(ctx, command = None):
     'Daily',
     'Weekly'
     ]
-
     if command == None:
         embed = discord.Embed(title = "Help", color = ctx.author.color, description = "Type `imp help` and then a command or category for more information for even more information!")
         embed.add_field(name = f":coin: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
@@ -270,7 +276,7 @@ async def help(ctx, command = None):
         elif command == "owner":
             embed = discord.Embed(title = "Help Owner:", color = ctx.author.color)
             embed.add_field(name = "enableautomod", value = "Enables automod for the server, if anyone types a bad word. It deletes")
-            embed.add_field(name = "disableaut  omod", value = "Disable automoderation for the entire server!")
+            embed.add_field(name = "disableautomod", value = "Disable automoderation for the entire server!")
             embed.add_field(name = "checkautomod", value = "Tells you automod status")
             msg = await ctx.send(embed = embed)
             await msg.add_reaction("🐯") 
@@ -547,8 +553,6 @@ async def help(ctx, command = None):
             embed.add_field(name = "Description:", value = "Gives you candy idiot")
             embed.add_field(name = "Correct usage:", value = '`imp candy `')
             await ctx.send(embed = embed)
-        
-        elif command == "enableautomod"
 
 #MODERATION COMMANDS
 @client.command()
@@ -604,6 +608,7 @@ async def removerole_error(ctx, error):
 @client.command()
 @commands.has_permissions(kick_members = True)
 async def kick(ctx, member : discord.Member, *, reason = None):
+    await member.kick(reason = reason)
     embed = discord.Embed(title = f"{member.name} got kicked!", color = ctx.author.color)
     embed.add_field(name = f"Moderator:", value = f"`{ctx.author.name}`")
     embed.add_field(name = 'Reason', value = f"`{reason}`")
@@ -612,10 +617,7 @@ async def kick(ctx, member : discord.Member, *, reason = None):
         await member.send(f'You were kicked in {ctx.message.guild.name}\nBy: {ctx.author.name}')
     except:
         pass
-
-    await member.kick(reason = reason)
     
-
 @kick.error
 async def kick_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
@@ -1572,22 +1574,6 @@ async def unload(ctx, extension):
     client.unload_extension(f"cogs.{extension}")
 
 @client.command()
-async def wanted(ctx, user : discord.Member = None):
-    if user == None:
-        user = ctx.author
-
-    wanted = Image.open("wanted.jpg")
-    asset = user.avatar_url_as(size = 128)
-    data = BytesIO(await asset.read())
-
-    pfp = Image.open(data)
-    pfp = pfp.resize((276, 350))
-    wanted.paste(pfp, (220, 300))
-
-    wanted.save("profile.jpg")
-    await ctx.send(file = discord.File("profile.jpg"))
-
-@client.command()
 @commands.has_permissions(administrator = True)
 async def enableautomod(ctx):
     with open("automod.json", "r") as f:
@@ -1778,6 +1764,23 @@ async def buy(ctx,item,amount = 1):
 
     await ctx.send(f"You just bought {amount} {item}")
 
+@client.command()
+async def wanted(ctx, user : discord.Member = None):
+    if user == None:
+        user = ctx.author
+    
+    wanted = Image.open("wanted.jpg")    
+    asset = user.avatar_url_as(size = 128)
+
+    data = BytesIO(await asset.read())
+    pfp = Image.open(data)
+
+    pfp = pfp.resize((88, 88))
+    wanted.paste(pfp, (47, 84))
+
+    wanted.save("profile.jpg")
+    await ctx.send(file = discord.File("profile.jpg"))
+
 @client.command(aliases = ['inv', 'inventory'])
 async def bag(ctx):
     await open_account(ctx.author)
@@ -1938,6 +1941,25 @@ async def check_for_item(user, item_name):
 
     if t == None:
         return [False, 1]
+
+@client.command()
+async def meme(ctx):
+
+    subreddit = reddit.subreddit("memes")
+    top = subreddit.new(limit = 100)
+    all_subs = []
+
+    for submission in top:
+        all_subs.append(submission)
+    
+    current_meme = random.choice(all_subs)
+
+    name = current_meme.title
+    url = current_meme.url
+
+    em = discord.Embed(title = f"{name}", color = ctx.author.name)
+    em.set_image(url = url)
+    await ctx.send(embed = embed)
 
 '''
 Some fun data about this code:
