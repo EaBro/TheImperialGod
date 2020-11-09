@@ -35,7 +35,7 @@ from io import BytesIO
 
 #constants
 CLIENT_ID = 768695035092271124 
-BOT_TOKEN = "NzY4Njk1MDM1MDkyMjcxMTI0.X5ENCg.AcwS_e9AhE9vSx4yJC0Jc48kOAU"
+BOT_TOKEN = "NzczNzYxODY5NTk2NzIxMTYy.X6N75Q.0onzTOcjtbHnkQCiUT7eVBII4AA"
 CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
 INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
@@ -44,9 +44,6 @@ DATABASES = 'mainbank.json'
 PACKAGING_DATA = "package.json"
 BOT_PREFIX = "imp "
 ZAN_ID = 575706831192719370
-
-with open("config.json", "r") as f:
-    config = json.load(f)
 
 client = commands.Bot(command_prefix = "imp ", case_insensitive = True) #making a client object
 
@@ -64,7 +61,6 @@ async def ping(ctx):
     embed = discord.Embed(title = 'Pong', color = ctx.author.color)
     embed.add_field(name = "Ping:", value = f"`{random.randint(175, 300)} ms`")
     await ctx.send(embed = embed)
-
 
 #when the bot gets ready
 @client.event
@@ -105,7 +101,7 @@ async def on_message(msg):
                     await msg.delete()
         try:
             if msg.mentions[0] == client.user:
-                await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")                
+                await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
             elif client.user in msg.mentions:
                 for i in range(0, len(msg.mentions)):
                     if msg.mentions[i] == client.user:
@@ -119,6 +115,22 @@ async def on_message(msg):
         pass
     
     await client.process_commands(msg)            
+
+@client.event
+async def on_guild_join(guild):
+    ctx = await client.get_context(guild)
+    with open("guilds.json", "r") as f:
+        guilds = json.load(f)
+    
+    if guild.name in guilds:
+        print("Joined old server!")
+    else:
+        guilds[str(guild.name)] = {}
+        guilds[str(guild.name)]["guild_id"] = guild.id
+        print("Joined a new SERVER!")
+
+    with open("guilds.json", "w") as f:
+        json.dump(guilds, f)
 
 @client.remove_command('help')
 @client.command()
@@ -174,7 +186,7 @@ async def help(ctx, command = None):
 
     if command == None:
         embed = discord.Embed(title = "Help", color = ctx.author.color, description = "Type `imp help` and then a command or category for more information for even more information!")
-        embed.add_field(name = f"Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
+        embed.add_field(name = f":coin:Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
         embed.add_field(name = f"Moderation Commands: [13]", value = "`Kick`, `Ban`, `Softban`, `Warn`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`")
         embed.add_field(name = f"Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`")
         embed.add_field(name = f"Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
@@ -258,7 +270,7 @@ async def help(ctx, command = None):
         elif command == "owner":
             embed = discord.Embed(title = "Help Owner:", color = ctx.author.color)
             embed.add_field(name = "enableautomod", value = "Enables automod for the server, if anyone types a bad word. It deletes")
-            embed.add_field(name = "disableautomod", value = "Disable automoderation for the entire server!")
+            embed.add_field(name = "disableaut  omod", value = "Disable automoderation for the entire server!")
             embed.add_field(name = "checkautomod", value = "Tells you automod status")
             msg = await ctx.send(embed = embed)
             await msg.add_reaction("🐯") 
@@ -478,7 +490,66 @@ async def help(ctx, command = None):
             embed.add_field(name = "Description:", value = "Try to guess a number")
             embed.add_field(name = 'Correct Usage:', value = "`imp guess [start_range] [end_range] [guess]`")
             await ctx.send(embed = embed)
-  
+        
+        elif command == "gstart" or command == "giveawaystart" or command == "giveaway_create":
+            embed = discord.Embed(title=  "Help GSTART", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Make giveaways!")
+            embed.add_field(name = 'Permissions needed:', value = "`Manage Server, Manage Roles, Manage Channels`")
+            embed.add_field(name = "Correct usage:", value = '`imp gstart`')
+            await ctx.send(embed = embed)
+        
+        elif command == "reroll":
+            embed = discord.Embed(title=  "Help Reroll", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Reroll an unfair giveaway!")
+            embed.add_field(name = 'Permissions needed:', value = "`Manage Server, Manage Roles, Manage Channels`")
+            embed.add_field(name = "Correct usage:", value = '`imp reroll [channel] [message_id] `')
+            embed.add_field(name = "Extra notes:", value = "Be sure to copy the message id of the embed and not the message")
+            await ctx.send(embed = embed)
+
+        elif command == "invite":
+            embed = discord.Embed(title=  "Help Invite", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "If you would like to invite me to your server!")
+            embed.add_field(name = "Correct usage:", value = '`imp invite `')
+            await ctx.send(embed = embed)
+
+        elif command == "invite":
+            embed = discord.Embed(title=  "Help Invite", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "If you would like to invite me to your server!")
+            embed.add_field(name = "Correct usage:", value = '`imp invite `')
+            await ctx.send(embed = embed)
+
+        elif command == "show_toprole":
+            embed = discord.Embed(title=  "Help Showtoprole", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Shows the highest role of a user")
+            embed.add_field(name = "Correct usage:", value = '`imp show_toprole [user] `')
+            await ctx.send(embed = embed)
+        
+        elif command == "botinfo":
+            embed = discord.Embed(title=  "Help Botinfo", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Shows you information about the bot")
+            embed.add_field(name = "Correct usage:", value = '`imp botinfo `')
+            await ctx.send(embed = embed)
+        
+        elif command == "serverinfo":
+            embed = discord.Embed(title=  "Help Serverinfo", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Shows you information about the server")
+            embed.add_field(name = "Correct usage:", value = '`imp serverinfo `')
+            await ctx.send(embed = embed)
+        
+        elif command == "channelinfo":
+            embed = discord.Embed(title=  "Help Channelinfo", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Shows you information about a channel")
+            embed.add_field(name = "Correct usage:", value = '`imp channelinfo [channel] `')
+            await ctx.send(embed = embed)
+        
+        elif command == "candy":
+            embed = discord.Embed(title=  "Help Candy", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Gives you candy idiot")
+            embed.add_field(name = "Correct usage:", value = '`imp candy `')
+            await ctx.send(embed = embed)
+        
+        elif command == "enableautomod"
+
 #MODERATION COMMANDS
 @client.command()
 @commands.has_permissions(manage_roles = True)
@@ -659,6 +730,20 @@ async def lock_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("You really think you can use that?")
 
+@client.command()
+@commands.has_permissions(manage_channels = True)
+async def unlock(ctx, *, reason = None):
+    await ctx.message.channel.set_permissions(ctx.guild.default_role, send_messages = True)
+    embed = discord.Embed(title = "Channel Was Unlocked!", color = ctx.author.color)
+    embed.add_field(name = "Moderator:", inline = True, value = f"`{ctx.author.name}`")
+    embed.add_field(name = "Reason:", inline = True, value = f"`{reason}`")
+    await ctx.send(embed = embed)
+
+@unlock.error
+async def unlock_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("You really think you can use that?")
+
 @client.command(aliases = ["setslowmode", "slowmode", "setmsgdelay"])
 @has_permissions(manage_messages = True)
 async def setdelay(ctx, seconds: int):
@@ -680,20 +765,6 @@ async def purge(ctx, amount = 5):
 async def purge_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Looks like you don't have the perms.")
-
-@client.command()
-@commands.has_permissions(manage_channels = True)
-async def unlock(ctx, *, reason = None):
-    await ctx.message.channel.set_permissions(ctx.guild.default_role, send_messages = True)
-    embed = discord.Embed(title = "Channel Was Unlocked!", color = ctx.author.color)
-    embed.add_field(name = "Moderator:", inline = True, value = f"`{ctx.author.name}`")
-    embed.add_field(name = "Reason:", inline = True, value = f"`{reason}`")
-    await ctx.send(embed = embed)
-
-@unlock.error
-async def unlock_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You really think you can use that?")
 
 @client.command()
 async def helpowner(ctx):
@@ -1039,13 +1110,13 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         "Serving 256 users" 
     ]
     while not client.is_closed():
-         status = random.choice(statuses)
-         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
+        status = random.choice(statuses)
 
-         await asyncio.sleep(5)
+        await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
+        await asyncio.sleep(10)
 
     if client.is_closed():
-        print("Websocket connection is closing")
+        print("Offline again, f in the chat for the discord devs!")
 
 
 #UTILITIES 
@@ -1517,15 +1588,6 @@ async def wanted(ctx, user : discord.Member = None):
     await ctx.send(file = discord.File("profile.jpg"))
 
 @client.command()
-async def DM(ctx, member : discord.Member, *, reason):
-    try:
-        await member.send(reason)    
-        await ctx.send("DM successfully sent!")
-    except Exception as e:
-        await ctx.send("Member has DMs off")
-        raise e
-
-@client.command()
 @commands.has_permissions(administrator = True)
 async def enableautomod(ctx):
     with open("automod.json", "r") as f:
@@ -1715,7 +1777,6 @@ async def buy(ctx,item,amount = 1):
 
 
     await ctx.send(f"You just bought {amount} {item}")
-
 
 @client.command(aliases = ['inv', 'inventory'])
 async def bag(ctx):
