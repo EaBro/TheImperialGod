@@ -6,4 +6,4 @@ pillow
 time
 sqlite
 datetime
-tracebackw
+traceback

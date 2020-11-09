@@ -186,12 +186,12 @@ async def help(ctx, command = None):
 
     if command == None:
         embed = discord.Embed(title = "Help", color = ctx.author.color, description = "Type `imp help` and then a command or category for more information for even more information!")
-        embed.add_field(name = f":coin:Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
-        embed.add_field(name = f"Moderation Commands: [13]", value = "`Kick`, `Ban`, `Softban`, `Warn`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`")
-        embed.add_field(name = f"Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`")
-        embed.add_field(name = f"Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
-        embed.add_field(name = f"Misc: [{len(misc_commands)}]", value = "`invite`, `DM`, `show_toprole`, `botinfo`, `serverinfo`, `userinfo`, `channelinfo`, `avatar`, `candy`, `hypesquad`")
-        embed.add_field(name = f"Owner: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
+        embed.add_field(name = f":coin: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
+        embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [13]", value = "`Kick`, `Ban`, `Softban`, `Warn`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`")
+        embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`")
+        embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
+        embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `DM`, `show_toprole`, `botinfo`, `serverinfo`, `userinfo`, `channelinfo`, `avatar`, `candy`, `hypesquad`")
+        embed.add_field(name = f"<:owner:761302143331205131> Owner: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
         embed.set_footer(text = f"My prefix is {BOT_PREFIX}")
         await ctx.send(embed = embed)
 
