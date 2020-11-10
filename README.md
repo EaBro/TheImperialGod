@@ -68,4 +68,6 @@ You can find the invite link in the main bot file, just copy paste that into you
 Or of course if you don't know how to read variables simply click [this](https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398)
 
 He will be up most of the time, but when he is down please cope with it!
+But anyways, if you are interested in the public bot. Then you are in the currency system, and if you want coins join my server where there are giveaways happening.
 
+Join (here)[https://discord.gg/wsfC5u4]
