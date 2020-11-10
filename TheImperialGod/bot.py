@@ -1,3 +1,11 @@
+"""
+MIT LICENCE 2020 - 2021
+All the code and the full bot is nothing but TheImperialGod
+All the code is made by NightZan999, check him out at https://github.com/NightZan999
+
+
+The repository the code has been taken from is at https://github.com/NightZan999/TheImperialGod
+"""
 import discord #discord object
 import discord.ext #external
 from discord.ext import commands #commands from external
