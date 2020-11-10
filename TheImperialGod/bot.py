@@ -42,7 +42,7 @@ reddit = praw.Reddit(client_id = "e9i9IueslHQ7HA",
 
 #constants
 CLIENT_ID = 768695035092271124 
-BOT_TOKEN = "NzY4Njk1MDM1MDkyMjcxMTI0.X5ENCg.ZviCIjncL8iHwlU5QxeXAZ8IQCg"
+BOT_TOKEN = "" #MY TOKEN IS MINE!!!
 CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
 INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
