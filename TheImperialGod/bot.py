@@ -2,7 +2,7 @@
 MIT LICENCE 2020 - 2021
 All the code and the full bot is nothing but TheImperialGod
 All the code is made by NightZan999, check him out at https://github.com/NightZan999
-
+The deposit and withdraw command have been added on to by Makiyu-py, he used it in a fork
 
 The repository the code has been taken from is at https://github.com/NightZan999/TheImperialGod
 """
