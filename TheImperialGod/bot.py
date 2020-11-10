@@ -19,10 +19,6 @@ from discord.ext.commands.errors import MissingPermissions
 from discord.ext.commands.errors import BadArgument
 from discord.ext.commands.errors import CheckFailure
 import random #random
-from random import randint #random number
-from random import randrange #random number in range
-from random import choice #random choice from a list
-from random import shuffle #shuffling a list
 #FOR GAWS
 import datetime #date and time
 import asyncio #asyncio needed!
@@ -30,12 +26,7 @@ from asyncio import sleep
 #General Imports
 import os
 import math
-from math import pow
-from math import sqrt
-from math import e
 import json
-from json import dump
-from json import load
 import traceback
 #image manipulation
 from PIL import Image
@@ -892,6 +883,9 @@ async def withdraw(ctx, amount = None):
     if amount == None: #making sure they are withdrawing something!
         await ctx.send("Type an amount")
 
+    if amount == 'all'
+        amount = bal[1]
+        
     amount = int(amount)
     bal = await update_bank(ctx.author)
     if amount > bal[1]:
@@ -908,7 +902,10 @@ async def deposit(ctx, amount = None):
     await open_account(ctx.author)
     if amount == None:
         await ctx.send("Type an amount")
-
+        
+    if amount == 'all':
+        amount = bal[0]
+        
     amount = int(amount)
     bal = await update_bank(ctx.author)
     if amount > bal[0]:
