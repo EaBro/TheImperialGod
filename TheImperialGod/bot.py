@@ -882,12 +882,13 @@ async def withdraw(ctx, amount = None):
     await open_account(ctx.author) #opening their account
     if amount == None: #making sure they are withdrawing something!
         await ctx.send("Type an amount")
-
-    if amount == 'all'
-        amount = bal[1]
         
     amount = int(amount)
     bal = await update_bank(ctx.author)
+
+    if amount == 'all':
+        amount = bal[1]
+
     if amount > bal[1]:
         await ctx.send("You can't withdraw more than you have in your bank!")
         return
@@ -903,11 +904,12 @@ async def deposit(ctx, amount = None):
     if amount == None:
         await ctx.send("Type an amount")
         
-    if amount == 'all':
-        amount = bal[0]
-        
     amount = int(amount)
     bal = await update_bank(ctx.author)
+
+    if amount == 'all':
+        amount = bal[0]
+
     if amount > bal[0]:
         await ctx.send("You can't deposit more than you have in your wallet!")
         return
@@ -1120,7 +1122,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         status = random.choice(statuses)
 
         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
-        await asyncio.sleep(10)
+        await asyncio.sleep(60)
 
     if client.is_closed():
         print("Offline again, f in the chat for the discord devs!")
