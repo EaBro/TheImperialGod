@@ -1,9 +1,9 @@
 discord.py~=1.4.1
 asyncio
 youtube_dl
+wikipedia
 praw
+requests
 pillow
-time
-sqlite
-datetime
-traceback
+captcha
+ffmpeg 
