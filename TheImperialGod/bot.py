@@ -45,6 +45,7 @@ PACKAGING_DATA = "package.json"
 BOT_PREFIX = "imp "
 ZAN_ID = 575706831192719370
 
+#NzY4Njk1MDM1MDkyMjcxMTI0.X5ENCg.N3RV_HVjuyUWtSBK_KcvUNmsu6Y
 client = commands.Bot(command_prefix = "imp ", case_insensitive = True) #making a client object
 
 def load_json(filename):
@@ -94,9 +95,6 @@ async def on_message(msg):
         guilds = json.load(f)
 
     ctx = await client.get_context(msg)
-
-    if msg.lower() == 'hello' or msg.lower() == "hi":
-        await msg.channel.send(f'Hello {msg.author.mention}')
 
     try:
         if guilds[str(ctx.guild.id)]["automod"] == "true":
@@ -885,13 +883,14 @@ async def withdraw(ctx, amount = None):
     bal = await update_bank(ctx.author)
 
     if amount == 'all':
-        amount = bal[1]
+        amount = users[str(user.id)]["bank"]
 
     if amount > bal[1]:
         await ctx.send("You can't withdraw more than you have in your bank!")
         return
     if amount <= 0:
         await ctx.send("Amount must be positive!")
+
     await update_bank(ctx.author, amount)
     await update_bank(ctx.author, -1*amount, "bank")
     await ctx.send(f"You withdrew {amount} coins from your bank")
@@ -913,6 +912,7 @@ async def deposit(ctx, amount = None):
         return
     if amount <= 0:
         await ctx.send("Amount must be positive!")
+
     await update_bank(ctx.author, -1*amount)
     await update_bank(ctx.author,amount, "bank")
     await ctx.send(f"You deposited {amount} coins from your wallet into your bank")
