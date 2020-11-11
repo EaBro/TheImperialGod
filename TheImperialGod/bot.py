@@ -33,12 +33,6 @@ from PIL import Image
 from io import BytesIO
 import praw
 
-reddit = praw.Reddit(client_id = "e9i9IueslHQ7HA",
-    client_secret = "lQA_L-C19Em7h2MPR8CVNuK3gd6-Xw",
-    username = "Foreign_Demand_5496",
-    user_agent = "pythonpraw128982"    
-)
-
 #constants
 CLIENT_ID = 768695035092271124 
 BOT_TOKEN = "" #MY TOKEN IS MINE!!!
@@ -100,6 +94,10 @@ async def on_message(msg):
         guilds = json.load(f)
 
     ctx = await client.get_context(msg)
+
+    if msg.lower() == 'hello' or msg.lower() == "hi":
+        await msg.channel.send(f'Hello {msg.author.mention}')
+
     try:
         if guilds[str(ctx.guild.id)]["automod"] == "true":
             for word in filtered_words:
@@ -1948,26 +1946,6 @@ async def check_for_item(user, item_name):
 
     if t == None:
         return [False, 1]
-
-@client.command()
-async def meme(ctx):
-
-    subreddit = reddit.subreddit("memes")
-    top = subreddit.new(limit = 100)
-    all_subs = []
-
-    for submission in top:
-        all_subs.append(submission)
-    
-    current_meme = random.choice(all_subs)
-
-    name = current_meme.title
-    url = current_meme.url
-
-    em = discord.Embed(title = f"{name}", color = ctx.author.name)
-    em.set_image(url = url)
-    await ctx.send(embed = embed)
-
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
