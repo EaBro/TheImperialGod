@@ -45,7 +45,6 @@ PACKAGING_DATA = "package.json"
 BOT_PREFIX = "imp "
 ZAN_ID = 575706831192719370
 
-#NzY4Njk1MDM1MDkyMjcxMTI0.X5ENCg.N3RV_HVjuyUWtSBK_KcvUNmsu6Y
 client = commands.Bot(command_prefix = "imp ", case_insensitive = True) #making a client object
 
 def load_json(filename):
