@@ -73,3 +73,10 @@ He will be up most of the time, but when he is down please cope with it!
 But anyways, if you are interested in the public bot. Then you are in the currency system, and if you want coins join my server where there are giveaways happening.
 
 Join [here](https://discord.gg/wsfC5u4)
+
+# Suggestions and More:
+If you tested the bot and loved it, but thought you would want to give in some suggestions, please first don't make an issue. 
+
+Firstly you should simply, check BETA_FEATURES.md for some new things the bot might get, if your suggestion is an improvement first search for a similar suggestion in the issues, if there are none then make a new one. 
+
+Otherwise you also can suggest stuff in my discord server, so you could join it and make things easy!
