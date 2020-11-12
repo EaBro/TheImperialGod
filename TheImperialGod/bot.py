@@ -32,6 +32,7 @@ import traceback
 from PIL import Image
 from io import BytesIO
 import praw
+import sqlite3
 
 #constants
 CLIENT_ID = 768695035092271124 
@@ -2064,6 +2065,8 @@ async def open_warn_server(guild):
     
     with open("warns.json", "w") as f:
         json.dump(warns, f)
+
+
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
