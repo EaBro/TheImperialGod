@@ -50,12 +50,13 @@ But GIVE THE CREDITS, if you don't you can be doing illegal activity due to the 
 
 ### Steps for Self Hosting
 1. Download Python from [here](https://python.org) (lastest version please)
-2. Then download the bot files either by downloading as a zip in github or doing `git clone https://github.com/NightZan999/TheImperialGod`, make sure you have git installed and the github CLI (Client Line Interface)
-3. Then unzip the zipped folder
-4. Then go to cmd of that directory and type `pip install -r requirements.txt`
-5. Then immediately go to cmd and type `python bot.py`
-6. The bot is running and use the invite link to invite it to your server, replace the client id with your bots client id. 
-7. Enjoy the bot! <br>
+2. Remember the website files are in "views" and some website files are in the main directory, if your hosting the bot then you should see TheImperialGod folder because that is where the source files of the bot is going to be
+3. Then download the bot files either by downloading as a zip in github or doing `git clone https://github.com/NightZan999/TheImperialGod/tree/main/TheImperialGod`, make sure you have git installed and the github CLI (Client Line Interface)
+4. Then unzip the zipped folder
+5. Then go to cmd of that directory and type `pip install -r requirements.txt`
+6. Then immediately go to cmd and type `python bot.py`
+7. The bot is running and use the invite link to invite it to your server, replace the client id with your bots client id. 
+8. Enjoy the bot! <br>
 **Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WONT work!
 
 Thanks for your patience.
