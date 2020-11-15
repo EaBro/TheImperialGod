@@ -2065,6 +2065,37 @@ async def open_warn_server(guild):
     with open("warns.json", "w") as f:
         json.dump(warns, f)
 
+#Math Commands
+@client.command()
+async def add(ctx, num1 : int, num2 : int):
+    await ctx.send(f"Sum of the numbers is: `{num1 + num2}`")
+
+#Math Commands
+@client.command()
+async def subtract(ctx, num1 : int, num2 : int):
+    await ctx.send(f"Difference of the numbers is: `{num1 - num2}`")
+
+@client.command()
+async def multiply(ctx, num1 : int, num2 : int):
+    await ctx.send(f"Product of the numbers is: `{num1 * num2}`")
+
+@client.command()
+async def divide(ctx, num1 : int, num2 : int):
+    await ctx.send(f"Quotient is: `{num1 / num2}`")
+
+@client.command()
+async def sqrt(ctx, num : int):
+    for i in range(0, num, 0.0001):
+        if i * i == num:
+            await ctx.send(f"The square root of {num} is {i}")
+    
+@client.command()
+async def square(ctx, num : int):
+    await ctx.send(f"`{num * num}`")
+
+@client.command()
+async def power(ctx, num1 : int, num2 : int):
+    await ctx.send(f"The power of that I think is {math.pow(num1, num2)}")
 
 '''
 Some fun data about this code:
