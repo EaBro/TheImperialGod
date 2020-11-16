@@ -15,7 +15,7 @@ app.get("/about", function(req, res) {
 app.get("*", function(req, res) {
   res.render("404")
 })
-/
+
 app.listen(process.env.PORT, process.env.IP, function() {
   console.log("Server up!")
 })
