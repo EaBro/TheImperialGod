@@ -84,7 +84,8 @@ Otherwise you also can suggest stuff in my discord server, so you could join it 
 
 # Resources:
 
-You may be thinking 'How do I keep my self hosted bot up 24/7?', so to make things easy, we're giving you a list of hosting services you could use!
+## Hosting
+You may be thinking 'How do I keep my self hosted bot up 24/7?', so to make things easy, we're giving you a list of hosting services you could use:
 
 **1. Heroku.**
 Heroku is a really good hosting service, with the only problem being it doesn't let you store data.
@@ -95,4 +96,5 @@ You could YouTube a video on how to host a python bot with Heroku.
 Repl.it is a great hosting service that also stores data, with the only problem being that others could view your code and data. **This includes your bot token. You can fix this by buying repl.it premium or using a .env file.**
 
 Along with these are many others, like Google Cloud, Microsoft Azure, AWS, DanBot hosting and many more. You could use those as well.
+Of course, if your self hosting you would need these. Else you can skip all this
 
