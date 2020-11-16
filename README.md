@@ -89,7 +89,9 @@ You may be thinking 'How do I keep my self hosted bot up 24/7?', so to make thin
 
 **1. Heroku.**
 Heroku is a really good hosting service, with the only problem being it doesn't let you store data.
-You could YouTube a video on how to host a python bot with Heroku.
+You could YouTube a video on how to host a python bot with Heroku. So if your hosting this bot with heroku, then it won't work. 
+
+Well everything would work except the economy commands. After every day the files get wiped out, which means that economy is useless. 
 
 **2. Repl.it.**
 
