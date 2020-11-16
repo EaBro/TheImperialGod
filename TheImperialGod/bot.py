@@ -32,7 +32,6 @@ import traceback
 from PIL import Image
 from io import BytesIO
 import praw
-import sqlite3
 
 #constants
 CLIENT_ID = 768695035092271124 
@@ -47,6 +46,13 @@ BOT_PREFIX = "imp "
 ZAN_ID = 575706831192719370
 
 client = commands.Bot(command_prefix = "imp ", case_insensitive = True) #making a client object
+reddit = praw.Reddit(
+    client_id = 'NY_kPmfmJV1VAg',
+    client_secret = "GNKjyvMHErF9yYqZGrhx6MxG55WtVw",
+    username = "NightZan999",
+    password = "python123_praw",
+    user_agent = "python_praw"
+)
 
 @client.command()
 async def ping(ctx):
@@ -181,6 +187,7 @@ async def help(ctx, command = None):
         embed.add_field(name = f":coin: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
         embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Addwarnpoints`, `Setwarnbanpoints`, `Removewarnpoints`")
         embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`")
+        embed.add_field(name = f':video_game: Animals: [5]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`")
         embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
         embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `DM`, `show_toprole`, `botinfo`, `serverinfo`, `userinfo`, `channelinfo`, `avatar`, `candy`, `hypesquad`")
         embed.add_field(name = f"<:owner:761302143331205131> Owner: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
@@ -338,25 +345,25 @@ async def help(ctx, command = None):
         elif command == "lock":
             embed = discord.Embed(title = "Help on Lock", color = ctx.author.color)
             embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Channels`")
-            embed.add_field(name = "Correct usage", value = f"`imp lock [reason]")
+            embed.add_field(name = "Correct usage", value = f"`imp lock [reason]`")
             await ctx.send(embed = embed)
 
         elif command == "unlock":
             embed = discord.Embed(title = "Help on Unlock", color = ctx.author.color)
             embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Channels`")
-            embed.add_field(name = "Correct usage", value = f"`imp unlock [reason]")
+            embed.add_field(name = "Correct usage", value = f"`imp unlock [reason]`")
             await ctx.send(embed = embed)
         
         elif command == "setdelay":
             embed = discord.Embed(title = "Help on Setdelay", color = ctx.author.color)
             embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Messages`")
-            embed.add_field(name = "Correct usage", value = f"`imp setdelay <secs>")
+            embed.add_field(name = "Correct usage", value = f"`imp setdelay <secs>`")
             await ctx.send(embed = embed)
 
         elif command == "unban":
             embed = discord.Embed(title = "Help on Unban", color = ctx.author.color)
             embed.add_field(name = "Requirements - Permissions:", value = f"`Ban Members`")
-            embed.add_field(name = "Correct usage", value = f"`imp unban {ctx.author.mention}")
+            embed.add_field(name = "Correct usage", value = f"`imp unban {ctx.author.mention}`")
             await ctx.send(embed = embed)
         
         elif command == "with" or command == "withdraw":
@@ -1792,7 +1799,7 @@ async def wanted(ctx, user : discord.Member = None):
     if user == None:
         user = ctx.author
     
-    wanted = Image.open("wanted.jpg")    
+    wanted = Image.open("assets/wanted.jpg")    
     asset = user.avatar_url_as(size = 128)
 
     data = BytesIO(await asset.read())
@@ -1801,8 +1808,16 @@ async def wanted(ctx, user : discord.Member = None):
     pfp = pfp.resize((88, 88))
     wanted.paste(pfp, (47, 84))
 
-    wanted.save("profile.jpg")
-    await ctx.send(file = discord.File("profile.jpg"))
+    wanted.save("assets/profile.jpg")
+    em = discord.Embed(title=  f"{user.name} has murdered!", color = ctx.author.color)
+    em.set_image(
+        url="assets/profile.png"
+    )
+    image = discord.File("assets/profile.png")
+    await ctx.send(
+        embed=em,
+        file=image
+    )
 
 @client.command(aliases = ['inv', 'inventory'])
 async def bag(ctx):
@@ -2097,6 +2112,75 @@ async def square(ctx, num : int):
 async def power(ctx, num1 : int, num2 : int):
     await ctx.send(f"The power of that I think is {math.pow(num1, num2)}")
 
+@client.command()
+async def dog(ctx):
+    subreddit = reddit.subreddit("dog")
+    top = subreddit.top(limit = 100)
+    
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+    
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
+
+@client.command()
+async def cat(ctx):
+    subreddit = reddit.subreddit("cat")
+    top = subreddit.top(limit = 100)
+    
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+    
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
+
+@client.command()
+async def duck(ctx):
+    subreddit = reddit.subreddit("duck")
+    top = subreddit.top(limit = 100)
+    
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+    
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
+
+@client.command()
+async def fox(ctx):
+    subreddit = reddit.subreddit("fox")
+    top = subreddit.top(limit = 100)
+    
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+    
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
+
+@client.command()
+async def panda(ctx):
+    subreddit = reddit.subreddit("panda")
+    top = subreddit.top(limit = 100)
+    
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+    
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
