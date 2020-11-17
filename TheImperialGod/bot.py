@@ -35,7 +35,7 @@ import praw
 
 #constants
 CLIENT_ID = 768695035092271124 
-BOT_TOKEN = "" #MY TOKEN IS MINE!!!
+BOT_TOKEN = #my token is mine
 CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
 INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
@@ -147,7 +147,8 @@ async def help(ctx, command = None):
     'eightball',
     'fight',
     'whois',
-    'wanted'
+    'wanted',
+    "quote"
     ]
     gaws_commands = [
         'gstart',
@@ -186,8 +187,8 @@ async def help(ctx, command = None):
         embed = discord.Embed(title = "Help", color = ctx.author.color, description = "Type `imp help` and then a command or category for more information for even more information!")
         embed.add_field(name = f":coin: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
         embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Addwarnpoints`, `Setwarnbanpoints`, `Removewarnpoints`")
-        embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`")
-        embed.add_field(name = f':video_game: Animals: [5]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`")
+        embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`, `quote`, `whois`")
+        embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `redditsearch`")
         embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
         embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `DM`, `show_toprole`, `botinfo`, `serverinfo`, `userinfo`, `channelinfo`, `avatar`, `candy`, `hypesquad`")
         embed.add_field(name = f"<:owner:761302143331205131> Owner: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
@@ -549,28 +550,14 @@ async def help(ctx, command = None):
             embed.add_field(name = "Correct usage:", value = '`imp candy `')
             await ctx.send(embed = embed)
 
-        elif command == "addwarnpoints":
-            embed = discord.Embed(title = "Help Addwarnpoints", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Adds warn points to a user")
-            embed.add_field(name = "Permissions needed:", value = "`Ban Members = True`")
-            embed.add_field(name = "Correct usage:", value = "`imp addwarnpoints <user> <points> [reason]`")
+        elif command == "dog":
+            embed = discord.Embed(title = "Help Dog", color = ctx.author.color)
+            embed.add_field(name = "Description:", value = "Shows you any random dog from reddit!")
+            embed.add_field(name = "Correct Usuage:", value = f'`imp {command}`')
             await ctx.send(embed = embed)
+
         
-        elif command == "removewarnpoints":
-            embed = discord.Embed(title = "Help Removewarnpoints", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Removes warn points from a user")
-            embed.add_field(name = "Permissions needed:", value = "`Ban Members = True`")
-            embed.add_field(name = "Correct usage:", value = "`imp addwarnpoints <user> <points> [reason]`")
-            await ctx.send(embed = embed)
-
-        elif command == "setwarnbanpoints":
-            embed = discord.Embed(title = "Help Setwarnpoints", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Sets an amount of points, if a user reaches these many points they get autobanned")
-            embed.add_field(name = "Permissions needed:", value = "`Ban Members = True`")
-            embed.add_field(name = "Correct usage:", value = "`imp addwarnpoints <user> <points> [reason]`")
-            await ctx.send(embed = embed)
-
-#MODERATION COMMANDS
+#moderation commands
 @client.command()
 @commands.has_permissions(manage_roles = True)
 async def addrole(ctx, member : discord.Member, role : int = None, *, reason = None):
@@ -1703,48 +1690,29 @@ async def dice(ctx, amount : int):
 
 @client.command()
 async def botinfo(ctx):
-    embed = discord.Embed(title = "Botinfo", color = ctx.author.color)
+    embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
+    description = "TheImperialGod, is an awesome customizable discord bot with awesome features. Check some information about the bot below!"
+    )
     embed.add_field(name = "First went live on:", value = "1 / 10 / 2020")
     embed.add_field(name = "Started coding on:", value = "26 / 9 / 2020")
     embed.add_field(name = "Creator", value = "NightZan999#0194")
-    embed.add_field(name = 'Hosting', value = "DanBot Hosting, tysm", inline = False)
-    await ctx.send(embed = embed)
+    embed.add_field(name = 'Hosting', value = "DanBot Hosting")
+    embed.add_field(name = "Servers:", value = f'`{len(client.guilds)}`')
+    embed.add_field(name = 'Customizable Settings:', value = "Automoderation and utilities!")
+    try:
+        embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
+    except:
+        pass
+    finally:
+        embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
+        embed.add_field(name = "Number of Commands:", value = f"`59` (including special owner commands)")
+        embed.add_field(name = "**Tech:**", value = "```Library : discord.py\nDatabase : JSON\nHosting Services : DanBot Hosting!\n```", inline = False)
+        await ctx.send(embed = embed)
 
 @client.command()
 async def candy(ctx):
     await ctx.send("You want candy, take it!")
-    await ctx.send(file = discord.File("candy.jpg"))
-
-@client.command()
-async def bounty(ctx, user : discord.Member = None):
-    if user == None:
-        await ctx.send("Must provide a valid user to bounty!")
-        return
-
-    await open_account(user)
-    users = await get_bank_data()
-    
-    if users[str(ctx.author.id)]["wallet"] < 10000:
-        await ctx.send("You are supposed to have atleast 10,000 coins to bounty someone!")
-        return
-
-    wanted = Image.open("wanted.jpg")
-    asset = user.avatar_url_as(size = 128)
-    data = BytesIO(await asset.read())
-
-    pfp = Image.open(data)
-    pfp = pfp.resize((276, 350))
-    wanted.paste(pfp, (220, 300))
-
-    wanted.save("profile.jpg")
-
-    embed = discord.Embed(title = "New BOUNTY!", color = ctx.author.color)    
-    embed.add_field(name = "Owner:", value = f"`{ctx.author.name}`")
-    embed.add_field(name = "Price:", vaue = f"`10,000`")
-    await ctx.send(embed = embed)
-
-    await ctx.send(file = discord.File("profile.jpg"))
-    await ctx.send("First person to type `PAY PERSON` will start a bid for the bounty!")
+    await ctx.send(file = discord.File("assets/candy.jpg"))
 
 @client.command()
 async def leaveguild(ctx, guild_id : int):
@@ -1809,15 +1777,7 @@ async def wanted(ctx, user : discord.Member = None):
     wanted.paste(pfp, (47, 84))
 
     wanted.save("assets/profile.jpg")
-    em = discord.Embed(title=  f"{user.name} has murdered!", color = ctx.author.color)
-    em.set_image(
-        url="assets/profile.png"
-    )
-    image = discord.File("assets/profile.png")
-    await ctx.send(
-        embed=em,
-        file=image
-    )
+    await ctx.send(file = discord.File("assets/profile.jpg"))
 
 @client.command(aliases = ['inv', 'inventory'])
 async def bag(ctx):
@@ -1955,131 +1915,6 @@ async def sell_this(user,item_name,amount,price = None):
 
     return [True,"Worked"]    
 
-async def check_for_item(user, item_name):
-    item_name = item_name.lower()
-    name_ = None
-    for item in mainshop:
-        name = item["name"].lower()
-        if name == item_name:
-            name_ = name
-            break
-
-    if name_ == None:
-        return [False, 2]
-    
-    users = await get_bank_data()
-    bal = await update_bank(user)
-    index = 0
-    t = None
-    for thing in users[str(user.id)]["bag"]:
-        n = thing["item"]
-        if n == item_name:
-            return True
-            t = 1
-
-    if t == None:
-        return [False, 1]
-
-@client.command()
-@commands.has_permissions(ban_members = True)
-async def addwarnpoints(ctx, user : discord.Member, points : int, *, reason = None):
-    with open("mainbank.json", "r") as f:
-        warns = json.load(f)
-    
-    await open_warn_server(ctx.guild)
-
-    if user.id in warns[str(ctx.guild.id)]:
-        warns[str(ctx.guild.id)][user.id] += points
-    else:
-        warns[str(ctx.guild.id)][user.id] = points
-    
-    try:
-        if warns[str(ctx.guild.id)][user.id] >= warns[str(ctx.guild.id)][ban_points]:
-            await user.ban(reason = reason)
-    except Exception as e:
-        print(e)
-
-    embed = discord.Embed(title = "Member was Warned!", color = user.color)
-    embed.add_field(name = "Points Added:", value = f"`{points}`")
-    embed.add_field(name = "Total points", value = f"`{warns[str(ctx.guild.id)][user.id]}`")
-    embed.add_field(name = "Reason:", value = f"`{reason}`")
-    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-    try:
-        embed.add_field(name = "More points needed for a ban:", value = f'`{warns[str(ctx.guild.id)][ban_points] - warns[str(ctx.guild.id)][user.id]}`')
-        await ctx.send(embed = embed)
-    except:
-        await ctx.send(embed = embed)
-
-    with open("warns.json", "w") as f:
-        json.dump(warns, f)
-
-@client.command()
-@commands.has_permissions(ban_members = True)
-async def removewarnpoints(ctx, user : discord.Member, points : int, *, reason = None):
-    with open("mainbank.json", "r") as f:
-        warns = json.load(f)
-    
-    await open_warn_server(ctx.guild)
-
-    if user.id in warns[str(ctx.guild.id)]:
-        if warns[str(ctx.guild.id)][user.id] > points:
-            await ctx.send(f'Bruh that user only has {warns[str(ctx.guild.id)][user.id]} points')
-            return
-
-        warns[str(ctx.guild.id)][user.id] -= points
-
-    else:
-        await ctx.send("Bruh that user has NO warn points")
-        return
-
-    try:
-        if warns[str(ctx.guild.id)][user.id] >= warns[str(ctx.guild.id)][ban_points]:
-            await user.ban(reason = reason)
-    except Exception as e:
-        print(e)
-
-    embed = discord.Embed(title = "Member was Warned!", color = user.color)
-    embed.add_field(name = "Points removed:", value = f"`{points}`")
-    embed.add_field(name = "Total points", value = f"`{warns[str(ctx.guild.id)][user.id]}`")
-    embed.add_field(name = "Reason:", value = f"`{reason}`")
-    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-    try:
-        embed.add_field(name = "More points needed for a ban:", value = f'`{warns[str(ctx.guild.id)][ban_points] - warns[str(ctx.guild.id)][user.id]}`')
-        await ctx.send(embed = embed)
-    except:
-        await ctx.send(embed = embed)
-    
-    with open("warns.json", "w") as f:
-        json.dump(warns, f)
-
-@client.command()
-async def setwarnbanpoints(ctx, points : int):
-    with open("mainbank.json", "r") as f:
-        warns = json.load(f)
-
-    await open_warn_server(ctx.guild)
-    warns[str(ctx.guild.id)][ban_points] = points
-
-    embed = discord.Embed(title = "Ban points set!", color = ctx.author.color)
-    embed.add_field(name = "Points:", value = f"`{points}`")
-    await ctx.send(embed = embed)
-    
-    with open("warns.json", "w") as f:
-        json.dump(warns, f)
-
-async def open_warn_server(guild):
-    with open("warns.json", "r") as f:
-        warns = json.load(f)
-    
-    if str(guild.id) in warns:
-        return False
-    else:
-        warns[str(guild.id)] = {}
-        return True
-    
-    with open("warns.json", "w") as f:
-        json.dump(warns, f)
-
 #Math Commands
 @client.command()
 async def add(ctx, num1 : int, num2 : int):
@@ -2181,6 +2016,31 @@ async def panda(ctx):
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
     await ctx.send(embed = embed)
+
+@client.command()
+async def koala(ctx):
+    subreddit = reddit.subreddit("koala")
+    top = subreddit.top(limit = 100)
+    
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+    
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
+
+@client.command()
+async def whois(ctx, member : discord.Member = None):
+    if member == None:
+        member = ctx.author
+    em = discord.Embed(title = member.name, color = member.color)
+    em.add_field(name = "ID:", value = member.id)
+    em.set_thumbnail(url = member.avatar_url)
+    await ctx.send(embed = em)
+
+
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
