@@ -14,10 +14,11 @@ from discord.ext.commands import has_permissions #permissions
 from discord.ext.commands import MissingPermissions #the missing perms
 from discord.ext.commands import BadArgument #incorrect arguments
 from discord.ext.commands import CheckFailure #failure
-from discord.utils import get #get
+import discord.utils
 from discord.ext.commands.errors import MissingPermissions
 from discord.ext.commands.errors import BadArgument
 from discord.ext.commands.errors import CheckFailure
+from discord.ext.commands import cooldown, BucketType
 import random #random
 #FOR GAWS
 import datetime #date and time
@@ -31,16 +32,17 @@ import traceback
 #image manipulation
 from PIL import Image
 from io import BytesIO
+# reddit
 import praw
 
 #constants
-CLIENT_ID = 768695035092271124 
-BOT_TOKEN = #my token is mine
+CLIENT_ID = 768695035092271124
+BOT_TOKEN = ""
 CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
 INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
 LINES_OF_CODE = 500
-DATABASES = 'mainbank.json'
+DATABASES = 'data/mainbank.json'
 PACKAGING_DATA = "package.json"
 BOT_PREFIX = "imp "
 ZAN_ID = 575706831192719370
@@ -70,8 +72,9 @@ async def on_ready():
 #when an error occurs
 @client.command()
 async def invite(ctx):
-    await ctx.send("The invite link:\nhttps://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=2147483383")
-    await ctx.send("My other friend in botland, a moderation only bot. Invite him here:\nhttps://discordapp.com/oauth2/authorize?&client_id=774607493031657523&scope=bot&permissions=21474836398")
+    embed = discord.Embed(title = "Invite Link:", color = ctx.author.color)
+    embed.add_field(name = "Here:", value = f"[Click me]({INVITE_LINK})")
+    await ctx.send(embed = embed)
 
 @client.event
 async def on_command_error(ctx, error):
@@ -83,12 +86,12 @@ async def on_command_error(ctx, error):
         await ctx.author.send('Sorry. This command is disabled and cannot be used.')
     elif isinstance(error, commands.CommandInvokeError):
         pass
-        
+
 filtered_words = ['idiot', 'Idiots', "DIE", "ass", "butt", "Fool", "shit", "bitch"]
 
 @client.event
 async def on_message(msg):
-    with open("automod.json", "r") as f:
+    with open("data/automod.json", "r") as f:
         guilds = json.load(f)
 
     ctx = await client.get_context(msg)
@@ -96,31 +99,34 @@ async def on_message(msg):
     try:
         if guilds[str(ctx.guild.id)]["automod"] == "true":
             for word in filtered_words:
-                if word in msg.content:
+                if word in msg.content.lower():
+                    warns = await read_json("data/warns.json")
                     await msg.delete()
-        try:
-            if msg.mentions[0] == client.user:
-                await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
-            elif client.user in msg.mentions:
-                for i in range(0, len(msg.mentions)):
-                    if msg.mentions[i] == client.user:
-                        await ctx.send("Hello there, I think I was pinged!")
-                        break   
-            else:
-                pass                   
-        except:
+    except:
+        pass
+
+    try:
+        if msg.mentions[0] == client.user:
+            await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
+        elif client.user in msg.mentions:
+            for i in range(0, len(msg.mentions)):
+                if msg.mentions[i] == client.user:
+                    await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
+                    break
+        else:
             pass
     except:
         pass
-    
-    await client.process_commands(msg)            
+
+
+    await client.process_commands(msg)
 
 @client.event
 async def on_guild_join(guild):
     ctx = await client.get_context(guild)
-    with open("guilds.json", "r") as f:
+    with open("data/guilds.json", "r") as f:
         guilds = json.load(f)
-    
+
     if guild.name in guilds:
         print("Joined old server!")
     else:
@@ -128,435 +134,9 @@ async def on_guild_join(guild):
         guilds[str(guild.name)]["guild_id"] = guild.id
         print("Joined a new SERVER!")
 
-    with open("guilds.json", "w") as f:
+    with open("data/guilds.json", "w") as f:
         json.dump(guilds, f)
 
-@client.remove_command('help')
-@client.command()
-async def help(ctx, command = None):
-    prefix = "imp "
-    utils_commands = [
-    'Coinflip',
-    'Random_Number',
-    'Code',
-    'Guess',
-    'respect',
-    'Poll',
-    'Thank',
-    'Reverse',
-    'eightball',
-    'fight',
-    'whois',
-    'wanted',
-    "quote"
-    ]
-    gaws_commands = [
-        'gstart',
-        'reroll'
-        ]
-    misc_commands = [
-        'invite',
-        'show_toprole',
-        'botinfo',
-        'serverinfo',
-        'channelinfo',
-        'userinfo',
-        'avatar',
-        'candy',
-        "hypesquad"
-        ]
-    owner_commands = [
-            'enableautomod',
-            "disableautomod",
-            "checkautomod",
-            "addwinnerrole",
-            "removewinnerrole"
-    ]
-    economy_commands = [
-    "Withdraw",
-    "Balance",
-    "Deposit",
-    "Slots"
-    'Rob',
-    'Dice',
-    'Leaderboard',
-    'Daily',
-    'Weekly'
-    ]
-    if command == None:
-        embed = discord.Embed(title = "Help", color = ctx.author.color, description = "Type `imp help` and then a command or category for more information for even more information!")
-        embed.add_field(name = f":coin: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
-        embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Addwarnpoints`, `Setwarnbanpoints`, `Removewarnpoints`")
-        embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`, `quote`, `whois`")
-        embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `redditsearch`")
-        embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
-        embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `DM`, `show_toprole`, `botinfo`, `serverinfo`, `userinfo`, `channelinfo`, `avatar`, `candy`, `hypesquad`")
-        embed.add_field(name = f"<:owner:761302143331205131> Owner: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
-        embed.set_footer(text = f"My prefix is {BOT_PREFIX}")
-        await ctx.send(embed = embed)
-
-    else:
-        command = command.lower()
-        if command == "eco" or command == "economy":
-            embed = discord.Embed(title = "Help Economy:", color = ctx.author.color)
-            embed.add_field(name = "Balance", value = "Use this to check your balance")
-            embed.add_field(name = "Beg", value = "Use this to beg and earn some money!")
-            embed.add_field(name = "Serve", value = "Use this command to serve the  and make money!")
-            embed.add_field(name = "Withdraw", value = "Use this to withdraw coins from the bank")
-            embed.add_field(name = "Deposit", value = "Use this to deposit coins from the wallet")
-            embed.add_field(name = "Slots", value = "Use this to play some slots")
-            embed.add_field(name = "Rob", value = "Use this to rob someones wallet")
-            embed.add_field(name = "Dice", value = "User this to roll a dice")
-            embed.add_field(name = "Leaderboard", value = "Use this to see who is the richest in town!")
-            embed.add_field(name = 'Shop', value = "Shows you what you can buy!")
-            embed.add_field(name = 'Buy', value = "Buy an interesting item!")
-            embed.add_field(name = 'Sell', value = "Sell any useless items you have!")
-            em = await ctx.send(embed = embed)
-            await em.add_reaction('💰')
-        
-        elif command == "mod" or command == "moderation":
-            em = discord.Embed(title = "Help Moderation:", color = ctx.author.color)
-            em.add_field(name = "Kick", value = "Kicks a user, with mentions")
-            em.add_field(name = "Ban", value = "Bans a user, with mentions")
-            em.add_field(name = "Purge", value = "Deletes plenty of messages")
-            em.add_field(name = "Lock", value = "Makes sure no-one other than mods can type in a channel!")
-            em.add_field(name = "Unlock", value = "Unlocks a locked channel")
-            em.add_field(name = "Addrole", value = "Simply gives a role to someone, uses role id!")
-            em.add_field(name = "Removerole", value = "Removes a role from someone, uses role id!")
-            em.add_field(name = "Announce", value = "Make an announcement with the bot! Uses channel id")
-            em.add_field(name = "Addwarnpoints", value = "Add warn points to a user")
-            em.add_field(name = 'Removewarnpoints', value = "Remove warn points")
-            em.add_field(name = "Setwarnbanpoints", value = "Set a number of points, in which a user gets banned")
-            msg = await ctx.send(embed = em)
-            await msg.add_reaction("🗡")
-            await msg.add_reaction("🛠")
-
-        elif command == "utilities" or command == "utils":
-            em = discord.Embed(title = "Help Utils:", color = ctx.author.color)
-            em.add_field(name = "Coinflip", value = "Flips a coin")
-            em.add_field(name = "Random Number", value = "Gives a random number in a range")
-            em.add_field(name = "Code", value = "Turns a message into code")
-            em.add_field(name = "Guess", value = "Selects a random number in a range and plays a guess game!")
-            em.add_field(name = "Respect", value = "Shows your respect for anything")
-            em.add_field(name = "Poll", value = "Creates a poll")
-            em.add_field(name = "Thank", value = "Thanks someone for something")
-            em.add_field(name = "Reverse", value = "Reverses a message")
-            em.add_field(name = "Eightball", value = "Classic Eightball")
-            em.add_field(name = "Fight", value = "Fight someone with lightsabers!")
-            em.add_field(name = "Wanted", value = "Can't spoil the fun try it yourself!")
-            msg = await ctx.send(embed = em)
-            await msg.add_reaction("🍩") 
-
-
-        elif command == "gaws" or command == "gaw" or command == "giveaways":
-            em = discord.Embed(title = "Help Giveaways:", color = ctx.author.color)
-            em.add_field(name = "gstart", value = "Starts a giveaway")
-            em.add_field(name = "reroll", value = "Rerolls a giveaway")
-            msg = await ctx.send(embed = em)
-            await msg.add_reaction("🎉")
-        
-        elif command == "misc" or command == "miscellaneous":
-            em = discord.Embed(title = "Help Misc:", color = ctx.author.color)
-            em.add_field(name = "invite", value = "Get a link to invite the bot to your s")
-            em.add_field(name = "show_toprole", value = "Shows the top role of a person")
-            em.add_field(name = "passwordgenerator", value = "DMs you a random password, you can also specify how many letters!")
-            em.add_field(name = "botinfo", value = "Shows general information about the Bot!")
-            em.add_field(name = "serverinfo", value = "Shows you information about your server!")
-            em.add_field(name = "userinfo", value = "Shows you information about a user")
-            em.add_field(name = "channelinfo", value = "Shows you information about a channel!")
-            em.add_field(name = "avatar", value = "Shows you an avatar of a person")
-            em.add_field(name = "hypesquad", value = "Shows you the true story of hypesquad.")
-            msg = await ctx.send(embed = em)
-            await msg.add_reaction("🐬")
-
-        elif command == "owner":
-            embed = discord.Embed(title = "Help Owner:", color = ctx.author.color)
-            embed.add_field(name = "enableautomod", value = "Enables automod for the server, if anyone types a bad word. It deletes")
-            embed.add_field(name = "disableautomod", value = "Disable automoderation for the entire server!")
-            embed.add_field(name = "checkautomod", value = "Tells you automod status")
-            msg = await ctx.send(embed = embed)
-            await msg.add_reaction("🐯") 
-        
-        elif command == "balance" or command == "bal":
-            embed = discord.Embed(title = "Help on Balance", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shows the balance of a user. You have to mention someone or if you leave it blank it shows you your balance!", inline = False)
-            embed.add_field(name = "Correct usage", value = f"`imp bal {ctx.author.mention}`")
-            await ctx.send(embed = embed)
-
-        elif command == "beg":
-            embed = discord.Embed(title = "Help on Beg", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Beg for money on the road, you probably will make something!", inline = False)
-            embed.add_field(name = "Correct usage", value = f"`imp bal {ctx.author.mention}`")
-            await ctx.send(embed = embed)
-        
-        elif command == "serve":
-            embed = discord.Embed(title = "Help on Serve", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Serve your server and make huge counts of money!", inline = False)
-            embed.add_field(name = "Correct usage", value = f"`imp bal {ctx.author.mention}`")
-            await ctx.send(embed = embed)
-        
-        elif command == "kick":
-            embed = discord.Embed(title = "Help on Kick", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Kick Members`")
-            embed.add_field(name = "Correct usage", value = f"`imp kick {ctx.author.mention} [reason]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "ban":
-            embed = discord.Embed(title = "Help on Ban", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Ban Members`")
-            embed.add_field(name = "Correct usage", value = f"`imp ban {ctx.author.mention} [reason]`")
-            await ctx.send(embed = embed)
-
-        elif command == "softban":
-            embed = discord.Embed(title = "Help on Softban", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Kick Members`")
-            embed.add_field(name = "Correct usage", value = f"`imp softban {ctx.author.mention} [reason]`")
-            await ctx.send(embed = embed)
-
-        elif command == "addrole":
-            embed = discord.Embed(title = "Help on Addrole", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Roles`")
-            embed.add_field(name = "Correct usage", value = f"`imp addrole {ctx.author.mention} <role_id>`")
-            await ctx.send(embed = embed)
-
-        elif command == "removerole":
-            embed = discord.Embed(title = "Help on Removerole", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Roles`")
-            embed.add_field(name = "Correct usage", value = f"`imp removerole {ctx.author.mention} <role_id>`")
-            await ctx.send(embed = embed)
-        
-        elif command == "warn":
-            embed = discord.Embed(title = "Help on Warn", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Kick Members`")
-            embed.add_field(name = "Correct usage", value = f"`imp warn {ctx.author.mention} [reason]`")
-            await ctx.send(embed = embed)
-
-        elif command == "purge":
-            embed = discord.Embed(title = "Help on Purge", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Messages`")
-            embed.add_field(name = "Correct usage", value = f"`imp purge <message_count>`")
-            await ctx.send(embed = embed)
-
-        elif command == "count":
-            embed = discord.Embed(title = "Help on Count", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Channels`")
-            embed.add_field(name = "Correct usage", value = f"`imp count {channel.mention}")
-            await ctx.send(embed = embed)
-        
-        elif command == "lock":
-            embed = discord.Embed(title = "Help on Lock", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Channels`")
-            embed.add_field(name = "Correct usage", value = f"`imp lock [reason]`")
-            await ctx.send(embed = embed)
-
-        elif command == "unlock":
-            embed = discord.Embed(title = "Help on Unlock", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Channels`")
-            embed.add_field(name = "Correct usage", value = f"`imp unlock [reason]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "setdelay":
-            embed = discord.Embed(title = "Help on Setdelay", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Manage Messages`")
-            embed.add_field(name = "Correct usage", value = f"`imp setdelay <secs>`")
-            await ctx.send(embed = embed)
-
-        elif command == "unban":
-            embed = discord.Embed(title = "Help on Unban", color = ctx.author.color)
-            embed.add_field(name = "Requirements - Permissions:", value = f"`Ban Members`")
-            embed.add_field(name = "Correct usage", value = f"`imp unban {ctx.author.mention}`")
-            await ctx.send(embed = embed)
-        
-        elif command == "with" or command == "withdraw":
-            embed = discord.Embed(title = "Help Withdraw:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Withdraw money from your bank!")
-            embed.add_field(name = "Correct Usage:", value = "`imp with <money>`")
-            await ctx.send(embed = embed)    
-
-        elif command == "dep" or command == "deposit":
-            embed = discord.Embed(title = "Help Deposit:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Put money into your bank")
-            embed.add_field(name = "Correct Usage:", value = "`imp dep <money>`")
-            await ctx.send(embed = embed)
-
-        elif command == "slots":
-            embed = discord.Embed(title = "Help Slots:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Spend your money on an arcade game")
-            embed.add_field(name = "Correct Usage:", value = "`imp slots <money>`")
-            await ctx.send(embed = embed)
-
-        elif command == "steal" or command == "rob":
-            embed = discord.Embed(title = "Help Rob:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "You can try to rob someone's wallet")
-            embed.add_field(name = "Correct Usage:", value = "`imp rob <user>`")
-            await ctx.send(embed = embed)
-        
-        elif command == "dice":
-            embed = discord.Embed(title = "Help Dice:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "This time another arcade game, only simpler")
-            embed.add_field(name = "Correct Usage:", value = "`imp dice <money>`")
-            await ctx.send(embed = embed)
-        
-        elif command == "leaderboard" or command == "lb":
-            embed = discord.Embed(title = "Help Leaderboard:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "See the richest guys in town!")
-            embed.add_field(name = "Correct Usage:", value = "`imp leaderboard <top_richest_people>`")
-            await ctx.send(embed = embed)
-
-        elif command == "daily":
-            embed = discord.Embed(title = "Help Daily:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Claim your daily coins!")
-            embed.add_field(name = "Correct Usage:", value = "`imp daily`")
-            await ctx.send(embed = embed)
-
-        elif command == "weekly":
-            embed = discord.Embed(title = "Help Weekly:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Claim your weekly coins!")
-            embed.add_field(name = "Correct Usage:", value = "`imp weekly`")
-            await ctx.send(embed = embed)
-        
-        elif command == "buy":
-            embed = discord.Embed(title = "Help Buy:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Buy an item!")
-            embed.add_field(name = "Correct Usage:", value = "`imp buy [item]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "sell":
-            embed = discord.Embed(title = "Help Sell:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Sell an item that you have for 90 percent of its cost!")
-            embed.add_field(name = "Correct Usage:", value = "`imp sell [item]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "shop":
-            embed = discord.Embed(title = "Help Shop:", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "See what's avalible to buy")
-            embed.add_field(name = "Correct Usage:", value = "`imp shop`")
-            await ctx.send(embed = embed)
-        
-        elif command == "coinflip":
-            embed = discord.Embed(title=  "Help Coinflip", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Flip a coin!")
-            embed.add_field(name = 'Correct Usage:', value = "`imp coinflip`")
-            await ctx.send(embed = embed)
-
-        elif command == "random_number" or command == "rn":
-            embed = discord.Embed(title=  "Help Random Number", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Returns a random number in a range!")
-            embed.add_field(name = 'Correct Usage:', value = "`imp random_number [start_range] [end_range]`")
-            await ctx.send(embed = embed)
-
-        elif command == "code":
-            embed = discord.Embed(title=  "Help Code", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shapes a message into code")
-            embed.add_field(name = 'Correct Usage:', value = "`imp code [message]`")
-            await ctx.send(embed = embed)
-
-        elif command == "respect":
-            embed = discord.Embed(title=  "Help Respect", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Show your respect for something")
-            embed.add_field(name = 'Correct Usage:', value = "`imp respect [message]`")
-            await ctx.send(embed = embed)
-
-        elif command == "poll":
-            embed = discord.Embed(title=  "Help Poll", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Creates a poll for you")
-            embed.add_field(name = 'Correct Usage:', value = "`imp poll [message]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "thank":
-            embed = discord.Embed(title=  "Help Thank", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Show your gratitude towards a user")
-            embed.add_field(name = 'Correct Usage:', value = "`imp thank [user] [reason]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "reverse":
-            embed = discord.Embed(title=  "Help Reverse", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Reverses a message!")
-            embed.add_field(name = 'Correct Usage:', value = "`imp reverse [message]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "eightball":
-            embed = discord.Embed(title=  "Help Eightball", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Classic eightball, predicts the future!")
-            embed.add_field(name = 'Correct Usage:', value = "`imp eightball [future]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "wanted":
-            embed = discord.Embed(title=  "Help Wanted", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Can't spoil the fun!")
-            embed.add_field(name = 'Correct Usage:', value = "`imp wanted [user]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "guess":
-            embed = discord.Embed(title=  "Help Guess", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Try to guess a number")
-            embed.add_field(name = 'Correct Usage:', value = "`imp guess [start_range] [end_range] [guess]`")
-            await ctx.send(embed = embed)
-        
-        elif command == "gstart" or command == "giveawaystart" or command == "giveaway_create":
-            embed = discord.Embed(title=  "Help GSTART", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Make giveaways!")
-            embed.add_field(name = 'Permissions needed:', value = "`Manage Server, Manage Roles, Manage Channels`")
-            embed.add_field(name = "Correct usage:", value = '`imp gstart`')
-            await ctx.send(embed = embed)
-        
-        elif command == "reroll":
-            embed = discord.Embed(title=  "Help Reroll", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Reroll an unfair giveaway!")
-            embed.add_field(name = 'Permissions needed:', value = "`Manage Server, Manage Roles, Manage Channels`")
-            embed.add_field(name = "Correct usage:", value = '`imp reroll [channel] [message_id] `')
-            embed.add_field(name = "Extra notes:", value = "Be sure to copy the message id of the embed and not the message")
-            await ctx.send(embed = embed)
-
-        elif command == "invite":
-            embed = discord.Embed(title=  "Help Invite", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "If you would like to invite me to your server!")
-            embed.add_field(name = "Correct usage:", value = '`imp invite `')
-            await ctx.send(embed = embed)
-
-        elif command == "invite":
-            embed = discord.Embed(title=  "Help Invite", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "If you would like to invite me to your server!")
-            embed.add_field(name = "Correct usage:", value = '`imp invite `')
-            await ctx.send(embed = embed)
-
-        elif command == "show_toprole":
-            embed = discord.Embed(title=  "Help Showtoprole", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shows the highest role of a user")
-            embed.add_field(name = "Correct usage:", value = '`imp show_toprole [user] `')
-            await ctx.send(embed = embed)
-        
-        elif command == "botinfo":
-            embed = discord.Embed(title=  "Help Botinfo", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shows you information about the bot")
-            embed.add_field(name = "Correct usage:", value = '`imp botinfo `')
-            await ctx.send(embed = embed)
-        
-        elif command == "serverinfo":
-            embed = discord.Embed(title=  "Help Serverinfo", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shows you information about the server")
-            embed.add_field(name = "Correct usage:", value = '`imp serverinfo `')
-            await ctx.send(embed = embed)
-        
-        elif command == "channelinfo":
-            embed = discord.Embed(title=  "Help Channelinfo", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shows you information about a channel")
-            embed.add_field(name = "Correct usage:", value = '`imp channelinfo [channel] `')
-            await ctx.send(embed = embed)
-        
-        elif command == "candy":
-            embed = discord.Embed(title=  "Help Candy", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Gives you candy idiot")
-            embed.add_field(name = "Correct usage:", value = '`imp candy `')
-            await ctx.send(embed = embed)
-
-        elif command == "dog":
-            embed = discord.Embed(title = "Help Dog", color = ctx.author.color)
-            embed.add_field(name = "Description:", value = "Shows you any random dog from reddit!")
-            embed.add_field(name = "Correct Usuage:", value = f'`imp {command}`')
-            await ctx.send(embed = embed)
-
-        
 #moderation commands
 @client.command()
 @commands.has_permissions(manage_roles = True)
@@ -620,7 +200,7 @@ async def kick(ctx, member : discord.Member, *, reason = None):
         await member.send(f'You were kicked in {ctx.message.guild.name}\nBy: {ctx.author.name}')
     except:
         pass
-    
+
 @kick.error
 async def kick_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
@@ -661,7 +241,7 @@ async def softban(ctx, member : discord.Member, *, reason = None):
     try:
         await member.send(f"You got softbanned in {ctx.guild.name}\nReason: {reason}\nModerator: {ctx.author.name}")
     except:
-        print("DMs off")        
+        print("DMs off")
 
 @softban.error
 async def softban_error(ctx, error):
@@ -674,21 +254,24 @@ async def softban_error(ctx, error):
         await ctx.send("You have to provide a valid person to kick!")
         await ctx.send(f"Good usage:\n`imp kick `{ctx.author.mention}")
 
-@client.command(aliases=['ub'])
-@commands.has_permissions(ban_members = True)
-async def unban(ctx, member : discord.Member):
+@client.command(aliases = ["ub"])
+@has_permissions(ban_members = True)
+async def unban(ctx, member : str, *, reason = None):
     banned_users = await ctx.guild.bans()
-    member_name, member_disc = member.split('#')
+    member_name, member_disc = member.split("#")
 
     for banned_entry in banned_users:
         user = banned_entry.user
 
-        if (user.name, user.discriminator) == (member_name,member_disc):
+        if (user.name, user.discriminator) == (member_name, member_disc):
             await ctx.guild.unban(user)
-            await ctx.send(member_name + " has been unbanned!")
+            embed = discord.Embed(title = f"{member_name} was unbanned!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = f"`{reason}`")
+            embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
+            await ctx.send(embed = embed)
             return
 
-    await ctx.send(member + " Was Not Found")
+    await ctx.send("Not a valid user, try it like this:\`imp unban name#disc`")
 
 @unban.error
 async def unban_error(ctx, error):
@@ -701,18 +284,45 @@ async def unban_error(ctx, error):
         await ctx.send("You have to provide a valid person to kick!")
         await ctx.send(f"Good usage:\n`imp unban `{ctx.author.mention}")
 
-@client.command()
-async def warn(ctx, user : discord.Member, reason = None):
-    embed = discord.Embed(title = f"{user.name} was Warned!")
+@client.command(aliases = ["warn"])
+@has_permissions(kick_members = True)
+async def addwarn(ctx, member : discord.Member, *, reason = None):
+    warns = await read_json("data/warns.json")
+
+    if str(ctx.guild.id) not in warns:
+        warns[str(ctx.guild.id)] = {}
+    if str(member.id) not in warns[str(ctx.guild.id)]:
+        warns[str(ctx.guild.id)][str(member.id)] = {}
+        warns[str(ctx.guild.id)][str(member.id)]["warns"] = 1
+    else:
+        warns[str(ctx.guild.id)][str(member.id)]["warns"] += 1
+
+    res = warns[str(ctx.guild.id)][str(member.id)]["warns"]
+
+    embed = discord.Embed(title = f"{member.name} was warned!", color = ctx.author.color)
     embed.add_field(name = "Reason:", value = f"`{reason}`")
-    embed.add_field(name = "Moderator:", value = f'{ctx.author.name}')
+    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
+    embed.add_field(name = "Number of Warns:", value = f"`{res}`")
     await ctx.send(embed = embed)
     try:
-        await user.send(f"You were warned in {ctx.guild.name}\nReason: `{reason}`")
+        await member.send(f"You were warned in {ctx.guild.name}\nBy {ctx.author.name}\nFor {reason}")
     except:
-        print(f"{user.name} has DMs off!")
-        
-@warn.error
+        pass
+
+@client.command()
+async def checkwarns(ctx, member : discord.Member):
+    warns = await read_json("data/warns.json")
+    if str(ctx.guild.id) not in warns:
+        res = 0
+    if str(member.id) not in warns[str(ctx.guild.id)]:
+        res = 0
+    else:
+        res = warns[str(ctx.guild.id)][str(member.id)]["warns"]
+
+    embed = discord.Embed(title=  f"{member.name} has {res} warnings", color = ctx.author.color)
+    await ctx.send(embed = embed)
+
+@addwarn.error
 async def warn_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Permissions missing!")
@@ -723,7 +333,8 @@ async def warn_error(ctx, error):
         await ctx.send("You have to provide a valid person to kick!")
         await ctx.send(f"Good usage:\n`imp warn `{ctx.author.mention}")
 
- #`Mute`, `Unmute`, `Hardmute`, `setmuterole`, 
+
+ #`Mute`, `Unmute`, `Hardmute`, `setmuterole`,
 @client.command()
 @commands.has_permissions(manage_channels = True)
 async def lock(ctx,*, reason = None):
@@ -775,15 +386,6 @@ async def purge_error(ctx, error):
         await ctx.send("Looks like you don't have the perms.")
 
 @client.command()
-async def helpowner(ctx):
-    if ctx.author.id != ZAN_ID:
-        await ctx.send("Not for server owners, but for the Emperor\nBehold my creator: NightZan999")
-        return 
-    embed = discord.Embed(title = "Help Bot Dev", color = discord.Color.purple())
-    embed.add_field(name = "The Special Powers of the Sith!", value = "`Guilds`, `Leaveguild`")
-    await ctx.send(embed = embed)
-
-@client.command()
 async def guilds(ctx):
     if ctx.author.id != 575706831192719370:
         await ctx.send("Only for bot devs, sorry no sorry")
@@ -793,7 +395,7 @@ async def guilds(ctx):
         for guild in client.guilds:
             a += 1
             await ctx.author.send(f"{guild.name} : {guild.id}")
-            
+
 #balance command
 @client.command(aliases = ["balance"])
 async def bal(ctx, member : discord.Member = None):
@@ -822,11 +424,11 @@ async def beg(ctx):
     #same as last time!
     await open_account(ctx.author)
     users = await get_bank_data()
-    user = ctx.author 
+    user = ctx.author
 
     wallet_amt = users[str(user.id)]["wallet"]
     bank_amt = users[str(user.id)]["bank"]
-    
+
     #I deleted the halloween event
     list = ['money']
     reward_type = random.choice(list)
@@ -835,7 +437,7 @@ async def beg(ctx):
         users[str(user.id)]["wallet"] += earnings
 
         #making sure the balance is saved
-        with open("mainbank.json", "w") as f:
+        with open("data/mainbank.json", "w") as f:
             json.dump(users, f)
 
         await ctx.send(f"Well you earned {earnings} coins")
@@ -859,9 +461,9 @@ async def daily(ctx):
 
     users[str(user.id)]["wallet"] += 20000
 
-    with open("mainbank.json", "w") as f:
+    with open("data/mainbank.json", "w") as f:
         json.dump(users, f)
-        
+
 @daily.error
 async def daily_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
@@ -878,9 +480,9 @@ async def weekly(ctx):
     user = ctx.author
     await open_account(user)
 
-    users[str(user.id)]["wallet"] += 50000    
+    users[str(user.id)]["wallet"] += 50000
 
-    with open("mainbank.json", "w") as f:
+    with open("data/mainbank.json", "w") as f:
         json.dump(users, f)
 
 @client.command(aliases = ["with"])
@@ -889,12 +491,12 @@ async def withdraw(ctx, amount = None):
     await open_account(ctx.author) #opening their account
     if amount == None: #making sure they are withdrawing something!
         await ctx.send("Type an amount")
-        
+
     amount = int(amount)
     bal = await update_bank(ctx.author)
 
     if amount == 'all':
-        amount = users[str(user.id)]["bank"]
+        amount = bal[1]
 
     if amount > bal[1]:
         await ctx.send("You can't withdraw more than you have in your bank!")
@@ -911,7 +513,7 @@ async def deposit(ctx, amount = None):
     await open_account(ctx.author)
     if amount == None:
         await ctx.send("Type an amount")
-        
+
     amount = int(amount)
     bal = await update_bank(ctx.author)
 
@@ -957,15 +559,14 @@ async def give_error(ctx, error):
         await ctx.send(embed)
 
 @client.command()
-@commands.cooldown(1, 10, commands.BucketType.user)
-async def slots(ctx, amount = None): 
-    await open_account(ctx.author)
-
+@commands.cooldown(1, 10, commands.BucketType.user) #I dont want alt spams
+async def slots(ctx, amount = None):
     if amount == None:
         await ctx.send("Type an amount")
 
     amount = int(amount)
     bal = await update_bank(ctx.author)
+
     if amount > bal[0]:
         await ctx.send("You can't pay more than you have in your wallet!")
         return
@@ -974,20 +575,17 @@ async def slots(ctx, amount = None):
 
     final = []
     for i in range(0, 3):
-        final.append(random.choice("🎃", "👻", "👾"))
+        a = random.choice("🐸", "👾", "👻")
+        final.append(a)
 
-    await ctx.send(final)
-
+    await ctx.send(str(final))
     if final[0] == final[1] or final[1] == final[2] or final[0] == final[2]:
         if final[0] == final[1] and final[1] == final[2]:
-            await ctx.send("GRAND PRIZE")
-            await update_bank(ctx.author, amount * 3, "wallet")
+            await update_bank(ctx.author, 5 * amount)
         else:
-            await ctx.send("PRIZE!")
-            await update_bank(ctx.author, amount * 2, "wallet")
+            await update_bank(ctx.author, 2 *amount)
     else:
-        await ctx.send("YOU LOSE!!!")
-        await update_bank(ctx.author, amount * -1, "wallet")
+        await update_bank(ctx.author, -1* amount)
 
 @slots.error
 async def slots_error(ctx, error):
@@ -1041,7 +639,7 @@ async def bankrob_error(ctx, error):
         embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
         embed.add_field(name = "You need to plan your next attack", value = "If you try once more your next robbery will be a fail")
         embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
-        await ctx.send(embed = embed)    
+        await ctx.send(embed = embed)
 
 @client.command(aliases = ["lb"])
 async def leaderboard(ctx,x = 1):
@@ -1054,7 +652,7 @@ async def leaderboard(ctx,x = 1):
         leader_board[total_amount] = name
         total.append(total_amount)
 
-    total = sorted(total,reverse=True)    
+    total = sorted(total,reverse=True)
 
     em = discord.Embed(title = f"Top {x} Richest People" , description = "This is decided on the basis of raw money in the bank and wallet",color = discord.Color(0xfa43ee))
     index = 1
@@ -1079,16 +677,16 @@ async def devwith(ctx, amount): #had to make this!
         users = await get_bank_data()
 
         users[str(user.id)]["wallet"] += amount
-        with open("mainbank.json", "w") as f:
+        with open("data/mainbank.json", "w") as f:
             json.dump(users, f)
 
         await ctx.send(f"Gave you {amount} coins!")
     else: #else it should not give!
-        await ctx.send("Bruh, your not a bot dev!")   
+        await ctx.send("Bruh, your not a bot dev!")
 
 #Helperfunctions
 async def open_account(user):
-    with open("mainbank.json", "r") as f:
+    with open("data/mainbank.json", "r") as f:
         users = json.load(f)
 
     if str(user.id) in users:
@@ -1098,12 +696,12 @@ async def open_account(user):
         users[str(user.id)]["wallet"] = 0 #I want them to get 100 coins
         users[str(user.id)]["bank"]  = 0
 
-    with open("mainbank.json", "w") as f:
+    with open("data/mainbank.json", "w") as f:
         json.dump(users, f)
 
 
 async def get_bank_data():
-    with open("mainbank.json", "r") as f:
+    with open("data/mainbank.json", "r") as f:
         users = json.load(f)
     return users
 
@@ -1111,7 +709,7 @@ async def update_bank(user, change = 0, mode = "wallet"):
     users = await get_bank_data()
     users[str(user.id)][mode] = users[str(user.id)][mode] + change
 
-    with open("mainbank.json", "w") as f:
+    with open("data/mainbank.json", "w") as f:
         json.dump(users, f)
 
     bal = users[str(user.id)]["wallet"], users[str(user.id)]["bank"]
@@ -1126,7 +724,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         "imp gstart",
         "Kicking people!",
         "Using utils!",
-        "Serving 256 users" 
+        "Serving 256 users"
     ]
     while not client.is_closed():
         status = random.choice(statuses)
@@ -1138,12 +736,20 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         print("Offline again, f in the chat for the discord devs!")
 
 
-#UTILITIES 
+#UTILITIES
 @client.command()
 async def coinflip(ctx):
     list = ["Heads", "Tails"]
     embed = discord.Embed(title = "Coinflip by {}".format(ctx.author.name), color = ctx.author.color)
-    embed.add_field(name = "We rolled a:", value = random.choice(list))
+    res = random.choice(list)
+    embed.add_field(name = "We rolled a:", value = f"`{res}`")
+    if res.lower() == "heads":
+        embed.set_image(url = """
+        data:image/jpeg;base64,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
+        """
+        )
+    else:
+        embed.set_image(url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnWL81FKwiyIak8DR8azPVHryuOFNlS5esVw&usqp=CAU")
     await ctx.send(embed = embed)
 
 @client.command(aliases = ['rn', 'random_n', 'random_int', 'randrange', 'randint', 'r_number'])
@@ -1249,10 +855,10 @@ async def thank(ctx, member : discord.Member, *, reason = None):
 async def checkthanks(ctx, member : discord.Member = None):
     if member == None:
         member = ctx.author
-    
+
     with open("thanks.json", "r") as f:
         ty = json.load(f)
-    
+
     if member.id in ty:
         thanks_user = ty[str(user.id)]["thanks"]
         await ctx.send(f"{member.mention} has {thanks_user} thanks!")
@@ -1284,7 +890,7 @@ async def eightball(ctx, *, question):
     'My sources say no!'
     ]
     await ctx.send(f'Question: {question}\nAnswer: {random.choice(responses)}')
-    
+
 @client.command()
 async def poll(ctx, *, message):
     embed = discord.Embed(title = f"{ctx.author.name}'s Poll", color = ctx.author.color)
@@ -1376,7 +982,7 @@ def convert(time):
         val = int(time[:-1])
     except:
         return -2
-        
+
     return val * time_dict[unit]
 
 #making the real command
@@ -1385,7 +991,7 @@ def convert(time):
 async def giveaway(ctx):
     await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
 
-    questions = ["Which channel should it be hosted in?", 
+    questions = ["Which channel should it be hosted in?",
                 "What should be the duration of the giveaway? (s|m|h|d)",
                 "What is the prize of the giveaway?",
     ]
@@ -1393,7 +999,7 @@ async def giveaway(ctx):
     answers = []
 
     def check(m):
-        return m.author == ctx.author and m.channel == ctx.channel 
+        return m.author == ctx.author and m.channel == ctx.channel
 
     for i in questions:
         await ctx.send(i)
@@ -1419,7 +1025,7 @@ async def giveaway(ctx):
         return
     elif time == -2:
         await ctx.send(f"The time must be an integer. Please enter an integer next time")
-        return             
+        return
 
     prize = answers[2]
 
@@ -1443,8 +1049,8 @@ async def giveaway(ctx):
     except:
         await ctx.send("No-one entered the giveaway can't decide winner")
         return
-    
-    with open("automod.json", "r") as f:
+
+    with open("data/automod.json", "r") as f:
         guilds = json.load(f)
 
 @giveaway.error
@@ -1461,7 +1067,7 @@ async def announce(ctx, c_id : int, *, msg):
     embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
     embed.add_field(name = "Announcement:", value = f"`{msg}`")
     embed.add_field(name = "Moderator:", value = f"`{ctx.autor.name}`")
-    await channel.send(embed = embed)    
+    await channel.send(embed = embed)
 
 @announce.error
 async def announce_error(ctx, error):
@@ -1478,12 +1084,12 @@ async def reroll(ctx, channel : discord.TextChannel, id_ : int):
     except:
         await ctx.send("The id was entered incorrectly.")
         return
-    
+
     users = await new_msg.reactions[0].users().flatten()
     users.pop(users.index(client.user))
 
     winner = random.choice(users)
-    await channel.send(f"Congratulations! The new winner is {winner.mention}.!")    
+    await channel.send(f"Congratulations! The new winner is {winner.mention}.!")
 
 
 @reroll.error
@@ -1492,65 +1098,6 @@ async def reroll_error(ctx, error):
         embed = discord.Embed(title = "Giveaway failed!", color = ctx.author.color)
         embed.add_field(name = 'Reason:', value = "Some perms are missing")
         await ctx.send(embed = embed)
-
-@client.command()
-async def avatar(ctx, *, avamember : discord.Member = None):
-    userAvatarUrl = avamember.avatar_url
-    embed=discord.Embed(title=f'{avamember} avatar!!')
-    embed.set_image(url=userAvatarUrl)
-    await ctx.send(embed=embed)
-
-@client.command()
-async def channelinfo(ctx, channel : discord.TextChannel):
-    try:
-        nsfw = self.bot.get_channel(channel.id).is_nsfw()
-        news = self.bot.get_channel(channel.id).is_news()
-        embed = discord.Embed(title = 'Channel Infromation: ' + str(channel),
-        color = ctx.author.color)
-        embed.add_field(name = 'Channel Name: ', value = str(channel.name))
-        embed.add_field(name = "Channel's NSFW Status: ", value = str(nsfw))
-        embed.add_field(name = "Channel's id: " , value = str(channel.id))
-        embed.add_field(name = 'Channel Created At: ', value = str(channel.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
-        embed.add_field(name = 'Channel Type: ', value = str(channel.type))
-        embed.add_field(name = "Channel's Announcement Status: ", value = str(news))
-        await ctx.send(embed = embed) 
-    except:
-        await ctx.send(f"Wow, next time try to mention a channel properly! Like {ctx.channel.mention}") 
-
-@client.command()
-async def userinfo(ctx, member : discord.Member):
-    if member == None:
-        member = ctx.author
-
-    pos = sum(m.joined_at < member.joined_at for m in ctx.guild.members if m.joined_at is not None)
-    roles = [role for role in member.roles]
-    embed = discord.Embed(color=member.color, timestamp=datetime.datetime.utcnow())
-    embed.set_author(name=f"{member}", icon_url=member.avatar_url)
-    embed.set_thumbnail(url=member.avatar_url)
-    embed.add_field(name="Joined at:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p"))
-    embed.add_field(name='Registered at:', value=member.created_at.strftime('%a, %#d %B %Y, %I:%M %p'))
-    embed.add_field(name='Bot?', value=f'{member.bot}')
-    embed.add_field(name='Status?', value=f'{member.status}')
-    embed.add_field(name='Top Role?', value=f'{member.top_role}')
-    embed.add_field(name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles[:1]]))
-    embed.add_field(name='Join position', value=pos)
-    embed.set_footer(icon_url=member.avatar_url, text=f'Requested By: {ctx.author.name}')
-    await ctx.send(embed=embed)
-
-@client.command()
-async def serverinfo(ctx):
-    findbots = sum(1 for member in ctx.guild.members if member.bot)
-    embed = discord.Embed(title = 'Infomation about ' + ctx.guild.name + '.', color = ctx.author.color)
-    embed.set_thumbnail(url = str(ctx.guild.icon_url))
-    embed.add_field(name = "Guild's name: ", value = ctx.guild.name)
-    embed.add_field(name = "Guild's owner: ", value = str(ctx.guild.owner))
-    embed.add_field(name = "Guild's verification level: ", value = str(ctx.guild.verification_level))
-    embed.add_field(name = "Guild's id: ", value = str(ctx.guild.id))
-    embed.add_field(name = "Guild's member count: ", value = str(ctx.guild.member_count))
-    embed.add_field(name="Bots", value=findbots, inline=True)
-    embed.add_field(name = "Guild created at: ", value = str(ctx.guild.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
-    await ctx.send(embed =  embed)
-
 
 @client.command(pass_context=True, aliases=['joi'])
 async def join(ctx):
@@ -1583,17 +1130,9 @@ async def leave(ctx):
         await ctx.send("Don't think I am in a voice channel")
 
 @client.command()
-async def load(ctx, extension):
-    client.load_extension(f"cogs.{extension}")
-
-@client.command()
-async def unload(ctx, extension):
-    client.unload_extension(f"cogs.{extension}")
-
-@client.command()
 @commands.has_permissions(administrator = True)
 async def enableautomod(ctx):
-    with open("automod.json", "r") as f:
+    with open("data/automod.json", "r") as f:
         guilds = json.load(f)
 
     if ctx.guild.id in guilds:
@@ -1603,10 +1142,10 @@ async def enableautomod(ctx):
         guilds[str(ctx.guild.id)]["automod"] = "true"
 
     embed = discord.Embed(title = 'Change in Server Settings', color = ctx.author.color)
-    embed.add_field(name = 'Automod:', value = "`Automod = True`")    
+    embed.add_field(name = 'Automod:', value = "`Automod = True`")
     await ctx.send(embed = embed)
 
-    with open("automod.json", "w") as f:
+    with open("data/automod.json", "w") as f:
         json.dump(guilds, f)
 
 @enableautomod.error
@@ -1617,7 +1156,7 @@ async def enableautomod_error(ctx, error):
 @client.command()
 @commands.has_permissions(administrator = True)
 async def disableautomod(ctx):
-    with open("automod.json", "r") as f:
+    with open("data/automod.json", "r") as f:
         guilds = json.load(f)
 
     if ctx.guild.id in guilds:
@@ -1627,18 +1166,18 @@ async def disableautomod(ctx):
         guilds[str(ctx.guild.id)]["automod"] = "false"
 
     embed = discord.Embed(title = 'Change in Server Settings', color = ctx.author.color)
-    embed.add_field(name = 'Automod:', value = "`Automod = False`")    
+    embed.add_field(name = 'Automod:', value = "`Automod = False`")
     await ctx.send(embed = embed)
 
-    with open("automod.json", "w") as f:
+    with open("data/automod.json", "w") as f:
         json.dump(guilds, f)
 
 @client.command()
 @commands.has_permissions(administrator = True)
 async def checkautomod(ctx):
-    with open("automod.json", "r") as f:
+    with open("data/automod.json", "r") as f:
         guilds = json.load(f)
-    
+
     if ctx.guild.id in guilds:
         if guilds[str(ctx.guild.id)]["automod"] == "true":
             embed = discord.Embed(title = "Automod Status", color = ctx.author.color)
@@ -1647,7 +1186,7 @@ async def checkautomod(ctx):
         if guilds[str(ctx.guild.id)]["automod"] == "false":
             embed = discord.Embed(title = "Automod Status", color = ctx.author.color)
             embed.add_field(name = "Status:", value = "`False`")
-        
+
         await ctx.send(embed = embed)
 
 @checkautomod.error
@@ -1674,7 +1213,7 @@ async def dice(ctx, amount : int):
         await ctx.send("Far out you do not have that much money!")
         return
 
-    users = await get_bank_data()   
+    users = await get_bank_data()
     user_roll = random.randint(1, 6)
     comp_roll = random.randint(1, 6)
 
@@ -1705,8 +1244,8 @@ async def botinfo(ctx):
         pass
     finally:
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
-        embed.add_field(name = "Number of Commands:", value = f"`59` (including special owner commands)")
-        embed.add_field(name = "**Tech:**", value = "```Library : discord.py\nDatabase : JSON\nHosting Services : DanBot Hosting!\n```", inline = False)
+        embed.add_field(name = "Number of Commands:", value = f"`62` (including special owner commands)")
+        embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : JSON\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
         await ctx.send(embed = embed)
 
 @client.command()
@@ -1719,7 +1258,7 @@ async def leaveguild(ctx, guild_id : int):
     if ctx.author.id != ZAN_ID:
         await ctx.send("Only bot devs can use this command!")
         return
-    
+
     guild = client.get_guild(guild_id)
     await guild.leave()
     embed = discord.Embed(title = "Imperial Bot leaves a guild", color = ctx.author.color)
@@ -1766,8 +1305,8 @@ async def buy(ctx,item,amount = 1):
 async def wanted(ctx, user : discord.Member = None):
     if user == None:
         user = ctx.author
-    
-    wanted = Image.open("assets/wanted.jpg")    
+
+    wanted = Image.open("assets/wanted.jpg")
     asset = user.avatar_url_as(size = 128)
 
     data = BytesIO(await asset.read())
@@ -1796,10 +1335,10 @@ async def bag(ctx):
         name = item["item"]
         amount = item["amount"]
 
-        em.add_field(name = name, value = amount)    
+        em.add_field(name = name, value = amount)
 
-    await ctx.send(embed = em)    
-    
+    await ctx.send(embed = em)
+
 async def buy_this(user,item_name,amount):
     item_name = item_name.lower()
     name_ = None
@@ -1834,20 +1373,64 @@ async def buy_this(user,item_name,amount):
                 t = 1
                 break
 
-            index += 1 
-            
+            index += 1
+
         if t == None:
             obj = {"item":item_name , "amount" : amount}
             users[str(user.id)]["bag"].append(obj)
     except:
         obj = {"item":item_name , "amount" : amount}
-        users[str(user.id)]["bag"] = [obj]        
+        users[str(user.id)]["bag"] = [obj]
 
-    with open("mainbank.json","w") as f:
+    with open("data/mainbank.json","w") as f:
         json.dump(users,f)
 
     await update_bank(user,cost*-1,"wallet")
     return [True,"Worked"]
+
+
+@client.command(aliases = ["postvid"])
+@cooldown(1, 30, BucketType.user)
+async def postvideo(ctx):
+    users = await get_bank_data()
+    a = await check_for_item(ctx.author, "pc")
+
+    if not a:
+        await ctx.send("You don't have a PC to post a video!")
+        return
+    
+    views = random.randint(500, 2000)
+    earnings = views * random.randint(1, 5)
+
+    await ctx.send(f"The video got {views} views\nAs a result with the ads you made {earnings} coins!")
+    await update_bank(ctx.author, earnings)
+
+async def check_for_item(user, item_name):
+    item_name = item_name.lower()
+    name_ = None
+    for item in mainshop:
+        name = item["name"].lower()
+        if name == item_name:
+            name_ = name
+            break
+
+    if name_ == None:
+        return False
+    users = await get_bank_data()
+    try:
+        index = 0
+        t = None
+        for thing in users[str(user.id)]["bag"]:
+            n = thing["item"]
+            if n == item_name:
+                return True
+                break
+
+        if t == None:
+            return False
+    except:
+        return False
+
 
 @client.command()
 async def sell(ctx,item,amount = 1):
@@ -1902,18 +1485,18 @@ async def sell_this(user,item_name,amount,price = None):
                 users[str(user.id)]["bag"][index]["amount"] = new_amt
                 t = 1
                 break
-            index+=1 
+            index+=1
         if t == None:
             return [False,3]
     except:
-        return [False,3]    
+        return [False,3]
 
-    with open("mainbank.json","w") as f:
+    with open("data/mainbank.json","w") as f:
         json.dump(users,f)
 
     await update_bank(user,cost,"wallet")
 
-    return [True,"Worked"]    
+    return [True,"Worked"]
 
 #Math Commands
 @client.command()
@@ -1938,7 +1521,7 @@ async def sqrt(ctx, num : int):
     for i in range(0, num, 0.0001):
         if i * i == num:
             await ctx.send(f"The square root of {num} is {i}")
-    
+
 @client.command()
 async def square(ctx, num : int):
     await ctx.send(f"`{num * num}`")
@@ -1951,11 +1534,11 @@ async def power(ctx, num1 : int, num2 : int):
 async def dog(ctx):
     subreddit = reddit.subreddit("dog")
     top = subreddit.top(limit = 100)
-    
+
     all_subs = []
     for submission in top:
         all_subs.append(submission)
-    
+
     sub = random.choice(all_subs)
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
@@ -1965,11 +1548,11 @@ async def dog(ctx):
 async def cat(ctx):
     subreddit = reddit.subreddit("cat")
     top = subreddit.top(limit = 100)
-    
+
     all_subs = []
     for submission in top:
         all_subs.append(submission)
-    
+
     sub = random.choice(all_subs)
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
@@ -1979,11 +1562,11 @@ async def cat(ctx):
 async def duck(ctx):
     subreddit = reddit.subreddit("duck")
     top = subreddit.top(limit = 100)
-    
+
     all_subs = []
     for submission in top:
         all_subs.append(submission)
-    
+
     sub = random.choice(all_subs)
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
@@ -1993,11 +1576,11 @@ async def duck(ctx):
 async def fox(ctx):
     subreddit = reddit.subreddit("fox")
     top = subreddit.top(limit = 100)
-    
+
     all_subs = []
     for submission in top:
         all_subs.append(submission)
-    
+
     sub = random.choice(all_subs)
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
@@ -2007,11 +1590,11 @@ async def fox(ctx):
 async def panda(ctx):
     subreddit = reddit.subreddit("panda")
     top = subreddit.top(limit = 100)
-    
+
     all_subs = []
     for submission in top:
         all_subs.append(submission)
-    
+
     sub = random.choice(all_subs)
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
@@ -2021,14 +1604,60 @@ async def panda(ctx):
 async def koala(ctx):
     subreddit = reddit.subreddit("koala")
     top = subreddit.top(limit = 100)
-    
+
     all_subs = []
     for submission in top:
         all_subs.append(submission)
-    
+
     sub = random.choice(all_subs)
     embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
     embed.set_image(url = sub.url)
+    await ctx.send(embed = embed)
+
+menu = ['pizza', "pasta", "fries", "chips", "nachos", "hotdogs", "burgers",
+"steak", "cheese", "Salad", "Chicken", "pancakes", "waffles"
+]
+
+@client.command()
+@cooldown(1, 3, BucketType.user)
+async def order(ctx, food = None):
+    if food == None:
+        await ctx.send("You have to mention some food!")
+        return
+
+    foodExists = False
+    for item in menu:
+        if item.lower() == food.lower():
+            foodExists = True
+
+    if foodExists == False:
+        await ctx.send("Not valid food!")
+        return
+
+    users = await get_bank_data()
+    await open_account(ctx.author)
+    bal = await update_bank(ctx.author)
+
+    if users[str(user.id)]["wallet"] < 500:
+        await ctx.send("You need 500 coins to eat")
+        return
+
+    await ctx.send("The order has been sent to the kitchen")
+    await update_bank(ctx.author, -500, "wallet")
+
+    #searching for the food on reddit
+    subreddit = reddit.subreddit(food)
+    top = subreddit.top(limit = 10)
+
+    all_subs = []
+    for submission in top:
+        all_subs.append(submission)
+
+    sub = random.choice(all_subs)
+    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+    embed.set_image(url = sub.url)
+
+    await asyncio.sleep(5)
     await ctx.send(embed = embed)
 
 @client.command()
@@ -2041,16 +1670,79 @@ async def whois(ctx, member : discord.Member = None):
     await ctx.send(embed = em)
 
 
+async def read_json(filename):
+    with open(filename, "r") as f:
+        res = json.load(f)
+
+    return res
+
+@client.command()
+async def osay(ctx, *, args : str):
+    embed = discord.Embed(title=  f"Osay by {ctx.author.name}", color = ctx.author.color)
+    embed.add_field(name = "Message:", value = f"`{args}`")
+    await ctx.send(embed = embed)
+
+
+@client.command()
+@commands.cooldown(1, 180, commands.BucketType.user) #I dont want alt spams
+async def rob(ctx, member : discord.Member):
+    await open_account(ctx.author) #open the givers account
+    await open_account(member) #and the receivers
+
+    bal = await update_bank(member)
+
+    if bal[0] < 500:
+        await ctx.send("Not worth it, the victim has less than 500 coins")
+        return
+
+    if users[str(ctx.author.id)]["wallet"] < 1000:
+        await ctx.send("You need 1000 coins to rob someone")
+        return
+
+    a = random.randint(0, bal[0])
+
+    await ctx.send(f"You robbed {member.mention} and stole {a} coins from them!")
+    await update_bank(ctx.author, a)
+    await update_bank(member, -1*a)
+    
+@rob.error
+async def rob_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
+        embed.add_field(name = 'Stop robbing', value = "Bruh, your a Tusken Raider. Stop robbing so much")
+        embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
+        await ctx.send(embed)
+
+
+@client.command()
+async def load(ctx, extension):
+    if ZAN_ID != ctx.author.id:
+        await ctx.send("Only for bot devs")
+        return
+    client.load_extension(f"cogs.{extension}")
+
+@client.command()
+async def unload(ctx, extension):
+    if ZAN_ID != ctx.author.id:
+        await ctx.send("Only for bot devs")
+        return
+    client.unload_extension(f"cogs.{extension}")
+
+for filename in os.listdir("./cogs"):
+    if filename.endswith(".py"):
+        client.load_extension(f"cogs.{filename[:-3]}")
+
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
-50 Lines of Code = 27/09/2020   
+50 Lines of Code = 27/09/2020
 100 Lines of Code = 29/09/2020
 250 Lines of Code = 30/09/2020
 500 Lines of Code = 07/10/2020
 1000 Lines of Code = 19/10/2020
 1500 Lines of Code = 05/11/2020
 2000 Lines of Code = 11/11/2020
+5000 Lines of Code =
 '''
 
 client.loop.create_task(ch_pr())
