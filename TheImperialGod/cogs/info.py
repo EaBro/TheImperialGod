@@ -12,16 +12,6 @@ class Information(commands.Cog):
     async def on_ready(self):
         print("Information is ready")
     
-    @commands.command()
-    async def avatar(self, ctx, *, member : discord.Member = None):
-        if member == None:
-            await ctx.send('You need to provide a member!')
-            return
-        userAvatarUrl = member.avatar_url
-        embed=discord.Embed(title=f'{avamember} avatar!!')
-        embed.set_image(url=userAvatarUrl)
-        await ctx.send(embed=embed)
-    
     @commands.command(aliases = ["guild", "guildinfo", "si"])
     async def serverinfo(self, ctx):
         findbots = sum(1 for member in ctx.guild.members if member.bot)
@@ -72,6 +62,14 @@ class Information(commands.Cog):
         embed.set_footer(icon_url=member.avatar_url, text=f'Requested By: {ctx.author.name}')
         await ctx.send(embed=embed)
 
+    @commands.command()
+    async def whois(ctx, member : discord.Member = None):
+        if member == None:
+            member = ctx.author
+        em = discord.Embed(title = member.name, color = member.color)
+        em.add_field(name = "ID:", value = member.id)
+        em.set_thumbnail(url = member.avatar_url)
+        await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(Information(client))
