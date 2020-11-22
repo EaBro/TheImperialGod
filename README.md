@@ -9,6 +9,10 @@ Before touching the code and stuff please read till the end of the MD file. Ther
 
 You can choose whether or not you want to read CONTRIBUTING.md, as do it only if you want to contribute, as some of the code is hard for inexperienced programmers. And leave it if your new here, as first check out the bot!
 
+Once you have and if you like the public bot or the code then consider starring this repository. This not only helps out the contributors but the people who actually coded this bot. 
+Thanks and Regards,
+NightZan999
+
 ## Moderation
 Has advanced moderation features for all people! With using the concept of embeds and more! <br> Cool right, it also has automoderation features and that's customizable, which makes it perfect for you! <br>
 
@@ -74,9 +78,21 @@ But anyways, if you are interested in the public bot. Then you are in the curren
 
 Join [here](https://discord.gg/wsfC5u4)
 
-# Suggestions and More:
+## Suggestions and More:
 If you tested the bot and loved it, but thought you would want to give in some suggestions, please first don't make an issue. 
 
 Firstly you should simply, check BETA_FEATURES.md for some new things the bot might get, if your suggestion is an improvement first search for a similar suggestion in the issues, if there are none then make a new one. 
 
 Otherwise you also can suggest stuff in my discord server, so you could join it and make things easy!
+
+# Credits:
+**1. NightZan999:**
+The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. 
+**2. Dragonizedpizza:**
+The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation but even got the bot hosted and told me how it got hosted. Big thanks to him
+**3. Superzackx:**
+From helping NightZan999 with the website and making the full backend for the website and basically helping the full crew but also giving suggestion on the bot. Which are now implemented. 
+**4. Makiyu-py:**
+he helped in 2 commands...
+
+**Consider following most of these creators of the bot if you enjoy the public bot or the code which it relies on. Huge thanks if you do follow them**
