@@ -27,86 +27,6 @@ class Mod(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Mod commands Loaded!")
-    
-    @commands.command()
-    @has_permissions(kick_members = True)
-    async def kick(self, ctx, member : discord.Member, *, reason = None):
-        embed = discord.Embed(title=  f"{member.name} was kicked!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        embed.add_field(name = "Member getting kicked:", value = f"{member.mention}")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-        await ctx.send(embed=  embed)
-
-        try: #try to send a DM
-            await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
-        except: #if their DMs are closed
-            print(f"{member.name} has their DMs closed")
-        await member.kick(reason = reason)
-    
-    @kick.error
-    async def kick_error(self, ctx, error):
-        if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Kick Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Kick members Permissions Missing!")
-            await ctx.send(embed = embed)
-        if isinstance(error, BadArgument):
-            embed = discord.Embed(title = "Kick Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Tag a user to kick them!")
-            await ctx.send(embed = embed)
-
-    @commands.command()
-    @has_permissions(ban_members = True)
-    async def ban(self, ctx, member : discord.Member, *, reason = None):
-        embed = discord.Embed(title=  f"{member.name} was banned!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        embed.add_field(name = "Member getting banned:", value = f"{member.mention}")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-        await ctx.send(embed=  embed)
-
-        try: #try to send a DM
-            await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
-        except: #if their DMs are closed
-            print(f"{member.name} has their DMs closed")
-        await member.ban(reason = reason)
-
-    @ban.error
-    async def ban_error(self, ctx, error):
-        if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Ban Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Ban members Permissions Missing!")
-            await ctx.send(embed = embed)
-        if isinstance(error, BadArgument):
-            embed = discord.Embed(title = "Ban Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Tag a user to ban them!")
-            await ctx.send(embed = embed)
-
-    @commands.command()
-    @has_permissions(kick_members = True)
-    async def softban(self, ctx, member : discord.Member, *, reason = None):
-        embed = discord.Embed(title=  f"{member.name} was softbanned!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        embed.add_field(name = "Member getting softbanned:", value = f"{member.mention}")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-        await ctx.send(embed=  embed)
-
-        try: #try to send a DM
-            await member.send(f"You were softbanned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
-        except: #if their DMs are closed
-            print(f"{member.name} has their DMs closed")
-
-        await member.ban(reason = reason)
-        await member.unban()
-    
-    @softban.error
-    async def softban_error(self, ctx, error):
-        if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Kick members Permissions Missing!")
-            await ctx.send(embed = embed)
-        if isinstance(error, BadArgument):
-            embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Tag a user to softban them!")
-            await ctx.send(embed = embed)
 
     @commands.command()
     @has_permissions(manage_roles = True)
@@ -121,11 +41,11 @@ class Mod(commands.Cog):
             await ctx.send("Ping a role next time!")
             return
         
-        await member.add_roles(role.id)
-        embed = discord.Embed(title=  f"{member.name} was softbanned!", color = ctx.author.color)
+        await member.add_roles(role)
+        embed = discord.Embed(title=  f"{member.name} has got a new role!!", color = ctx.author.color)
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = f"Member getting {role.name}:", value = f"{member.mention}")
-        embed.add_field(name = "Role:", value = f"`{role.mention}`")
+        embed.add_field(name = "Role:", value = f"`{role.name}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
         await ctx.send(embed=  embed)
 
@@ -158,7 +78,7 @@ class Mod(commands.Cog):
             await ctx.send("Ping a role next time!")
             return
         
-        await member.remove_roles(role.id)
+        await member.remove_roles(role)
         embed = discord.Embed(title=  f"{member.name} was softbanned!", color = ctx.author.color)
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = f"Member losing {role.name}:", value = f"{member.mention}")
@@ -206,7 +126,7 @@ class Mod(commands.Cog):
         embed.add_field(name = "Moderator:", inline = True, value = f"`{ctx.author.name}`")
         embed.add_field(name = "Reason:", inline = True, value = f"`Spam`")
         embed.add_field(name = "Channel:", value = f"`{channel.mention}`")
-        await ctx.send(embed = embed)
+        await channel.send(embed = embed)
 
     @lock.error
     async def lock_error(self, ctx, error):
@@ -344,6 +264,20 @@ class Mod(commands.Cog):
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
         await ctx.send(embed = embed)
+
+    @commands.command()
+    @has_permissions(manage_channels = True)
+    async def count(ctx, channel: discord.TextChannel = None):
+        channel = channel or ctx.channel #or since sometimes people have it locked!
+        messages = await channel.history(limit = None).flatten()
+        count = len(messages)
+
+        embed = discord.Embed(
+        title="Total Messages",
+        colour=ctx.author.color,
+        description=f"There were {count} messages in {channel.mention}")
+
+        await ctx.send(embed=embed)
 
 def setup(client):
     client.add_cog(Mod(client))
