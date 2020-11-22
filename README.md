@@ -87,12 +87,12 @@ Otherwise you also can suggest stuff in my discord server, so you could join it 
 
 # Credits:
 **1. NightZan999:**
-The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. 
+The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. <br>
 **2. Dragonizedpizza:**
 The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation but even got the bot hosted and told me how it got hosted. Big thanks to him
-**3. Superzackx:**
+**3. Superzackx:**<br>
 From helping NightZan999 with the website and making the full backend for the website and basically helping the full crew but also giving suggestion on the bot. Which are now implemented. 
-**4. Makiyu-py:**
+**4. Makiyu-py:**<br>
 he helped in 2 commands...
 
 **Consider following most of these creators of the bot if you enjoy the public bot or the code which it relies on. Huge thanks if you do follow them**
