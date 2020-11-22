@@ -939,118 +939,9 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         print("Offline again, f in the chat for the discord devs!")
 
 
-#moderation
-@client.command()
-@commands.has_permissions(manage_channels = True)
-async def count(ctx, channel: discord.TextChannel = None):
-    channel = channel or ctx.channel #or since sometimes people have it locked!
-    messages = await channel.history(limit = None).flatten()
-    count = len(messages)
-
-    embed = discord.Embed(
-    title="Total Messages",
-    colour=ctx.author.color,
-    description=f"There were {count} messages in {channel.mention}")
-
-    await ctx.send(embed=embed)
-
-
 @client.command()
 async def support(ctx):
     await ctx.send("Please vote for the bot on top.gg\nLink: ")
-
-#Hosting Giveaways
-#function needed to convert time:
-def convert(time):
-    pos = ["s","m","h","d"]
-
-    time_dict = {"s" : 1, "m" : 60, "h" : 3600 , "d" : 3600*24}
-
-    unit = time[-1]
-
-    if unit not in pos:
-        return -1
-    try:
-        val = int(time[:-1])
-    except:
-        return -2
-
-    return val * time_dict[unit]
-
-#making the real command
-@client.command(aliases = ['gstart', 'g_host', 'gawstart', 'giveawaystart', 'gcreate'])
-@commands.has_guild_permissions(manage_channels = True, manage_roles = True, manage_messages = True)
-async def giveaway(ctx):
-    await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
-
-    questions = ["Which channel should it be hosted in?",
-                "What should be the duration of the giveaway? (s|m|h|d)",
-                "What is the prize of the giveaway?",
-    ]
-
-    answers = []
-
-    def check(m):
-        return m.author == ctx.author and m.channel == ctx.channel
-
-    for i in questions:
-        await ctx.send(i)
-
-        try:
-            msg = await client.wait_for('message', timeout=30.0, check=check)
-        except asyncio.TimeoutError:
-            await ctx.send('You didn\'t answer in time, please be quicker next time!')
-            return
-        else:
-            answers.append(msg.content)
-    try:
-        c_id = int(answers[0][2:-1])
-    except:
-        await ctx.send(f"You didn't mention a channel properly. Do it like this {ctx.channel.mention} next time.")
-        return
-
-    channel = client.get_channel(c_id)
-    time = convert(answers[1])
-
-    if time == -1:
-        await ctx.send(f"You didn't answer the time with a proper unit. Use (s|m|h|d) next time!")
-        return
-    elif time == -2:
-        await ctx.send(f"The time must be an integer. Please enter an integer next time")
-        return
-
-    prize = answers[2]
-
-    await ctx.send(f"The Giveaway will be in {channel.mention} and will last {answers[1]}!")
-
-
-    embed = discord.Embed(title = "Giveaway!", description = f"{prize}", color = ctx.author.color)
-    embed.add_field(name = "Hosted by:", value = ctx.author.mention)
-    embed.set_footer(text = f"Ends {answers[1]} from now!")
-
-    my_msg = await channel.send(embed = embed)
-    await my_msg.add_reaction("🎉")
-
-    await asyncio.sleep(time)
-    new_msg = await channel.fetch_message(my_msg.id)
-
-    users = await new_msg.reactions[0].users().flatten()
-    users.pop(users.index(client.user))
-    try:
-        winner = random.choice(users)
-    except:
-        await ctx.send("No-one entered the giveaway can't decide winner")
-        return
-
-    with open("data/automod.json", "r") as f:
-        guilds = json.load(f)
-
-@giveaway.error
-async def giveaway_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        embed = discord.Embed(title = "Giveaway failed!", color = ctx.author.color)
-        embed.add_field(name = 'Reason:', value = "Some perms are missing")
-        await ctx.send(embed = embed)
 
 @client.command()
 @commands.has_permissions(manage_channels = True)
@@ -1068,28 +959,6 @@ async def announce_error(ctx, error):
         embed.add_field(name = 'Reason:', value = "Some perms are missing")
         await ctx.send(embed = embed)
 
-@client.command()
-@commands.has_permissions(manage_roles=  True)
-async def reroll(ctx, channel : discord.TextChannel, id_ : int):
-    try:
-        new_msg = await channel.fetch_message(id_)
-    except:
-        await ctx.send("The id was entered incorrectly.")
-        return
-
-    users = await new_msg.reactions[0].users().flatten()
-    users.pop(users.index(client.user))
-
-    winner = random.choice(users)
-    await channel.send(f"Congratulations! The new winner is {winner.mention}.!")
-
-
-@reroll.error
-async def reroll_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        embed = discord.Embed(title = "Giveaway failed!", color = ctx.author.color)
-        embed.add_field(name = 'Reason:', value = "Some perms are missing")
-        await ctx.send(embed = embed)
 
 @client.command(pass_context=True, aliases=['joi'])
 async def join(ctx):
@@ -1671,6 +1540,7 @@ async def load(ctx, extension):
         await ctx.send("Only for bot devs")
         return
     client.load_extension(f"cogs.{extension}")
+    await ctx.send("loaded the cog...")
 
 @client.command()
 async def unload(ctx, extension):
@@ -1678,8 +1548,102 @@ async def unload(ctx, extension):
         await ctx.send("Only for bot devs")
         return
     client.unload_extension(f"cogs.{extension}")
+    await ctx.send('unloaded the cog...')
 
+@client.command()
+@has_permissions(kick_members = True)
+async def kick(ctx, member : discord.Member, *, reason = None):
+    embed = discord.Embed(title=  f"{member.name} was kicked!", color = ctx.author.color)
+    embed.add_field(name = "Reason:", value = f"`{reason}`")
+    embed.add_field(name = "Member getting kicked:", value = f"{member.mention}")
+    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+    await ctx.send(embed=  embed)
+    try: #try to send a DM
+        await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
+    except: #if their DMs are closed
+        print(f"{member.name} has their DMs closed")
+    await member.kick(reason = reason)
+    
+@kick.error
+async def kick_error(ctx, error):
+    if isinstance(error, MissingPermissions):
+        embed = discord.Embed(title = "Kick Failed!", color = ctx.author.color)
+        embed.add_field(name = "Reason:", value = f"Kick members Permissions Missing!")
+        await ctx.send(embed = embed)
+    if isinstance(error, BadArgument):
+        embed = discord.Embed(title = "Kick Failed!", color = ctx.author.color)
+        embed.add_field(name = "Reason:", value = f"Tag a user to kick them!")
+        await ctx.send(embed = embed)
 
+@client.command()
+@has_permissions(ban_members = True)
+async def ban(ctx, member : discord.Member, *, reason = None):
+    embed = discord.Embed(title=  f"{member.name} was banned!", color = ctx.author.color)
+    embed.add_field(name = "Reason:", value = f"`{reason}`")
+    embed.add_field(name = "Member getting banned:", value = f"{member.mention}")
+    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+    await ctx.send(embed=  embed)
+    try: #try to send a DM
+        await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
+    except: #if their DMs are closed
+        print(f"{member.name} has their DMs closed")
+    await member.ban(reason = reason)
+    
+@ban.error
+async def ban_error(ctx, error):
+    if isinstance(error, MissingPermissions):
+        embed = discord.Embed(title = "Ban Failed!", color = ctx.author.color)
+        embed.add_field(name = "Reason:", value = f"Ban members Permissions Missing!")
+        await ctx.send(embed = embed)
+    if isinstance(error, BadArgument):
+        embed = discord.Embed(title = "Ban Failed!", color = ctx.author.color)
+        embed.add_field(name = "Reason:", value = f"Tag a user to ban them!")
+        await ctx.send(embed = embed)
+
+@client.command()
+@has_permissions(ban_members = True)
+async def softban(ctx, member : discord.Member, *, reason = None):
+    embed = discord.Embed(title=  f"{member.name} was softbanned!", color = ctx.author.color)
+    embed.add_field(name = "Reason:", value = f"`{reason}`")
+    embed.add_field(name = "Member getting softbanned:", value = f"{member.mention}")
+    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+    await ctx.send(embed=  embed)
+    try: #try to send a DM
+        await member.send(f"You were softbanned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
+    except: #if their DMs are closed
+        print(f"{member.name} has their DMs closed")
+    await member.ban(reason = reason)
+    await ctx.guild.unban(member)
+
+@softban.error
+async def softban_error(ctx, error):
+    if isinstance(error, MissingPermissions):
+        embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
+        embed.add_field(name = "Reason:", value = f"Softban members Permissions Missing!")
+        await ctx.send(embed = embed)
+    if isinstance(error, BadArgument):
+        embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
+        embed.add_field(name = "Reason:", value = f"Tag a user to softban them!")
+        await ctx.send(embed = embed)
+
+@client.command()
+@has_permissions(ban_members = True)
+async def unban(ctx, member : str, *, reason = None):
+    banned_users = await ctx.guild.bans()
+    member_name, member_disc = member.split("#")
+
+    for banned_entry in banned_users:
+        user = banned_entry.user
+
+        if (user.name, user.discriminator) == (member_name, member_disc):
+            await ctx.guild.unban(user)
+            embed = discord.Embed(title = f"{member_name} was unbanned!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = f"`{reason}`")
+            embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
+            await ctx.send(embed = embed)
+            return
+
+    await ctx.send("Not a valid user, try it like this:\`imp unban name#disc`")
 
 '''
 Some fun data about this code:
