@@ -28,19 +28,20 @@ import os
 import math
 import json
 import traceback
-#image manipulation
-from PIL import Image
-from io import BytesIO
 # reddit
 import praw
 
-with open("config.json", "r") as f:
-    config = json.load(f)
+def load_config():
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    return config # loading config.json
 
 def load_cogs(): #loading all our cogs
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             client.load_extension(f"cogs.{filename[:-3]}")
+
+config = load_config()
 
 BOT_TOKEN = config["token"]
 #constants
@@ -125,20 +126,21 @@ async def help(ctx, command = None):
         'Daily',
         'Weekly'
         ]
-    a = True
     info_commands = [
         "channelinfo",
         "botinfo",
         "serverinfo",
         "userinfo"
     ]
-    if a:
+    async with ctx.typing():
+        await asyncio.sleep(2)
         if command == None:
             embed = discord.Embed(title = "Help", color = ctx.author.color, description = "Type `imp help` and then a command or category for more information for even more information!")
             embed.add_field(name = f":dollar: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
             embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Warn`, `nick`, `setmuterole`")
             embed.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
-            embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `wanted`, `quote`, `osay`, `nick`")
+            embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`")
+            embed.add_field(name = f"Image Module [2]: ", value = f"`wanted`, `crown`")
             embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`")
             embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
             embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`")
@@ -991,77 +993,6 @@ async def leave(ctx):
         await ctx.send("Don't think I am in a voice channel")
 
 @client.command()
-@commands.has_permissions(administrator = True)
-async def enableautomod(ctx):
-    with open("data/automod.json", "r") as f:
-        guilds = json.load(f)
-
-    if ctx.guild.id in guilds:
-        guilds[str(ctx.guild.id)]["automod"] = "true"
-    else:
-        guilds[str(ctx.guild.id)] = {}
-        guilds[str(ctx.guild.id)]["automod"] = "true"
-
-    embed = discord.Embed(title = 'Change in Server Settings', color = ctx.author.color)
-    embed.add_field(name = 'Automod:', value = "`Automod = True`")
-    await ctx.send(embed = embed)
-
-    with open("data/automod.json", "w") as f:
-        json.dump(guilds, f)
-
-@enableautomod.error
-async def enableautomod_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("Bruh you really think you can use that?")
-
-@client.command()
-@commands.has_permissions(administrator = True)
-async def disableautomod(ctx):
-    with open("data/automod.json", "r") as f:
-        guilds = json.load(f)
-
-    if ctx.guild.id in guilds:
-        guilds[str(ctx.guild.id)]["automod"] = "false"
-    else:
-        guilds[str(ctx.guild.id)] = {}
-        guilds[str(ctx.guild.id)]["automod"] = "false"
-
-    embed = discord.Embed(title = 'Change in Server Settings', color = ctx.author.color)
-    embed.add_field(name = 'Automod:', value = "`Automod = False`")
-    await ctx.send(embed = embed)
-
-    with open("data/automod.json", "w") as f:
-        json.dump(guilds, f)
-
-@client.command()
-@commands.has_permissions(administrator = True)
-async def checkautomod(ctx):
-    with open("data/automod.json", "r") as f:
-        guilds = json.load(f)
-
-    if ctx.guild.id in guilds:
-        if guilds[str(ctx.guild.id)]["automod"] == "true":
-            embed = discord.Embed(title = "Automod Status", color = ctx.author.color)
-            embed.add_field(name = "Status:", value = "`True`")
-
-        if guilds[str(ctx.guild.id)]["automod"] == "false":
-            embed = discord.Embed(title = "Automod Status", color = ctx.author.color)
-            embed.add_field(name = "Status:", value = "`False`")
-
-        await ctx.send(embed = embed)
-
-@checkautomod.error
-async def checkautomod_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("You really think you can use that?")
-
-
-@disableautomod.error
-async def disableautomod_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("Bruh you really think you can use that?")
-
-@client.command()
 async def dice(ctx, amount : int):
     user = ctx.author
     await open_account(ctx.author)
@@ -1087,27 +1018,6 @@ async def dice(ctx, amount : int):
         await update_bank(ctx.author, -1*amount, "wallet")
     elif user_roll == comp_roll:
         await ctx.send("A tie! Not bad so you get your money back!")
-
-@client.command()
-async def botinfo(ctx):
-    embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
-    description = "TheImperialGod, is an awesome customizable discord bot with awesome features. Check some information about the bot below!"
-    )
-    embed.add_field(name = "First went live on:", value = "1 / 10 / 2020")
-    embed.add_field(name = "Started coding on:", value = "26 / 9 / 2020")
-    embed.add_field(name = "Creator", value = "NightZan999#0194")
-    embed.add_field(name = 'Hosting', value = "DanBot Hosting")
-    embed.add_field(name = "Servers:", value = f'`{len(client.guilds)}`')
-    embed.add_field(name = 'Customizable Settings:', value = "Automoderation and utilities!")
-    try:
-        embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
-    except:
-        pass
-    finally:
-        embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
-        embed.add_field(name = "Number of Commands:", value = f"`62` (including special owner commands)")
-        embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : JSON\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
-        await ctx.send(embed = embed)
 
 @client.command()
 async def candy(ctx):

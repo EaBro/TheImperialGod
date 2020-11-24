@@ -3,6 +3,7 @@ from discord.ext import commands
 import traceback
 import random
 import datetime
+import json
 
 class Information(commands.Cog):
     def __init__(self, client):
@@ -15,7 +16,9 @@ class Information(commands.Cog):
     @commands.command(aliases = ["guild", "guildinfo", "si"])
     async def serverinfo(self, ctx):
         findbots = sum(1 for member in ctx.guild.members if member.bot)
-        embed = discord.Embed(title = 'Infomation about ' + ctx.guild.name + '.', colour = discord.Colour.from_rgb(54,151,255))
+        roles = sum(1 for role in ctx.guild.roles)
+        
+        embed = discord.Embed(title = 'Infomation about ' + ctx.guild.name + '.', colour = ctx.author.color)
         embed.set_thumbnail(url = str(ctx.guild.icon_url))
         embed.add_field(name = "Guild's name: ", value = ctx.guild.name)
         embed.add_field(name = "Guild's owner: ", value = str(ctx.guild.owner))
@@ -24,13 +27,13 @@ class Information(commands.Cog):
         embed.add_field(name = "Guild's member count: ", value = str(ctx.guild.member_count))
         embed.add_field(name="Bots", value=findbots, inline=True)
         embed.add_field(name = "Guild created at: ", value = str(ctx.guild.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
+        embed.add_field(name = "Number of Roles:", value = f"`{roles}`")
         await ctx.send(embed =  embed)
     
     @commands.command(aliases = ["ci"])
     async def channelinfo(self, ctx, channel : discord.TextChannel = None):
         if channel == None:
             channel = ctx.channel
-
         nsfw = self.bot.get_channel(channel.id).is_nsfw()
         news = self.bot.get_channel(channel.id).is_news()
         embed = discord.Embed(title = 'Channel Infromation: ' + str(channel),
@@ -70,6 +73,32 @@ class Information(commands.Cog):
         em.add_field(name = "ID:", value = member.id)
         em.set_thumbnail(url = member.avatar_url)
         await ctx.send(embed = em)
+    
+    
+    @commands.command()
+    async def botinfo(ctx):
+        with open("./data/emojis.json", "r") as f:
+            emojis = json.load(f)
+        embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
+        description = "TheImperialGod, is an awesome customizable discord bot with awesome features. Check some information about the bot below!"
+        )
+        embed.add_field(name = "First went live on:", value = "1 / 10 / 2020")
+        embed.add_field(name = "Started coding on:", value = "26 / 9 / 2020")
+        embed.add_field(name = f"Creator", value = f"NightZan999#0194 {emojis["fun"]}")
+        embed.add_field(name = 'Hosting', value = f"DanBot Hosting {emojis["success"]}")
+        embed.add_field(name = "Servers:", value = f'`{len(client.guilds)}` {emojis["fail"]} ')
+        embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! {emojis["success"]}")
+        embed.add_field(name = "Database:", value = "SQLite3")
+        try:
+            embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
+        except:
+            pass
+        finally:
+            embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
+            embed.add_field(name = "Number of Commands:", value = f"`62` (including special owner commands)")
+            embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
+            await ctx.send(embed = embed)
+
 
 def setup(client):
     client.add_cog(Information(client))

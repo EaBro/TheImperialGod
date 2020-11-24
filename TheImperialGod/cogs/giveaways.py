@@ -3,6 +3,7 @@ from discord.ext import commands
 import asyncio
 import time
 import datetime
+import json
 
 class Giveaways(commands.Cog):
     def __init__(self, client):
