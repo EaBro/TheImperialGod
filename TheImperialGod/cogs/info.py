@@ -76,7 +76,7 @@ class Information(commands.Cog):
     
     
     @commands.command()
-    async def botinfo(ctx):
+    async def botinfo(self, ctx):
         with open("./data/emojis.json", "r") as f:
             emojis = json.load(f)
         embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
