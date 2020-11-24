@@ -84,21 +84,16 @@ class Information(commands.Cog):
         )
         embed.add_field(name = "First went live on:", value = "1 / 10 / 2020")
         embed.add_field(name = "Started coding on:", value = "26 / 9 / 2020")
-        embed.add_field(name = f"Creator", value = f"NightZan999#0194 {emojis["fun"]}")
-        embed.add_field(name = 'Hosting', value = f"DanBot Hosting {emojis["success"]}")
-        embed.add_field(name = "Servers:", value = f'`{len(client.guilds)}` {emojis["fail"]} ')
-        embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! {emojis["success"]}")
+        embed.add_field(name = f"Creator", value = f"NightZan999#0194")
+        embed.add_field(name = 'Hosting', value = f"DanBot Hosting ")
+        embed.add_field(name = "Servers:", value = f'`{len(client.guilds)}`')
+        embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
-        try:
-            embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
-        except:
-            pass
-        finally:
-            embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
-            embed.add_field(name = "Number of Commands:", value = f"`62` (including special owner commands)")
-            embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
-            await ctx.send(embed = embed)
-
+        embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
+        embed.add_field(name = "Number of Commands:", value = f"`70` (including special owner commands)")
+        embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
+        embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
+        await ctx.send(embed = embed)
 
 def setup(client):
     client.add_cog(Information(client))

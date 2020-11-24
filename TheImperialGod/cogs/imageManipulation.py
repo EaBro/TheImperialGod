@@ -32,4 +32,4 @@ class ImageManipulation(commands.Cog):
     
 
 def setup(client):
-    client.add_cog(imageManipulation(client))
+    client.add_cog(ImageManipulation(client))

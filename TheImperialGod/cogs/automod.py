@@ -27,7 +27,7 @@ class Automod(commands.Cog):
             guilds[str(ctx.guild.id)] = {}
             guilds[str(ctx.guild.id)]["automod"] = "true"
 
-        embed = discord.Embed(title = f"{emojis["success"]} change in server settings!", color = ctx.author.color,
+        embed = discord.Embed(title = f"<:success:761297849475399710> change in server settings!", color = ctx.author.color,
         description = "An awesome moderator, enabled automod. Beware no more **bad words!**"
         )
         embed.add_field(name = "Automod Status:", value = f"`Automod = True`")
@@ -58,7 +58,7 @@ class Automod(commands.Cog):
             guilds[str(ctx.guild.id)] = {}
             guilds[str(ctx.guild.id)]["automod"] = "false"
 
-        embed = discord.Embed(title = f'{emojis['success']} Change in Server Settings', color = ctx.author.color)
+        embed = discord.Embed(title = f'<:success:761297849475399710> Change in Server Settings', color = ctx.author.color)
         embed.add_field(name = 'Automod:', value = "`Automod = False`")
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
@@ -86,10 +86,10 @@ class Automod(commands.Cog):
                 embed.add_field(name = "Automod Status:", value = f"`False`")
             await ctx.send(embed = embed)
         else:
-            embed.add_field(name = "Automod Status:", value = f"`Not set up!`")
+            embed.add_field(name = "Automod Status:", value = f"`<:fail:761292267360485378> Not set up!`")
             embed.add_field(name = "What to do?", value = "Ask a mod to set this up!")
             await ctx.send(embed = embed)
-        
     
+
 def setup(client):  
     client.add_cog(Automod(client))

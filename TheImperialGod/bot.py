@@ -31,17 +31,17 @@ import traceback
 # reddit
 import praw
 
-def load_config():
-    with open("config.json", "r") as f:
-        config = json.load(f)
-    return config # loading config.json
+banned_userids = [
+    758169063871741984
+]
 
 def load_cogs(): #loading all our cogs
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
             client.load_extension(f"cogs.{filename[:-3]}")
 
-config = load_config()
+with open("config.json", "r") as f:
+    config = json.load(f)
 
 BOT_TOKEN = config["token"]
 #constants
@@ -140,6 +140,7 @@ async def help(ctx, command = None):
             embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Warn`, `nick`, `setmuterole`")
             embed.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
             embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`")
+            embed.add_field(name = f"<:pepethink:779232211336822804> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
             embed.add_field(name = f"Image Module [2]: ", value = f"`wanted`, `crown`")
             embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`")
             embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
@@ -519,7 +520,7 @@ async def help(ctx, command = None):
                 embed = discord.Embed(title = "Help Nick", color = ctx.author.color)
                 embed.add_field(name = "Description:", value = "Change your nickname boi!")
                 await ctx.send(embed = embed)
-    
+
 
 #when an error occurs
 @client.command()
@@ -894,6 +895,9 @@ async def open_account(user):
     with open("data/mainbank.json", "r") as f:
         users = json.load(f)
 
+    if user.id in banned_userids:
+        return False
+
     if str(user.id) in users:
         return False
     else:
@@ -913,6 +917,9 @@ async def get_bank_data():
 async def update_bank(user, change = 0, mode = "wallet"):
     users = await get_bank_data()
     users[str(user.id)][mode] = users[str(user.id)][mode] + change
+    
+    if user.id in banned_userids:
+        return
 
     with open("data/mainbank.json", "w") as f:
         json.dump(users, f)
@@ -1071,23 +1078,6 @@ async def buy(ctx,item,amount = 1):
 
 
     await ctx.send(f"You just bought {amount} {item}")
-
-@client.command()
-async def wanted(ctx, user : discord.Member = None):
-    if user == None:
-        user = ctx.author
-
-    wanted = Image.open("assets/wanted.jpg")
-    asset = user.avatar_url_as(size = 128)
-
-    data = BytesIO(await asset.read())
-    pfp = Image.open(data)
-
-    pfp = pfp.resize((88, 88))
-    wanted.paste(pfp, (47, 84))
-
-    wanted.save("assets/profile.jpg")
-    await ctx.send(file = discord.File("assets/profile.jpg"))
 
 @client.command(aliases = ['inv', 'inventory'])
 async def bag(ctx):
@@ -1535,25 +1525,6 @@ async def softban_error(ctx, error):
         embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
         embed.add_field(name = "Reason:", value = f"Tag a user to softban them!")
         await ctx.send(embed = embed)
-
-@client.command()
-@has_permissions(ban_members = True)
-async def unban(ctx, member : str, *, reason = None):
-    banned_users = await ctx.guild.bans()
-    member_name, member_disc = member.split("#")
-
-    for banned_entry in banned_users:
-        user = banned_entry.user
-
-        if (user.name, user.discriminator) == (member_name, member_disc):
-            await ctx.guild.unban(user)
-            embed = discord.Embed(title = f"{member_name} was unbanned!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"`{reason}`")
-            embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-            await ctx.send(embed = embed)
-            return
-
-    await ctx.send("Not a valid user, try it like this:\`imp unban name#disc`")
 
 '''
 Some fun data about this code:
