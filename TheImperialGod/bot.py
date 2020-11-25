@@ -52,10 +52,10 @@ PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
 LINES_OF_CODE = 500
 DATABASES = 'data/mainbank.json'
 PACKAGING_DATA = "package.json"
-BOT_PREFIX = "imp "
+BOT_PREFIX = config["prefix"]
 ZAN_ID = 575706831192719370
 
-client = commands.Bot(command_prefix = "imp ", case_insensitive = True) #making a client object
+client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
 reddit = praw.Reddit(
     client_id = 'NY_kPmfmJV1VAg',
     client_secret = "GNKjyvMHErF9yYqZGrhx6MxG55WtVw",
@@ -80,7 +80,6 @@ async def on_ready():
 @client.remove_command("help")
 @client.command()
 async def help(ctx, command = None):
-    prefix = "imp "
     utils_commands = [
     'Coinflip',
         'Random_Number',
