@@ -57,9 +57,20 @@ But GIVE THE CREDITS, if you don't you can be doing illegal activity due to the 
 2. Then download the bot files either by downloading as a zip in github or doing `git clone https://github.com/NightZan999/TheImperialGod`, make sure you have git installed and the github CLI (Client Line Interface)
 3. Then unzip the zipped folder
 4. Then go to cmd of that directory and type `pip install -r requirements.txt`
-5. Then immediately go to cmd and type `python bot.py`
-6. The bot is running and use the invite link to invite it to your server, replace the client id with your bots client id. 
-7. Enjoy the bot! <br>
+**5. Okay now create a file in the same directory as bot.py and name it `config.json`**
+In that config.json file simply type in this code:
+```
+{
+  "token" : "your-token-here",
+  "prefix" : "botprefix",
+  "client.id" : "yourclientid"
+}
+```
+Replace all of that with your correct data, and it should be working
+
+6. Then immediately go to cmd and type `python bot.py`
+7. The bot is running and use the invite link to invite it to your server, replace the client id with your bots client id. 
+8. Enjoy the bot! <br>
 **Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WONT work!
 
 Thanks for your patience.
