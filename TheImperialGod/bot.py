@@ -77,6 +77,40 @@ async def on_ready():
     print("Username: ", client.user.name)
     print("User ID: ", client.user.id)
 
+filtered_words = ['idiot', 'Idiots', "DIE", "ass", "butt", "Fool", "shit", "bitch"]
+
+@client.event
+async def on_message(msg):
+    with open("data/automod.json", "r") as f:
+        guilds = json.load(f)
+
+    ctx = await client.get_context(msg)
+
+    try:
+        if guilds[str(ctx.guild.id)]["automod"] == "true":
+            for word in filtered_words:
+                if word in msg.content.lower():
+                    warns = await read_json("data/warns.json")
+                    await msg.delete()
+    except:
+        pass
+
+    try:
+        if msg.mentions[0] == client.user:
+            await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
+        elif client.user in msg.mentions:
+            for i in range(0, len(msg.mentions)):
+                if msg.mentions[i] == client.user:
+                    await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
+                    break
+        else:
+            pass
+    except:
+        pass
+
+
+    await client.process_commands(msg)
+
 @client.remove_command("help")
 @client.command()
 async def help(ctx, command = None):
@@ -528,68 +562,6 @@ async def invite(ctx):
     embed.add_field(name = "Here:", value = f"[Click me]({INVITE_LINK})")
     await ctx.send(embed = embed)
 
-@client.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
-        await ctx.send("Command not found!")
-    if isinstance(error, commands.NoPrivateMessage):
-        await ctx.author.send('This command cannot be used in private messages.')
-    elif isinstance(error, commands.DisabledCommand):
-        await ctx.author.send('Sorry. This command is disabled and cannot be used.')
-    elif isinstance(error, commands.CommandInvokeError):
-        pass
-
-filtered_words = ['idiot', 'Idiots', "DIE", "ass", "butt", "Fool", "shit", "bitch"]
-
-@client.event
-async def on_message(msg):
-    with open("data/automod.json", "r") as f:
-        guilds = json.load(f)
-
-    ctx = await client.get_context(msg)
-
-    try:
-        if guilds[str(ctx.guild.id)]["automod"] == "true":
-            for word in filtered_words:
-                if word in msg.content.lower():
-                    warns = await read_json("data/warns.json")
-                    await msg.delete()
-    except:
-        pass
-
-    try:
-        if msg.mentions[0] == client.user:
-            await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
-        elif client.user in msg.mentions:
-            for i in range(0, len(msg.mentions)):
-                if msg.mentions[i] == client.user:
-                    await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
-                    break
-        else:
-            pass
-    except:
-        pass
-
-
-    await client.process_commands(msg)
-
-@client.event
-async def on_guild_join(guild):
-    ctx = await client.get_context(guild)
-    with open("data/guilds.json", "r") as f:
-        guilds = json.load(f)
-
-    if guild.name in guilds:
-        print("Joined old server!")
-    else:
-        guilds[str(guild.name)] = {}
-        guilds[str(guild.name)]["guild_id"] = guild.id
-        print("Joined a new SERVER!")
-
-    with open("data/guilds.json", "w") as f:
-        json.dump(guilds, f)
-
-
 @client.command()
 async def guilds(ctx):
     if ctx.author.id != 575706831192719370:
@@ -621,6 +593,36 @@ async def bal(ctx, member : discord.Member = None):
     embed.add_field(name = "Bank Balance", value = f"`{bank_amt}`", inline = False)
     embed.add_field(name = "Total Balance", value = f"`{bank_amt + wallet_amt}`")
     await ctx.send(embed = embed)
+
+@client.command()
+@commands.cooldown(1, 180, commands.BucketType.user) #I dont want alt spams
+async def rob(ctx, member : discord.Member):
+    await open_account(ctx.author) #open the givers account
+    await open_account(member) #and the receivers
+
+    bal = await update_bank(member)
+
+    if bal[0] < 500:
+        await ctx.send("Not worth it, the victim has less than 500 coins")
+        return
+
+    if users[str(ctx.author.id)]["wallet"] < 1000:
+        await ctx.send("You need 1000 coins to rob someone")
+        return
+
+    a = random.randint(0, bal[0])
+
+    await ctx.send(f"You robbed {member.mention} and stole {a} coins from them!")
+    await update_bank(ctx.author, a)
+    await update_bank(member, -1*a)
+    
+@rob.error
+async def rob_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
+        embed.add_field(name = 'Stop robbing', value = "Bruh, your a Tusken Raider. Stop robbing so much")
+        embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
+        await ctx.send(embed)
 
 @client.command()
 @commands.cooldown(1, 15, commands.BucketType.user) #has a cooldown
@@ -1402,36 +1404,6 @@ async def osay(ctx, *, args : str):
     await ctx.send(embed = embed)
 
 
-@client.command()
-@commands.cooldown(1, 180, commands.BucketType.user) #I dont want alt spams
-async def rob(ctx, member : discord.Member):
-    await open_account(ctx.author) #open the givers account
-    await open_account(member) #and the receivers
-
-    bal = await update_bank(member)
-
-    if bal[0] < 500:
-        await ctx.send("Not worth it, the victim has less than 500 coins")
-        return
-
-    if users[str(ctx.author.id)]["wallet"] < 1000:
-        await ctx.send("You need 1000 coins to rob someone")
-        return
-
-    a = random.randint(0, bal[0])
-
-    await ctx.send(f"You robbed {member.mention} and stole {a} coins from them!")
-    await update_bank(ctx.author, a)
-    await update_bank(member, -1*a)
-    
-@rob.error
-async def rob_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
-        embed.add_field(name = 'Stop robbing', value = "Bruh, your a Tusken Raider. Stop robbing so much")
-        embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
-        await ctx.send(embed)
-
 
 @client.command()
 async def load(ctx, extension):
@@ -1449,81 +1421,6 @@ async def unload(ctx, extension):
     client.unload_extension(f"cogs.{extension}")
     await ctx.send('unloaded the cog...')
 
-@client.command()
-@has_permissions(kick_members = True)
-async def kick(ctx, member : discord.Member, *, reason = None):
-    embed = discord.Embed(title=  f"{member.name} was kicked!", color = ctx.author.color)
-    embed.add_field(name = "Reason:", value = f"`{reason}`")
-    embed.add_field(name = "Member getting kicked:", value = f"{member.mention}")
-    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-    await ctx.send(embed=  embed)
-    try: #try to send a DM
-        await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
-    except: #if their DMs are closed
-        print(f"{member.name} has their DMs closed")
-    await member.kick(reason = reason)
-    
-@kick.error
-async def kick_error(ctx, error):
-    if isinstance(error, MissingPermissions):
-        embed = discord.Embed(title = "Kick Failed!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"Kick members Permissions Missing!")
-        await ctx.send(embed = embed)
-    if isinstance(error, BadArgument):
-        embed = discord.Embed(title = "Kick Failed!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"Tag a user to kick them!")
-        await ctx.send(embed = embed)
-
-@client.command()
-@has_permissions(ban_members = True)
-async def ban(ctx, member : discord.Member, *, reason = None):
-    embed = discord.Embed(title=  f"{member.name} was banned!", color = ctx.author.color)
-    embed.add_field(name = "Reason:", value = f"`{reason}`")
-    embed.add_field(name = "Member getting banned:", value = f"{member.mention}")
-    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-    await ctx.send(embed=  embed)
-    try: #try to send a DM
-        await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
-    except: #if their DMs are closed
-        print(f"{member.name} has their DMs closed")
-    await member.ban(reason = reason)
-    
-@ban.error
-async def ban_error(ctx, error):
-    if isinstance(error, MissingPermissions):
-        embed = discord.Embed(title = "Ban Failed!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"Ban members Permissions Missing!")
-        await ctx.send(embed = embed)
-    if isinstance(error, BadArgument):
-        embed = discord.Embed(title = "Ban Failed!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"Tag a user to ban them!")
-        await ctx.send(embed = embed)
-
-@client.command()
-@has_permissions(ban_members = True)
-async def softban(ctx, member : discord.Member, *, reason = None):
-    embed = discord.Embed(title=  f"{member.name} was softbanned!", color = ctx.author.color)
-    embed.add_field(name = "Reason:", value = f"`{reason}`")
-    embed.add_field(name = "Member getting softbanned:", value = f"{member.mention}")
-    embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-    await ctx.send(embed=  embed)
-    try: #try to send a DM
-        await member.send(f"You were softbanned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")   
-    except: #if their DMs are closed
-        print(f"{member.name} has their DMs closed")
-    await member.ban(reason = reason)
-    await ctx.guild.unban(member)
-
-@softban.error
-async def softban_error(ctx, error):
-    if isinstance(error, MissingPermissions):
-        embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"Softban members Permissions Missing!")
-        await ctx.send(embed = embed)
-    if isinstance(error, BadArgument):
-        embed = discord.Embed(title = "Softban Failed!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"Tag a user to softban them!")
-        await ctx.send(embed = embed)
 
 '''
 Some fun data about this code:
