@@ -42,7 +42,6 @@ with open("config.json", "r") as f:
 BOT_TOKEN = config["token"]
 #constants
 CLIENT_ID = 768695035092271124
-CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
 INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
 LINES_OF_CODE = 500
@@ -52,13 +51,6 @@ BOT_PREFIX = config["prefix"]
 ZAN_ID = 575706831192719370
 
 client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
-reddit = praw.Reddit(
-    client_id = 'NY_kPmfmJV1VAg',
-    client_secret = "GNKjyvMHErF9yYqZGrhx6MxG55WtVw",
-    username = "NightZan999",
-    password = "python123_praw",
-    user_agent = "python_praw"
-)
 
 @client.command()
 async def ping(ctx):
