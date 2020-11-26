@@ -8,26 +8,40 @@ import json
 class Information(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
+
     @commands.Cog.listener()
     async def on_ready(self):
         print("Information is ready")
     
     @commands.command(aliases = ["guild", "guildinfo", "si"])
     async def serverinfo(self, ctx):
+        
         findbots = sum(1 for member in ctx.guild.members if member.bot)
         roles = sum(1 for role in ctx.guild.roles)
-        
+
         embed = discord.Embed(title = 'Infomation about ' + ctx.guild.name + '.', colour = ctx.author.color)
         embed.set_thumbnail(url = str(ctx.guild.icon_url))
         embed.add_field(name = "Guild's name: ", value = ctx.guild.name)
         embed.add_field(name = "Guild's owner: ", value = str(ctx.guild.owner))
         embed.add_field(name = "Guild's verification level: ", value = str(ctx.guild.verification_level))
-        embed.add_field(name = "Guild's id: ", value = str(ctx.guild.id))
-        embed.add_field(name = "Guild's member count: ", value = str(ctx.guild.member_count))
-        embed.add_field(name="Bots", value=findbots, inline=True)
+        embed.add_field(name = "Guild's id: ", value = f"`{ctx.guild.id}`")
+        embed.add_field(name = "Guild's member count: ", value = f"{ctx.guild.member_count}")
+        embed.add_field(name="Bots", value=f"`{findbots}`", inline=True)
         embed.add_field(name = "Guild created at: ", value = str(ctx.guild.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
         embed.add_field(name = "Number of Roles:", value = f"`{roles}`")
+        
+        # check if they have automod enabled or disabled
+        with open("./data/automod.json", "r") as f:
+            guilds = json.load(f)
+
+        if str(ctx.guild.id) not in guilds: # they never set it up
+            embed.add_field(name = "Automod Status:", value = f"`Not set up`")
+        else:
+            if guilds[str(ctx.guild.id)]["automod"] == "true":
+                embed.add_field(name = "Automod Status:", value = f"`True`")
+            elif guilds[str(ctx.guild.id)]["automod"] == "false":
+                embed.add_field(name = "Automod Status:", value = f"`False`")
+
         await ctx.send(embed =  embed)
     
     @commands.command(aliases = ["ci"])
@@ -74,8 +88,7 @@ class Information(commands.Cog):
         em.set_thumbnail(url = member.avatar_url)
         await ctx.send(embed = em)
     
-    
-    @commands.command()
+    @commands.command(aliases = ["bi"])
     async def botinfo(self, ctx):
         with open("./data/emojis.json", "r") as f:
             emojis = json.load(f)
@@ -94,6 +107,30 @@ class Information(commands.Cog):
         embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
         await ctx.send(embed = embed)
+
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild):
+        with open("./data/guilds.json", "r") as f:
+            guilds = json.load(f)
+
+        if str(guild.name) in guilds:
+            print("Joined old server!")
+        else:
+            guilds[str(guild.name)] = {}
+            guilds[str(guild.name)]["guild_id"] = guild.id
+            print("Joined a new SERVER!")
+
+        with open("./data/guilds.json", "w") as f:
+            json.dump(guilds, f)
+
+        #sending it in the support server
+    
+    @commands.Cog.listener()
+    async def on_guild_leave(self, guild):
+        with open("./data/guilds.json", "r") as f:
+            guilds = json.load(f)
+        pass
+
 
 def setup(client):
     client.add_cog(Information(client))

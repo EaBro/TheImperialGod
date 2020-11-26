@@ -31,10 +31,6 @@ import traceback
 # reddit
 import praw
 
-banned_userids = [
-    758169063871741984
-]
-
 def load_cogs(): #loading all our cogs
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
@@ -555,23 +551,6 @@ async def help(ctx, command = None):
                 await ctx.send(embed = embed)
 
 
-#when an error occurs
-@client.command()
-async def invite(ctx):
-    embed = discord.Embed(title = "Invite Link:", color = ctx.author.color)
-    embed.add_field(name = "Here:", value = f"[Click me]({INVITE_LINK})")
-    await ctx.send(embed = embed)
-
-@client.command()
-async def guilds(ctx):
-    if ctx.author.id != 575706831192719370:
-        await ctx.send("Only for bot devs, sorry no sorry")
-        return
-    else:
-        a = 0
-        for guild in client.guilds:
-            a += 1
-            await ctx.author.send(f"{guild.name} : {guild.id}")
 
 #balance command
 @client.command(aliases = ["balance"])
@@ -648,6 +627,7 @@ async def beg(ctx):
             json.dump(users, f)
 
         await ctx.send(f"Well you earned {earnings} coins")
+        
 @beg.error
 async def beg_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
@@ -1027,24 +1007,6 @@ async def dice(ctx, amount : int):
     elif user_roll == comp_roll:
         await ctx.send("A tie! Not bad so you get your money back!")
 
-@client.command()
-async def candy(ctx):
-    await ctx.send("You want candy, take it!")
-    await ctx.send(file = discord.File("assets/candy.jpg"))
-
-@client.command()
-async def leaveguild(ctx, guild_id : int):
-    if ctx.author.id != ZAN_ID:
-        await ctx.send("Only bot devs can use this command!")
-        return
-
-    guild = client.get_guild(guild_id)
-    await guild.leave()
-    embed = discord.Embed(title = "Imperial Bot leaves a guild", color = ctx.author.color)
-    embed.add_field(name = f"Guild:", value = f"`{guild.name}`")
-    await ctx.send(embed = embed)
-
-
 #advanced ecenomy
 mainshop = [{"name":"Watch","price":100,"description":"Time"},
             {"name":"Laptop","price":1000,"description":"Work"},
@@ -1396,14 +1358,6 @@ async def read_json(filename):
         res = json.load(f)
 
     return res
-
-@client.command()
-async def osay(ctx, *, args : str):
-    embed = discord.Embed(title=  f"Osay by {ctx.author.name}", color = ctx.author.color)
-    embed.add_field(name = "Message:", value = f"`{args}`")
-    await ctx.send(embed = embed)
-
-
 
 @client.command()
 async def load(ctx, extension):

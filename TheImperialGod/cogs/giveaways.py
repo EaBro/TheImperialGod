@@ -61,7 +61,7 @@ class Giveaways(commands.Cog):
             return
 
         channel = client.get_channel(c_id)
-        time = convert(answers[1])
+        time = self.convert(answers[1])
 
         if time == -1:
             await ctx.send(f"You didn't answer the time with a proper unit. Use (s|m|h|d) next time!")

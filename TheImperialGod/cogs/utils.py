@@ -161,7 +161,7 @@ class Utils(commands.Cog):
             print(e)
     
     @commands.command(aliases = ["av"])
-    @cooldown(1, 5, BucketType.user)
+    @commands.cooldown(1, 5, commands.BucketType.user)
     async def avatar(self, ctx, *, member: discord.Member = None):
         if member == None:
             em = discord.Embed(description=f"[**{ctx.author.name}'s Avatar**]({ctx.author.avatar_url})", colour=ctx.author.color, timestamp =ctx.message.created_at)
@@ -180,6 +180,13 @@ class Utils(commands.Cog):
             await ctx.send(embed=em)
 
             return
-
+    
+    @commands.command()
+    async def suggest(self, ctx, *, suggestion):
+        embed = discord.Embed(title = "Suggestion sent!", color = ctx.author.color)
+        embed.add_field(name = "Where:", value = "On the support server")
+        await ctx.send(embed = embed)
+    
+    
 def setup(client):
     client.add_cog(Utils(client))

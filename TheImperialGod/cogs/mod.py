@@ -2,6 +2,10 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 from discord.ext.commands import MissingPermissions, BadArgument
+from asyncio import sleep
+from discord.ext.commands import cooldown, BucketType
+import random
+import json
 
 class Mod(commands.Cog):
     def __init__(self, client):
@@ -278,6 +282,192 @@ class Mod(commands.Cog):
         description=f"There were {count} messages in {channel.mention}")
 
         await ctx.send(embed=embed)
+
+    @commands.command()
+    @commands.has_permissions(ban_members=True)
+    @cooldown(1, 3, BucketType.user)
+    async def unban(self, ctx, member=None, *, reason='No Reason Was Provided'):
+        if member == None:
+            await ctx.send(f"You can't unban yourself, {ctx.author.mention}\nNext time provide a user.")
+        banned_users = await ctx.guild.bans()
+        member_name, member_disc = member.split('#')
+
+        for banned_entry in banned_users:
+            user = banned_entry.user
+
+            if (user.name, user.discriminator) == (member_name, member_disc):
+                em = discord.Embed(title = f"{member} has been unbanned!", description = f"**Responsible Moderator:** {ctx.author.mention}\n**Reason:** {reason}", color = ctx.author.color, timestamp = ctx.message.created_at)
+    
+                await ctx.send(embed=em)
+
+                await member.send(f"You were unbanned from **{ctx.guild}** by **{ctx.author}** because **{reason}**")
+
+                return
+
+        await ctx.send(member + ' was not found. Make sure you gave a valid format (For eg. The Imperial God#9642)')
+
+    @commands.command()
+    @has_permissions(kick_members = True)
+    async def kick(self, ctx, member : discord.Member, *, reason = None):
+        await member.kick(reason = reason)
+        em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color)
+        em.add_field(name = f"Victim:", value = f"`{member.name}`")
+        em.add_field(name = "Reason: ", value = f"`{reason}`")
+        em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
+        await ctx.send(embed = em)
+        try:
+            await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
+        except:
+            pass
+
+    @kick.error
+    async def kick_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Kick members Permission Missing!`")
+            await ctx.send(embed = embed)
+
+    @commands.command()
+    @has_permissions(ban_members = True)
+    async def ban(self, ctx, member : discord.Member, *,reason = None):
+        await member.ban(reason = reason)
+        em = discord.Embed(title = f"<:success:761297849475399710> Ban was successful!", color = ctx.author.color)
+        em.add_field(name = f"Victim:", value = f"`{member.name}`")
+        em.add_field(name = "Reason: ", value = f"`{reason}`")
+        em.add_field(name = "**Moderator**:", value = f"`{ctx.author.name}`")
+        await ctx.send(embed = em)
+        try:
+            await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
+        except:
+            pass
+    
+    @ban.error
+    async def ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ban members Permission Missing!`")
+            await ctx.send(embed = embed)
+
+    async def get_warns(self):
+        with open("./data/warns.json", "r") as f:
+            warns = json.load(f)
+        return warns
+    
+    async def open_guild(self, guild):
+        warns = await self.get_warns()
+        if str(guild.id) not in warns:
+            warns[str(guild.id)] = {}
+            return True
+        else:
+            return False
+
+        with open("warns.json", "w") as f:
+            json.dump(warns, f)
+
+    async def addwarns(self, guild, user, number : int):
+        warns = await self.get_warns()
+        await self.open_guild(guild)
+
+        if str(user.id) not in warns[str(guild.id)]:
+            warns[str(guild.id)][str(user.id)] = number
+        else:
+            warns[str(guild.id)][str(user.id)] += number
+
+        with open("warns.json", "w") as f:
+            json.dump(warns, f)
+    
+    async def removewarns(self, guild, user, number : int):
+        warns = await self.get_warns()
+        await self.open_guild(guild)
+
+        if str(user.id) not in warns[str(guild.id)]:
+            return [False, 1]
+        else:
+            if warns[str(guild.id)][str(user.id)] < number:
+                return [False, 2]
+            warns[str(guild.id)][str(user.id)] -= number
+
+        with open("warns.json", "w") as f:
+            json.dump(warns, f)
+    
+    @commands.command()
+    @has_permissions(administrator = True)
+    async def enableautomod(self, ctx, *, reason = None):
+        with open("./data/automod.json", "r") as f:
+            guilds = json.load(f)
+        
+        with open("./data/emojis.json", "r") as f:
+            emojis = json.load(f)
+
+        if str(ctx.guild.id) in guilds:
+            guilds[str(ctx.guild.id)]["automod"] = "true"
+        else:
+            guilds[str(ctx.guild.id)] = {}
+            guilds[str(ctx.guild.id)]["automod"] = "true"
+
+        embed = discord.Embed(title = f"<:success:761297849475399710> change in server settings!", color = ctx.author.color,
+        description = "An awesome moderator, enabled automod. Beware no more **bad words!**"
+        )
+        embed.add_field(name = "Automod Status:", value = f"`Automod = True`")
+        embed.add_field(name = "Reason:", value = f"`{reason}`")
+        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+        await ctx.send(embed = embed)
+
+        with open("./data/automod.json", "w") as f:
+            json.dump(guilds, f)
+
+    @enableautomod.error
+    async def enableautomod_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("Bruh you really think you can use that?")
+    
+    @commands.command()
+    @has_permissions(administrator = True)
+    async def disableautomod(self, ctx, *, reason = None):
+        with open("./data/automod.json", "r") as f:
+            guilds = json.load(f)
+
+        with open("./data/emojis.json","r") as f:
+            emojis = json.load(f)
+
+        if str(ctx.guild.id) in guilds:
+            guilds[str(ctx.guild.id)]["automod"] = "false"
+        else:
+            guilds[str(ctx.guild.id)] = {}
+            guilds[str(ctx.guild.id)]["automod"] = "false"
+
+        embed = discord.Embed(title = f'<:success:761297849475399710> Change in Server Settings', color = ctx.author.color)
+        embed.add_field(name = 'Automod:', value = "`Automod = False`")
+        embed.add_field(name = "Reason:", value = f"`{reason}`")
+        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+        await ctx.send(embed = embed)
+
+        with open("./data/automod.json", "w") as f:
+            json.dump(guilds, f)
+
+    @disableautomod.error
+    async def disableautomod_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("Bruh you really think you can use that?")
+
+    @commands.command()
+    async def checkautomod(self,ctx):
+        with open("./data/automod.json", "r") as f:
+            guilds = json.load(f)
+        
+        embed = discord.Embed(title = f"Automoderation status of {ctx.guild.name}", color = ctx.author.color)
+
+        if str(ctx.guild.id) in guilds:
+            if guilds[str(ctx.guild.id)]["automod"] == "true":
+                embed.add_field(name = "Automod Status:", value = f"`True`")
+            elif guilds[str(ctx.guild.id)]["automod"] == "false":
+                embed.add_field(name = "Automod Status:", value = f"`False`")
+            await ctx.send(embed = embed)
+        else:
+            embed.add_field(name = "Automod Status:", value = f"`<:fail:761292267360485378> Not set up!`")
+            embed.add_field(name = "What to do?", value = "Ask a mod to set this up!")
+            await ctx.send(embed = embed)
+
 
 def setup(client):
     client.add_cog(Mod(client))

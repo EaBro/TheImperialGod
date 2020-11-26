@@ -2,8 +2,8 @@ import discord
 from discord.ext import commands
 import random
 #image manipulation
-from PIL import Image
-from io import BytesIO
+from PIL import Image 
+from io import BytesIO # need BytesIO function 
 
 class ImageManipulation(commands.Cog):
     def __init__(self, client):
@@ -21,7 +21,7 @@ class ImageManipulation(commands.Cog):
         wanted = Image.open("./assets/wanted.jpg")
         asset = user.avatar_url_as(size = 128)
 
-        data = BytesIO(await asset.read())
+        data = BytesIO(await asset.read()) # need bytesio
         pfp = Image.open(data)
 
         pfp = pfp.resize((88, 88))
