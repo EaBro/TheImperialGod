@@ -52,13 +52,6 @@ BOT_PREFIX = config["prefix"]
 ZAN_ID = 575706831192719370
 
 client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
-reddit = praw.Reddit(
-    client_id = 'NY_kPmfmJV1VAg',
-    client_secret = "GNKjyvMHErF9yYqZGrhx6MxG55WtVw",
-    username = "NightZan999",
-    password = "python123_praw",
-    user_agent = "python_praw"
-)
 
 @client.command()
 async def ping(ctx):
@@ -72,6 +65,7 @@ async def on_ready():
     print("Ready!")
     print("Username: ", client.user.name)
     print("User ID: ", client.user.id)
+    print("----------------------------")
 
 filtered_words = ['idiot', 'Idiots', "DIE", "ass", "butt", "Fool", "shit", "bitch"]
 
@@ -142,9 +136,6 @@ async def on_member_join(member):
     embed = discord.Embed(title = "A new member!", color = discord.Color.red())
     embed.add_field(name = "Their Name", value = f"{member.name}")
     embed.set_footer(text = "Thanks for joining bud!")
-    embed.set_image(url = """
-    data:image/jpeg;base64,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
-    """)
 
     for channel in sguild.channels:
         if channel.id == 781369860692115516:
@@ -219,7 +210,7 @@ async def help(ctx, command = None):
             embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`")
             embed.add_field(name = f"<:pepethink:779232211336822804> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
             embed.add_field(name = f"Image Module [2]: ", value = f"`wanted`, `crown`")
-            embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`")
+            embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`")
             embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
             embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`")
             embed.add_field(name = f"<:settings:761301883792654386> Admin: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
@@ -1268,90 +1259,6 @@ async def sell_this(user,item_name,amount,price = None):
     await update_bank(user,cost,"wallet")
 
     return [True,"Worked"]
-
-@client.command()
-async def dog(ctx):
-    subreddit = reddit.subreddit("dog")
-    top = subreddit.top(limit = 100)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-    await ctx.send(embed = embed)
-
-@client.command()
-async def cat(ctx):
-    subreddit = reddit.subreddit("cat")
-    top = subreddit.top(limit = 100)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-    await ctx.send(embed = embed)
-
-@client.command()
-async def duck(ctx):
-    subreddit = reddit.subreddit("duck")
-    top = subreddit.top(limit = 100)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-    await ctx.send(embed = embed)
-
-@client.command()
-async def fox(ctx):
-    subreddit = reddit.subreddit("fox")
-    top = subreddit.top(limit = 100)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-    await ctx.send(embed = embed)
-
-@client.command()
-async def panda(ctx):
-    subreddit = reddit.subreddit("panda")
-    top = subreddit.top(limit = 100)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-    await ctx.send(embed = embed)
-
-@client.command()
-async def koala(ctx):
-    subreddit = reddit.subreddit("koala")
-    top = subreddit.top(limit = 100)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-    await ctx.send(embed = embed)
 
 menu = ['pizza', "pasta", "fries", "chips", "nachos", "hotdogs", "burgers",
 "steak", "cheese", "Salad", "Chicken", "pancakes", "waffles"

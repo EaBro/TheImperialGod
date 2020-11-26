@@ -9,7 +9,7 @@ class Math(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Ready")
+        print("Mathematics command are loaded")
     
     @commands.command()
     async def add(self, ctx, num1, num2):
