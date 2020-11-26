@@ -32,7 +32,7 @@ class Misc(commands.Cog):
         await ctx.send(file = discord.File("./assets/candy.jpg"))
 
     @commands.command()
-    async def leaveguild(self, ctx, guild_id : int)
+    async def leaveguild(self, ctx, guild_id : int):
         if ctx.author.id != ZAN_ID:
             await ctx.send("Only bot devs can use this command!")
             return
@@ -55,7 +55,19 @@ class Misc(commands.Cog):
         
         await ctx.send(msg)
 
-    
+    @commands.command()
+    async def suggest(self, ctx, *, suggestion):
+        await ctx.send("Your suggestion has been sent to the devs!")
+        embed = discord.Embed(title = "New Suggestions", color = discord.Color.red())
+        embed.add_field(name = "Author:", value = f"`{ctx.author.name}`")
+        embed.add_field(name = "Server:", value = f"`{ctx.guild.name}`")
+        embed.add_field(name = "Suggestion: ", value = f"`{suggestion}`")
+        # sending it to the support server
+        guild = self.client.get_guild(781057246092197898)
+        # sending it in the channel
+        for channel in guild.channels:
+            if channel.id == 781363343780741140:
+                await channel.send(embed = embed)
 
 def setup(client):
     client.add_cog(Misc(client))

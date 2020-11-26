@@ -181,12 +181,6 @@ class Utils(commands.Cog):
 
             return
     
-    @commands.command()
-    async def suggest(self, ctx, *, suggestion):
-        embed = discord.Embed(title = "Suggestion sent!", color = ctx.author.color)
-        embed.add_field(name = "Where:", value = "On the support server")
-        await ctx.send(embed = embed)
-    
     
 def setup(client):
     client.add_cog(Utils(client))
