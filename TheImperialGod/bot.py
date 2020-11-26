@@ -725,8 +725,6 @@ async def withdraw(ctx, amount = None):
     await open_account(ctx.author) #opening their account
     if amount == None: #making sure they are withdrawing something!
         await ctx.send("Type an amount")
-
-    amount = int(amount)
     bal = await update_bank(ctx.author)
 
     if amount == 'all':
@@ -1057,7 +1055,9 @@ async def dice(ctx, amount : int):
 #advanced ecenomy
 mainshop = [{"name":"Watch","price":100,"description":"Time"},
             {"name":"Laptop","price":1000,"description":"Work"},
-            {"name":"PC","price":10000,"description":"Gaming"}]
+            {"name":"PC","price":10000,"description":"Gaming"},
+            {"name": "Car", "price" : 25000, "description" : "Use this to travel! No benifits"}
+            ]
 
 
 @client.command()
@@ -1493,8 +1493,7 @@ async def gstart(ctx):
     my_msg = await channel.send(embed = embed)
 
 
-    await my_msg.add_reaction(":tada:")
-
+    await my_msg.add_reaction("🎉")
     await asyncio.sleep(time)
     new_msg = await channel.fetch_message(my_msg.id)
 
