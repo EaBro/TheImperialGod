@@ -29,7 +29,6 @@ class ImageManipulation(commands.Cog):
 
         wanted.save("./assets/profile.jpg")
         await ctx.send(file = discord.File("./assets/profile.jpg"))
-    
 
 def setup(client):
     client.add_cog(ImageManipulation(client))

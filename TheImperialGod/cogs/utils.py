@@ -44,9 +44,11 @@ class Utils(commands.Cog):
             embed.add_field(name = "Correct usage:", value = "`imp random_number <first_range> <last_range>`")
 
     @commands.command()
-    async def code(self, ctx, *, msg):
+    async def code(self, ctx, *, msg = None):
+        if msg == None:
+            await ctx.send("You have to provide a valid message:\n `imp code hello there`")
+
         await ctx.send("```" + msg.replace("`", "") +("```"))
-    
     
     @commands.command()
     async def guess(self, ctx, start, end, guess):

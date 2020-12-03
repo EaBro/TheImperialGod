@@ -28,13 +28,25 @@ import os
 import math
 import json
 import traceback
-# reddit
-import praw
+
 
 def load_cogs(): #loading all our cogs
+    extensions = [
+        "cogs.animals",
+        "cogs.giveaways",
+        "cogs.imageManipulation",
+        "cogs.info",
+        "cogs.math",
+        "cogs.misc",
+        "cogs.mod",
+        "cogs.owner",
+        "cogs.utils",
+    ]
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
-            client.load_extension(f"cogs.{filename[:-3]}")
+            newFile = f"cogs.{filename[:-3]}"
+            if newFile in extensions:
+                client.load_extension(newFile)
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -52,12 +64,6 @@ BOT_PREFIX = config["prefix"]
 ZAN_ID = 575706831192719370
 
 client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
-
-@client.command()
-async def ping(ctx):
-    embed = discord.Embed(title = 'Pong', color = ctx.author.color)
-    embed.add_field(name = "Ping:", value = f"`{random.randint(175, 300)} ms`")
-    await ctx.send(embed = embed)
 
 #when the bot gets ready
 @client.event
@@ -110,6 +116,7 @@ async def on_guild_join(guild):
     embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
     embed.add_field(name = "New Servercount:", value = f"`{len(client.guilds)}`")
     embed.add_field(name = "New Usercount:", value = f"`{len(client.users)}`")
+    embed.add_field(name = "Name:", value = f"{str(guild.name)}")
 
     for channel in sguild.channels:
         if channel.id == 781366606202798080:
@@ -117,30 +124,20 @@ async def on_guild_join(guild):
             break
             
 @client.event
-async def on_guild_leave(guild):
+async def on_guild_remove(guild):
     sguild = client.get_guild(781057246092197898)
     embed = discord.Embed(title = "I left a server!", color = discord.Color.red())
 
     embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
     embed.add_field(name = "New Servercount:", value = f"`{len(client.guilds)}`")
     embed.add_field(name = "New Usercount:", value = f"`{len(client.users)}`")
+    embed.add_field(name = "Name:", value = f"{str(guild.name)}")
 
     for channel in sguild.channels:
         if channel.id == 781366606202798080:
             await channel.send(embed = embed)
             break
 
-@client.event
-async def on_member_join(member):
-    sguild = client.get_guild(781057246092197898)
-    embed = discord.Embed(title = "A new member!", color = discord.Color.red())
-    embed.add_field(name = "Their Name", value = f"{member.name}")
-    embed.set_footer(text = "Thanks for joining bud!")
-
-    for channel in sguild.channels:
-        if channel.id == 781369860692115516:
-            await channel.send(embed = embed)
-            break
 
 @client.remove_command("help")
 @client.command()
@@ -170,7 +167,8 @@ async def help(ctx, command = None):
             'show_toprole',
             'avatar',
             'candy',
-            "hypesquad"
+            "hypesquad",
+            "support"
             ]
     owner_commands = [
                 'enableautomod',
@@ -202,17 +200,18 @@ async def help(ctx, command = None):
             embed = discord.Embed(title = "Help", color = ctx.author.color, description = f"""
             Type `imp help` and then a command or category for more information for even more information!\n
             :link: [Invite Link]({INVITE_LINK})\n
-            :link: [Support Server](https://discord.gg/hEbjHrKBqp)            
+            :link: [Support Server](https://discord.gg/hEbjHrKBqp)\n            
+            :link: [Website](https://theimperialgodwebsite.nightzan.repl.co/)
             """)
             embed.add_field(name = f":dollar: Economy Commands: [{len(economy_commands)}]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
             embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Warn`, `nick`, `setmuterole`")
             embed.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
             embed.add_field(name = f":tools: Utilities: [{len(utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`")
             embed.add_field(name = f"<:pepethink:779232211336822804> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
-            embed.add_field(name = f"Image Module [2]: ", value = f"`wanted`, `crown`")
-            embed.add_field(name = f':video_game: Animals: [7]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`")
+            embed.add_field(name = f"Image Module [1]: ", value = f"`wanted`")
+            embed.add_field(name = f':video_game: Animals: [10]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`")
             embed.add_field(name = f":gift: Giveaways: [{len(gaws_commands)}]", value = "`gstart`, `reroll`")
-            embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`")
+            embed.add_field(name = f":question: Misc: [{len(misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`, `support`")
             embed.add_field(name = f"<:settings:761301883792654386> Admin: [{len(owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addwinnerrole`")
             embed.set_footer(text = f"My prefix is {BOT_PREFIX}")
             await ctx.send(embed = embed)
@@ -588,7 +587,44 @@ async def help(ctx, command = None):
                 embed.add_field(name = "Description:", value = "Change your nickname boi!")
                 await ctx.send(embed = embed)
 
+async def ch_pr(): #changing the bots status every 5 secs!!!
+    await client.wait_until_ready()
+    
+    while not client.is_closed():
+        statuses = [
+            f"The Protection of {len(client.guilds)} servers",
+            "Making money!",
+            "Hosting Giveaways",
+            "imp gstart",
+            "Kicking people!",
+            "Using utils!",
+            f"Serving {len(client.users)} users",
+            "Calculating inflation!",
+            "Changing statuses!"            
+        ]
+        status = random.choice(statuses)
 
+        await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
+        await asyncio.sleep(15)
+
+    if client.is_closed():
+        print("Offline again, f in the chat for the discord devs!")
+
+@client.command()
+async def load(ctx, extension):
+    if ZAN_ID != ctx.author.id:
+        await ctx.send("Only for bot devs")
+        return
+    client.load_extension(f"cogs.{extension}")
+    await ctx.send("loaded the cog...")
+
+@client.command()
+async def unload(ctx, extension):
+    if ZAN_ID != ctx.author.id:
+        await ctx.send("Only for bot devs")
+        return
+    client.unload_extension(f"cogs.{extension}")
+    await ctx.send('unloaded the cog...')
 
 #balance command
 @client.command(aliases = ["balance"])
@@ -674,8 +710,6 @@ async def beg_error(ctx, error):
         embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
         await ctx.send(embed = embed)
 
-
-
 @client.command()
 @commands.cooldown(1, 86400, commands.BucketType.user)
 async def daily(ctx):
@@ -710,16 +744,21 @@ async def weekly(ctx):
     with open("data/mainbank.json", "w") as f:
         json.dump(users, f)
 
+@weekly.error
+async def weekly_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        embed = discord.Embed(title = "Slow it down C'mon!", color = ctx.author.color)
+        embed.add_field(name = "Bruh", value = "Stop moneying so much! It makes you look poor!")
+        embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
+        await ctx.send(embed = embed)
+
 @client.command(aliases = ["with"])
-async def withdraw(ctx, amount = None):
+async def withdraw(ctx, amount :int = None):
     #BTW for dep im not doing comments :-(
     await open_account(ctx.author) #opening their account
     if amount == None: #making sure they are withdrawing something!
         await ctx.send("Type an amount")
     bal = await update_bank(ctx.author)
-
-    if amount == 'all':
-        amount = bal[1]
 
     if amount > bal[1]:
         await ctx.send("You can't withdraw more than you have in your bank!")
@@ -739,9 +778,6 @@ async def deposit(ctx, amount = None):
 
     amount = int(amount)
     bal = await update_bank(ctx.author)
-
-    if amount == 'all':
-        amount = bal[0]
 
     if amount > bal[0]:
         await ctx.send("You can't deposit more than you have in your wallet!")
@@ -782,43 +818,6 @@ async def give_error(ctx, error):
         await ctx.send(embed)
 
 @client.command()
-@commands.cooldown(1, 10, commands.BucketType.user) #I dont want alt spams
-async def slots(ctx, amount = None):
-    if amount == None:
-        await ctx.send("Type an amount")
-
-    amount = int(amount)
-    bal = await update_bank(ctx.author)
-
-    if amount > bal[0]:
-        await ctx.send("You can't pay more than you have in your wallet!")
-        return
-    if amount <= 0:
-        await ctx.send("Amount must be positive!")
-
-    final = []
-    for i in range(0, 3):
-        a = random.choice("🐸", "👾", "👻")
-        final.append(a)
-
-    await ctx.send(str(final))
-    if final[0] == final[1] or final[1] == final[2] or final[0] == final[2]:
-        if final[0] == final[1] and final[1] == final[2]:
-            await update_bank(ctx.author, 5 * amount)
-        else:
-            await update_bank(ctx.author, 2 *amount)
-    else:
-        await update_bank(ctx.author, -1* amount)
-
-@slots.error
-async def slots_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
-        embed.add_field(name = 'Stop playing!', value = "You would only be more poor if you did")
-        embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
-        await ctx.send(embed)
-
-@client.command()
 @commands.cooldown(1, 60, commands.BucketType.user) #this pays a lot thus cooldown
 async def serve(ctx):
     await open_account(ctx.author)
@@ -834,232 +833,20 @@ async def serve_error(ctx, error):
         embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
         await ctx.send(embed)
 
-
-
-@client.command()
-@commands.cooldown(1, 1000, commands.BucketType.user)
-async def bankrob(ctx, member : discord.Member):
-    await open_account(ctx.author)
-    await open_account(member)
-    users = await get_bank_data()
-    if users[str(user.id)]["wallet"] > 10000:
-        a = random.randint(1, 100)
-        if a < 20:
-            earnings = random.randint(100, users[str(member.id)]["bank"])
-            await ctx.send(f"You stole {earnings} coins from {member.mention}!")
-            update_bank(ctx.author, earnings, "wallet")
-            update_bank(member, -1*earnings, "bank")
-        else:
-            await ctx.send("Sorry you got caught!")
-            update_bank(ctx.author, -10000, "wallet")
-            update_bank(member, 10000, "bank")
-    else:
-        await ctx.send("You need 10,000 coin in your wallet to bankrob!")
-
-@bankrob.error
-async def bankrob_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
-        embed.add_field(name = "You need to plan your next attack", value = "If you try once more your next robbery will be a fail")
-        embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
-        await ctx.send(embed = embed)
-
-@client.command(aliases = ["lb"])
-async def leaderboard(ctx,x = 1):
-    users = await get_bank_data()
-    leader_board = {}
-    total = []
-    for user in users:
-        name = int(user)
-        total_amount = users[user]["wallet"] + users[user]["bank"]
-        leader_board[total_amount] = name
-        total.append(total_amount)
-
-    total = sorted(total,reverse=True)
-
-    em = discord.Embed(title = f"Top {x} Richest People" , description = "This is decided on the basis of raw money in the bank and wallet",color = discord.Color(0xfa43ee))
-    index = 1
-    for amt in total:
-        id_ = leader_board[amt]
-        member = client.get_user(id_)
-        name = member.name
-        em.add_field(name = f"{index}. {name}" , value = f"{amt}",  inline = False)
-        if index == x:
-            break
-        else:
-            index += 1
-
-    await ctx.send(embed = em)
-
-@client.command()
-async def devwith(ctx, amount): #had to make this!
-    if ctx.author.id == 575706831192719370: #if the user is me!
-        amount = int(amount)
-        await open_account(ctx.author)
-        user = ctx.author
-        users = await get_bank_data()
-
-        users[str(user.id)]["wallet"] += amount
-        with open("data/mainbank.json", "w") as f:
-            json.dump(users, f)
-
-        await ctx.send(f"Gave you {amount} coins!")
-    else: #else it should not give!
-        await ctx.send("Bruh, your not a bot dev!")
-
-#Helperfunctions
-async def open_account(user):
-    with open("data/mainbank.json", "r") as f:
-        users = json.load(f)
-
-    if user.id in banned_userids:
-        return False
-
-    if str(user.id) in users:
-        return False
-    else:
-        users[str(user.id)] = {}
-        users[str(user.id)]["wallet"] = 0 #I want them to get 100 coins
-        users[str(user.id)]["bank"]  = 0
-
-    with open("data/mainbank.json", "w") as f:
-        json.dump(users, f)
-
-
-async def get_bank_data():
-    with open("data/mainbank.json", "r") as f:
-        users = json.load(f)
-    return users
-
-async def update_bank(user, change = 0, mode = "wallet"):
-    users = await get_bank_data()
-    users[str(user.id)][mode] = users[str(user.id)][mode] + change
-    
-    if user.id in banned_userids:
-        return
-
-    with open("data/mainbank.json", "w") as f:
-        json.dump(users, f)
-
-    bal = users[str(user.id)]["wallet"], users[str(user.id)]["bank"]
-    return bal
-
-async def ch_pr(): #changing the bots status every 5 secs!!!
-    await client.wait_until_ready()
-    statuses = [
-        f"Helping {len(client.guilds)} servers",
-        "Making money!",
-        "Hosting Giveaways",
-        "imp gstart",
-        "Kicking people!",
-        "Using utils!",
-        "Serving 256 users"
-    ]
-    while not client.is_closed():
-        status = random.choice(statuses)
-
-        await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
-        await asyncio.sleep(60)
-
-    if client.is_closed():
-        print("Offline again, f in the chat for the discord devs!")
-
-
-@client.command()
-async def support(ctx):
-    await ctx.send("Please vote for the bot on top.gg\nLink: ")
-
-@client.command()
-@commands.has_permissions(manage_channels = True)
-async def announce(ctx, c_id : int, *, msg):
-    channel = client.get_channel(c_id)
-    embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
-    embed.add_field(name = "Announcement:", value = f"`{msg}`")
-    embed.add_field(name = "Moderator:", value = f"`{ctx.autor.name}`")
-    await channel.send(embed = embed)
-
-@announce.error
-async def announce_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        embed = discord.Embed(title = "Announcement failed!", color = ctx.author.color)
-        embed.add_field(name = 'Reason:', value = "Some perms are missing")
-        await ctx.send(embed = embed)
-
-
-@client.command(pass_context=True, aliases=['joi'])
-async def join(ctx):
-    channel = ctx.message.author.voice.channel
-    voice = get(client.voice_clients, guild= ctx.guild)
-
-    if voice and voice.is_connected():
-        await voice.move_to(channel)
-    else:
-        voice = await channel.connect()
-
-    await voice.disconnect()
-
-    if voice and voice.is_connected():
-        await voice.move_to(channel)
-    else:
-        voice = await channel.connect()
-    await ctx.send(f"Joined {channel}")
-
-
-@client.command(pass_context=True, aliases=['lea'])
-async def leave(ctx):
-    channel = ctx.message.author.voice.channel
-    voice = get(client.voice_clients, guild=ctx.guild)
-
-    if voice and voice.is_connected():
-        await voice.disconnect()
-        await ctx.send(f"Left {channel}")
-    else:
-        await ctx.send("Don't think I am in a voice channel")
-
-@client.command()
-async def dice(ctx, amount : int):
-    user = ctx.author
-    await open_account(ctx.author)
-
-    if amount <= 499:
-        await ctx.send("You can't bet less than 500 bucks!")
-        return
-
-    if amount > users[str(user.id)]["wallet"]:
-        await ctx.send("Far out you do not have that much money!")
-        return
-
-    users = await get_bank_data()
-    user_roll = random.randint(1, 6)
-    comp_roll = random.randint(1, 6)
-
-    await ctx.send(f"You rolled a {user_roll}\nI rolled a {comp_roll}")
-    if user_roll > comp_roll:
-        await ctx.send("You won! Congrats")
-        await update_bank(ctx.author, amount, "wallet")
-    elif user_roll < comp_roll:
-        await ctx.send("Sorry but you lost!")
-        await update_bank(ctx.author, -1*amount, "wallet")
-    elif user_roll == comp_roll:
-        await ctx.send("A tie! Not bad so you get your money back!")
-
-#advanced ecenomy
 mainshop = [{"name":"Watch","price":100,"description":"Time"},
             {"name":"Laptop","price":1000,"description":"Work"},
-            {"name":"PC","price":10000,"description":"Gaming"},
-            {"name": "Car", "price" : 25000, "description" : "Use this to travel! No benifits"}
-            ]
+            {"name":"PC","price":10000,"description":"Gaming"}]
 
 
 @client.command()
 async def shop(ctx):
-    em = discord.Embed(title = "Shop", color = ctx.author.color)
+    em = discord.Embed(title = "Shop")
 
     for item in mainshop:
         name = item["name"]
         price = item["price"]
         desc = item["description"]
-        em.add_field(name = name, value = f"${price} | {desc}", inline = False)
+        em.add_field(name = name, value = f"${price} | {desc}")
 
     await ctx.send(embed = em)
 
@@ -1080,7 +867,8 @@ async def buy(ctx,item,amount = 1):
 
     await ctx.send(f"You just bought {amount} {item}")
 
-@client.command(aliases = ['inv', 'inventory'])
+
+@client.command(aliases = ["inv", "inventory"])
 async def bag(ctx):
     await open_account(ctx.author)
     user = ctx.author
@@ -1092,15 +880,14 @@ async def bag(ctx):
         bag = []
 
 
-    em = discord.Embed(title = "Inventory", color = ctx.author.color)
+    em = discord.Embed(title = "Inventory")
     for item in bag:
         name = item["item"]
         amount = item["amount"]
 
-        em.add_field(name = name, value = amount)
+        em.add_field(name = name, value = amount)    
 
-    await ctx.send(embed = em)
-
+    await ctx.send(embed = em)    
 async def buy_this(user,item_name,amount):
     item_name = item_name.lower()
     name_ = None
@@ -1112,9 +899,10 @@ async def buy_this(user,item_name,amount):
             break
 
     if name_ == None:
-        return [False, 1]
+        return [False,1]
 
     cost = price*amount
+
     users = await get_bank_data()
 
     bal = await update_bank(user)
@@ -1134,65 +922,20 @@ async def buy_this(user,item_name,amount):
                 users[str(user.id)]["bag"][index]["amount"] = new_amt
                 t = 1
                 break
-
-            index += 1
-
+            index+=1 
         if t == None:
             obj = {"item":item_name , "amount" : amount}
             users[str(user.id)]["bag"].append(obj)
     except:
         obj = {"item":item_name , "amount" : amount}
-        users[str(user.id)]["bag"] = [obj]
+        users[str(user.id)]["bag"] = [obj]        
 
-    with open("data/mainbank.json","w") as f:
+    with open("mainbank.json","w") as f:
         json.dump(users,f)
 
     await update_bank(user,cost*-1,"wallet")
+
     return [True,"Worked"]
-
-
-@client.command(aliases = ["postvid"])
-@cooldown(1, 30, BucketType.user)
-async def postvideo(ctx):
-    users = await get_bank_data()
-    a = await check_for_item(ctx.author, "pc")
-
-    if not a:
-        await ctx.send("You don't have a PC to post a video!")
-        return
-    
-    views = random.randint(500, 2000)
-    earnings = views * random.randint(1, 5)
-
-    await ctx.send(f"The video got {views} views\nAs a result with the ads you made {earnings} coins!")
-    await update_bank(ctx.author, earnings)
-
-async def check_for_item(user, item_name):
-    item_name = item_name.lower()
-    name_ = None
-    for item in mainshop:
-        name = item["name"].lower()
-        if name == item_name:
-            name_ = name
-            break
-
-    if name_ == None:
-        return False
-    users = await get_bank_data()
-    try:
-        index = 0
-        t = None
-        for thing in users[str(user.id)]["bag"]:
-            n = thing["item"]
-            if n == item_name:
-                return True
-                break
-
-        if t == None:
-            return False
-    except:
-        return False
-
 
 @client.command()
 async def sell(ctx,item,amount = 1):
@@ -1221,7 +964,7 @@ async def sell_this(user,item_name,amount,price = None):
         if name == item_name:
             name_ = name
             if price==None:
-                price = 0.9 * item["price"]
+                price = 0.9* item["price"]
             break
 
     if name_ == None:
@@ -1247,184 +990,76 @@ async def sell_this(user,item_name,amount,price = None):
                 users[str(user.id)]["bag"][index]["amount"] = new_amt
                 t = 1
                 break
-            index+=1
+            index+=1 
         if t == None:
             return [False,3]
     except:
-        return [False,3]
+        return [False,3]    
 
-    with open("data/mainbank.json","w") as f:
+    with open("mainbank.json","w") as f:
         json.dump(users,f)
 
     await update_bank(user,cost,"wallet")
 
     return [True,"Worked"]
 
-menu = ['pizza', "pasta", "fries", "chips", "nachos", "hotdogs", "burgers",
-"steak", "cheese", "Salad", "Chicken", "pancakes", "waffles"
-]
-
-@client.command()
-@cooldown(1, 3, BucketType.user)
-async def order(ctx, food = None):
-    if food == None:
-        await ctx.send("You have to mention some food!")
-        return
-
-    foodExists = False
-    for item in menu:
-        if item.lower() == food.lower():
-            foodExists = True
-
-    if foodExists == False:
-        await ctx.send("Not valid food!")
-        return
-
+@client.command(aliases = ["lb"])
+async def leaderboard(ctx,x = 1):
     users = await get_bank_data()
-    await open_account(ctx.author)
-    bal = await update_bank(ctx.author)
+    leader_board = {}
+    total = []
+    for user in users:
+        name = int(user)
+        total_amount = users[user]["wallet"] + users[user]["bank"]
+        leader_board[total_amount] = name
+        total.append(total_amount)
 
-    if users[str(user.id)]["wallet"] < 500:
-        await ctx.send("You need 500 coins to eat")
-        return
+    total = sorted(total,reverse=True)
 
-    await ctx.send("The order has been sent to the kitchen")
-    await update_bank(ctx.author, -500, "wallet")
-
-    #searching for the food on reddit
-    subreddit = reddit.subreddit(food)
-    top = subreddit.top(limit = 10)
-
-    all_subs = []
-    for submission in top:
-        all_subs.append(submission)
-
-    sub = random.choice(all_subs)
-    embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-    embed.set_image(url = sub.url)
-
-    await asyncio.sleep(5)
-    await ctx.send(embed = embed)
-
-
-async def read_json(filename):
-    with open(filename, "r") as f:
-        res = json.load(f)
-
-    return res
-
-@client.command()
-async def load(ctx, extension):
-    if ZAN_ID != ctx.author.id:
-        await ctx.send("Only for bot devs")
-        return
-    client.load_extension(f"cogs.{extension}")
-    await ctx.send("loaded the cog...")
-
-@client.command()
-async def unload(ctx, extension):
-    if ZAN_ID != ctx.author.id:
-        await ctx.send("Only for bot devs")
-        return
-    client.unload_extension(f"cogs.{extension}")
-    await ctx.send('unloaded the cog...')
-
-def convert(time):
-    pos = ["s","m","h","d"]
-
-    time_dict = {"s" : 1, "m" : 60, "h" : 3600 , "d" : 3600*24}
-
-    unit = time[-1]
-
-    if unit not in pos:
-        return -1
-    try:
-        val = int(time[:-1])
-    except:
-        return -2
-
-
-    return val * time_dict[unit]
-
-@client.command()
-@has_permissions(administrator = True)
-async def gstart(ctx):
-    await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
-
-    questions = ["Which channel should it be hosted in?", 
-                "What should be the duration of the giveaway? (s|m|h|d)",
-                "What is the prize of the giveaway?"]
-
-    answers = []
-
-    def check(m):
-        return m.author == ctx.author and m.channel == ctx.channel 
-
-    for i in questions:
-        await ctx.send(i)
-
-        try:
-            msg = await client.wait_for('message', timeout=15.0, check=check)
-        except asyncio.TimeoutError:
-            await ctx.send('You didn\'t answer in time, please be quicker next time!')
-            return
+    em = discord.Embed(title = f"Top {x} Richest People" , description = "This is decided on the basis of raw money in the bank and wallet",color = discord.Color(0xfa43ee))
+    index = 1
+    for amt in total:
+        id_ = leader_board[amt]
+        member = client.get_user(id_)
+        name = member.name
+        em.add_field(name = f"{index}. {name}" , value = f"{amt}",  inline = False)
+        if index == x:
+            break
         else:
-            answers.append(msg.content)
-    try:
-        c_id = int(answers[0][2:-1])
-    except:
-        await ctx.send(f"You didn't mention a channel properly. Do it like this {ctx.channel.mention} next time.")
-        return
+            index += 1
 
-    channel = client.get_channel(c_id)
+    await ctx.send(embed = em)
 
-    time = convert(answers[1])
-    if time == -1:
-        await ctx.send(f"You didn't answer the time with a proper unit. Use (s|m|h|d) next time!")
-        return
-    elif time == -2:
-        await ctx.send(f"The time must be an integer. Please enter an integer next time")
-        return            
+#Helperfunctions
+async def open_account(user):
+    with open("data/mainbank.json", "r") as f:
+        users = json.load(f)
 
-    prize = answers[2]
+    if str(user.id) in users:
+        return False
+    else:
+        users[str(user.id)] = {}
+        users[str(user.id)]["wallet"] = 0 #I want them to get 100 coins
+        users[str(user.id)]["bank"]  = 0
 
-    await ctx.send(f"The Giveaway will be in {channel.mention} and will last {answers[1]}!")
+    with open("data/mainbank.json", "w") as f:
+        json.dump(users, f)
 
 
-    embed = discord.Embed(title = "Giveaway!", description = f"{prize}", color = ctx.author.color)
+async def get_bank_data():
+    with open("data/mainbank.json", "r") as f:
+        users = json.load(f)
+    return users
 
-    embed.add_field(name = "Hosted by:", value = ctx.author.mention)
+async def update_bank(user, change = 0, mode = "wallet"):
+    users = await get_bank_data()
+    users[str(user.id)][mode] = users[str(user.id)][mode] + change
 
-    embed.set_footer(text = f"Ends {answers[1]} from now!")
+    with open("data/mainbank.json", "w") as f:
+        json.dump(users, f)
 
-    my_msg = await channel.send(embed = embed)
-
-
-    await my_msg.add_reaction("🎉")
-    await asyncio.sleep(time)
-    new_msg = await channel.fetch_message(my_msg.id)
-
-    users = await new_msg.reactions[0].users().flatten()
-    users.pop(users.index(client.user))
-
-    winner = random.choice(users)
-
-    await channel.send(f"Congratulations! {winner.mention} won {prize}!")
-
-@client.command()
-@has_permissions(manage_guild = True)
-async def reroll(ctx, channel : discord.TextChannel, id_ : int):
-    try:
-        new_msg = await channel.fetch_message(id_)
-    except:
-        await ctx.send("The id was entered incorrectly.")
-        return
-    
-    users = await new_msg.reactions[0].users().flatten()
-    users.pop(users.index(client.user))
-
-    winner = random.choice(users)
-    await channel.send(f"Congratulations! The new winner is {winner.mention}.!")    
+    bal = users[str(user.id)]["wallet"], users[str(user.id)]["bank"]
+    return bal
 
 '''
 Some fun data about this code:

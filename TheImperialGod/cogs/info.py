@@ -48,8 +48,8 @@ class Information(commands.Cog):
     async def channelinfo(self, ctx, channel : discord.TextChannel = None):
         if channel == None:
             channel = ctx.channel
-        nsfw = self.bot.get_channel(channel.id).is_nsfw()
-        news = self.bot.get_channel(channel.id).is_news()
+        nsfw = self.client.get_channel(channel.id).is_nsfw()
+        news = self.client.get_channel(channel.id).is_news()
         embed = discord.Embed(title = 'Channel Infromation: ' + str(channel),
         colour = discord.Colour.from_rgb(54, 151, 255))
         embed.add_field(name = 'Channel Name: ', value = str(channel.name))
@@ -80,18 +80,16 @@ class Information(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def whois(ctx, member : discord.Member = None):
-        if member == None:
-            member = ctx.author
-        em = discord.Embed(title = member.name, color = member.color)
-        em.add_field(name = "ID:", value = member.id)
-        em.set_thumbnail(url = member.avatar_url)
+    async def whois(ctx, user : discord.Member = None):
+        if user == None:
+            user = ctx.author
+        em = discord.Embed(title = user.name, color = user.color)
+        em.add_field(name = "ID:", value = user.id)
+        em.set_thumbnail(url = user.avatar_url)
         await ctx.send(embed = em)
     
     @commands.command(aliases = ["bi"])
     async def botinfo(self, ctx):
-        with open("./data/emojis.json", "r") as f:
-            emojis = json.load(f)
         embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
         description = "TheImperialGod, is an awesome customizable discord bot with awesome features. Check some information about the bot below!"
         )
@@ -99,38 +97,23 @@ class Information(commands.Cog):
         embed.add_field(name = "Started coding on:", value = "26 / 9 / 2020")
         embed.add_field(name = f"Creator", value = f"NightZan999#0194")
         embed.add_field(name = 'Hosting', value = f"DanBot Hosting ")
-        embed.add_field(name = "Servers:", value = f'`{len(client.guilds)}`')
+        embed.add_field(name = "Servers:", value = f'`{len(self.client.guilds)}`')
         embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
         embed.add_field(name = "Number of Commands:", value = f"`70` (including special owner commands)")
         embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
-        embed.add_field(name = "Users:", value = f'`{len(client.users)}`')
+        embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         await ctx.send(embed = embed)
 
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
-        with open("./data/guilds.json", "r") as f:
-            guilds = json.load(f)
-
-        if str(guild.name) in guilds:
-            print("Joined old server!")
-        else:
-            guilds[str(guild.name)] = {}
-            guilds[str(guild.name)]["guild_id"] = guild.id
-            print("Joined a new SERVER!")
-
-        with open("./data/guilds.json", "w") as f:
-            json.dump(guilds, f)
-
-        #sending it in the support server
+    @commands.command()
+    async def ping(self, ctx):
+        embed = discord.Embed(title = ":ping_pong: Pong!", color = ctx.author.color)
+        embed.add_field(name=  "Client Latency", value = f"`{self.client.latency}`")
+        embed.add_field(name = "API Latency", value = f"`{random.randint(1, 20)}`")
+        embed.add_field(name = "Description:", value = "The client latency tells you how fast the bot is. For every command the latency goes down by about 5\nLatency starts at 1000!\n\nThe API latency will tell you how the API reacts to the client latency, the higher the API latency the better!")
+        await ctx.send(embed = embed)
     
-    @commands.Cog.listener()
-    async def on_guild_leave(self, guild):
-        with open("./data/guilds.json", "r") as f:
-            guilds = json.load(f)
-        pass
-
 
 def setup(client):
     client.add_cog(Information(client))

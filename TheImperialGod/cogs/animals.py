@@ -130,5 +130,47 @@ class Animals(commands.Cog):
         embed.set_image(url = sub.url)
         await ctx.send(embed = embed)
 
+    @commands.command(aliases = ["snek"])
+    async def snake(self, ctx):
+        subreddit = self.reddit.subreddit("snake")
+        top = subreddit.top(limit = 10)
+
+        all_subs = []
+        for submission in top:
+            all_subs.append(submission)
+
+        sub = random.choice(all_subs)
+        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+        embed.set_image(url = sub.url)
+        await ctx.send(embed = embed)
+
+    @commands.command()
+    async def owl(self, ctx):
+        subreddit = self.reddit.subreddit("owl")
+        top = subreddit.top(limit = 10)
+
+        all_subs = []
+        for submission in top:
+            all_subs.append(submission)
+
+        sub = random.choice(all_subs)
+        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+        embed.set_image(url = sub.url)
+        await ctx.send(embed = embed)
+    
+    @commands.command(aliases = ["pandared", "rpanda", "pandr"])
+    async def redpanda(self, ctx):
+        subreddit = self.reddit.subreddit("redpanda")
+        top = subreddit.top(limit = 10)
+
+        all_subs = []
+        for submission in top:
+            all_subs.append(submission)
+
+        sub = random.choice(all_subs)
+        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+        embed.set_image(url = sub.url)
+        await ctx.send(embed = embed)
+
 def setup(client):
     client.add_cog(Animals(client))

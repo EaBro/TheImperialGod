@@ -10,169 +10,71 @@ import json
 class Mod(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
-    # Creating Helperfunctions
-    async def open_muterole(self, role):
-        roles = self.get_muterole()
-        if str(role.id) in roles:
-            return False
-        else:
-            roles[str(role.id)] = "none"
-
-        with open('./data/muterole.json', 'w') as f:
-            json.dump(roles, f)
-        return True
-
-    async def get_muterole(self):
-        with open("./data/muterole.json", "r") as f:
-            dict = json.load(f)
-        return dict
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("Mod commands Loaded!")
 
-    @commands.command()
-    @has_permissions(manage_roles = True)
-    async def addrole(self, ctx, member : discord.Member = None,role : discord.Role = None, *, reason = None):
-        if member == None:
-            await ctx.send("You need to provide someone to add them the role")
-            return
-        if reason == None:
-            reason = "No reason provided"
-            pass
-        if role == None:
-            await ctx.send("Ping a role next time!")
-            return
-        
-        await member.add_roles(role)
-        embed = discord.Embed(title=  f"{member.name} has got a new role!!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        embed.add_field(name = f"Member getting {role.name}:", value = f"{member.mention}")
-        embed.add_field(name = "Role:", value = f"`{role.name}`")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-        await ctx.send(embed=  embed)
-
-        try:
-            await member.send(f"You were added {role.name} role in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")       
-        except:
-            pass
-    
-    @addrole.error
-    async def addrole_error(self, ctx, error):
-        if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Addrole Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Manage Roles Permissions Missing!")
-            await ctx.send(embed = embed)
-        if isinstance(error, BadArgument):
-            embed = discord.Embed(title = "Addrole Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Tag a user and a role!")
-            await ctx.send(embed = embed)
-
-    @commands.command()
-    @has_permissions(manage_roles = True)
-    async def removerole(self, ctx, member : discord.Member = None,role : discord.Role = None, *, reason = None):
-        if member == None:
-            await ctx.send("You need to provide someone to add them the role")
-            return
-        if reason == None:
-            reason = "No reason provided"
-            pass
-        if role == None:
-            await ctx.send("Ping a role next time!")
-            return
-        
-        await member.remove_roles(role)
-        embed = discord.Embed(title=  f"{member.name} was softbanned!", color = ctx.author.color)
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        embed.add_field(name = f"Member losing {role.name}:", value = f"{member.mention}")
-        embed.add_field(name = "Role:", value = f"`{role.mention}`")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
-        await ctx.send(embed=  embed)
-
-        try:
-            await member.send(f"You lost {role.name} role in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
-        except:
-            pass
-
-    @removerole.error
-    async def removerole_error(self, ctx, error):
-        if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Removerole Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Manage Roles Permissions Missing!")
-            await ctx.send(embed = embed)
-        if isinstance(error, BadArgument):
-            embed = discord.Embed(title = "Removerole Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Tag a user and a role!")
-            await ctx.send(embed = embed)
-
     @commands.command(aliases = ["purge", "massdelete", "bulkdel"])
     @has_permissions(manage_messages = True)
     async def clear(self, ctx, amount = 1):
         await ctx.channel.purge(limit = amount)
-        await ctx.send("Done purging, deleting this in 5 seconds", delete_in = 5)
-    
+        
     @clear.error
     async def clear_error(self, ctx, error):
         if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Purge Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Manage Messages Permissions Missing!")
+            embed = discord.Embed(title = "<:fail:761292267360485378> Purge Failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = f"`Manage Messages Permissions Missing!`")
             await ctx.send(embed = embed)
 
     @commands.command()
     @has_permissions(manage_channels = True)
-    async def lock(self, ctx, channel = None):
-        if channel == None:
-            channel = ctx.channel
+    async def lock(self, ctx, *, reason = None):
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False, read_messages = True)
+        em = discord.Embed(title = f"<:success:761297849475399710> Channel has been locked!", color = discord.Color.green())
+        em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
+        em.add_field(name = "**Reason:**", value = f"`{reason}`")
+        em.add_field(name=  "Description", value = "You are not muted this channel is locked! No one but mods can type in this channel!", inline = False)
+        await ctx.channel.send(embed = em)    
         
-        await channel.set_permissions(ctx.guild.default_role, send_messages = False, read_messages = True)
-        embed = discord.Embed(title = "Channel Was Locked!", color = ctx.author.color)
-        embed.add_field(name = "Moderator:", inline = True, value = f"`{ctx.author.name}`")
-        embed.add_field(name = "Reason:", inline = True, value = f"`Spam`")
-        embed.add_field(name = "Channel:", value = f"`{channel.mention}`")
-        await channel.send(embed = embed)
-
     @lock.error
     async def lock_error(self, ctx, error):
         if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Lock Failed!", color = ctx.author.color)
+            embed = discord.Embed(title = "<:fail:761292267360485378> Lock Failed!", color = ctx.author.color)
             embed.add_field(name = "Reason:", value = f"Manage Channels Permissions Missing!")
             await ctx.send(embed = embed)
 
-
     @commands.command()
     @has_permissions(manage_channels = True)
-    async def unlock(self, ctx, channel = None):
-        if channel == None:
-            channel = ctx.channel
-        
-        await channel.set_permissions(ctx.guild.default_role, send_messages = True, read_messages = True)
-        embed = discord.Embed(title = "Channel Was Unlocked!", color = ctx.author.color)
-        embed.add_field(name = "Moderator:", inline = True, value = f"`{ctx.author.name}`")
-        embed.add_field(name = "Reason:", inline = True, value = f"`Spam`")
-        embed.add_field(name = "Channel:", value = f"`{channel.mention}`")
-        await ctx.send(embed = embed)
+    async def unlock(self, ctx, *, reason = None):
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True, read_messages = True)
+        em = discord.Embed(title = f"<:success:761297849475399710> Channel has been unlocked!", color = discord.Color.green())
+        em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
+        em.add_field(name = "**Reason:**", value = f"`{reason}`")
+        em.add_field(name=  "Description", value = "You are not unmuted this channel is unlocked! No one but mods can type in this channel!", inline = False)
+        await ctx.channel.send(embed = em)    
 
     @unlock.error
     async def unlock_error(self, ctx, error):
         if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Unlock Failed!", color = ctx.author.color)
+            embed = discord.Embed(title = "<:fail:761292267360485378> Unlock Failed!", color = ctx.author.color)
             embed.add_field(name = "Reason:", value = f"Manage Channels Permissions Missing!")
             await ctx.send(embed = embed)
 
     @commands.command()
-    @commands.has_permissions(manage_channels = True)
+    @has_permissions(manage_channels = True)
     async def setdelay(self, ctx, amount = 5, *, reason = None):
         if amount > 6000:
             await ctx.channel.send("Amount needs to be less than 6000!")
             return
 
         await ctx.channel.edit(slowmode_delay=amount)
-        embed = discord.Embed(title = "Change in Channel Settings", color = ctx.author.color)
-        embed.add_field(name = "New slowmode:", value = f"`{amount} seconds`")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        await ctx.send(embed = embed)
+        em = discord.Embed(title = "<:success:761297849475399710> Change in channel settings", color = ctx.author.color)
+        em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
+        em.add_field(name = "**Reason:**", value = f"`{reason}`")
+        em.add_field(name=  "Description", value = f"Now the channel has a slowmode which avoids spamming\n {ctx.author.mention} for more type `imp lock [reason]`", inline = False)
+        em.add_field(name = "Slowmode", value = f"`{amount} seconds`")
+        await ctx.send(embed = em)
 
     @setdelay.error
     async def setdelay_error(self, ctx, error):
@@ -198,7 +100,7 @@ class Mod(commands.Cog):
                 await ctx.send(embed = embed)
                 return
 
-        await ctx.send("Not a valid user, try it like this:\`imp unban name#disc`")
+        await ctx.send("Not a valid user, try it like this:\n`imp unban name#disc`")
 
     #normal function
     def convert(self, time):
@@ -217,58 +119,6 @@ class Mod(commands.Cog):
 
         return val * time_dict[unit]
 
-
-    @commands.command(aliases = ["muterole"])
-    @has_permissions(manage_guild = True)
-    async def setmuterole(self, ctx, *, role : discord.Role = None):
-        await self.open_muterole(ctx.guild)
-        roles = await self.get_muterole()
-        embed = discord.Embed(title = "Muterole has been setup", color = ctx.author.color)
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-        embed.add_field(name = "New muterole:", value = f"{role.mention}")
-        try:
-            old_role = ctx.guild.get_role(roles[str(ctx.guild.id)])
-            embed.add_field(name = "Old Muterole:", value = f"{old_role.mention}")
-        except:
-            pass
-        finally:
-            await ctx.send(embed = embed)
-        
-        roles[str(ctx.guild.id)] = role.id
-    
-    @setmuterole.error
-    async def setmuterole_error(self, ctx, error):
-        if isinstance(error, MissingPermissions):
-            embed = discord.Embed(title = "Mute setup Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Manage Server Permissions Missing!")
-            await ctx.send(embed = embed)
-        if isinstance(error, BadArgument):
-            embed = discord.Embed(title = "Setmuterole Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"Tag a role!")
-            await ctx.send(embed = embed)
-
-    @commands.command()
-    @has_permissions(kick_members = True, manage_channels = True)
-    async def mute(self, ctx, member: discord.Member = None, *, reason = None):
-        await self.open_muterole(ctx.guild)
-        if member == None:
-            await ctx.send("Wow, define a member to get muted. Your an idiot!")
-        
-        with open("./data/muterole.json", "r") as f:
-            roles = json.load(f)
-
-        if roles[str(ctx.guild.id)] == "none":
-            await ctx.send("Muting for this server has not been set up. Do set it up, type `imp setmuterole <role>`")
-            return
-        
-        muterole = roles[str(ctx.guild.id)]
-        await member.add_roles(muterole)
-
-        embed = discord.Embed(title = f"{member.name} was muted!", color = member.color)
-        embed.add_field(name = "Reason:", value = f"`{reason}`")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-        await ctx.send(embed = embed)
-
     @commands.command()
     @has_permissions(manage_channels = True)
     async def count(ctx, channel: discord.TextChannel = None):
@@ -284,31 +134,12 @@ class Mod(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    @commands.has_permissions(ban_members=True)
-    @cooldown(1, 3, BucketType.user)
-    async def unban(self, ctx, member=None, *, reason='No Reason Was Provided'):
-        if member == None:
-            await ctx.send(f"You can't unban yourself, {ctx.author.mention}\nNext time provide a user.")
-        banned_users = await ctx.guild.bans()
-        member_name, member_disc = member.split('#')
-
-        for banned_entry in banned_users:
-            user = banned_entry.user
-
-            if (user.name, user.discriminator) == (member_name, member_disc):
-                em = discord.Embed(title = f"{member} has been unbanned!", description = f"**Responsible Moderator:** {ctx.author.mention}\n**Reason:** {reason}", color = ctx.author.color, timestamp = ctx.message.created_at)
-    
-                await ctx.send(embed=em)
-
-                await member.send(f"You were unbanned from **{ctx.guild}** by **{ctx.author}** because **{reason}**")
-
-                return
-
-        await ctx.send(member + ' was not found. Make sure you gave a valid format (For eg. The Imperial God#9642)')
-
-    @commands.command()
     @has_permissions(kick_members = True)
-    async def kick(self, ctx, member : discord.Member, *, reason = None):
+    async def kick(self, ctx, member : discord.Member = None, *, reason = None):
+        if member == None:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "Ping a user to kick them!")
+            await ctx.send(embed = embed)
         await member.kick(reason = reason)
         em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color)
         em.add_field(name = f"Victim:", value = f"`{member.name}`")
@@ -325,11 +156,19 @@ class Mod(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Kick members Permission Missing!`")
-            await ctx.send(embed = embed)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ping a user to kick them!`")
+            await ctx.send(embed = em)
 
     @commands.command()
     @has_permissions(ban_members = True)
-    async def ban(self, ctx, member : discord.Member, *,reason = None):
+    async def ban(self, ctx, member : discord.Member = None, *,reason = None):
+        if member == None:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "Ping a user to ban them!")
+            await ctx.send(embed = embed)
         await member.ban(reason = reason)
         em = discord.Embed(title = f"<:success:761297849475399710> Ban was successful!", color = ctx.author.color)
         em.add_field(name = f"Victim:", value = f"`{member.name}`")
@@ -346,49 +185,11 @@ class Mod(commands.Cog):
         if isinstance(error, commands.MissingPermissions):
             em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Ban members Permission Missing!`")
-            await ctx.send(embed = embed)
-
-    async def get_warns(self):
-        with open("./data/warns.json", "r") as f:
-            warns = json.load(f)
-        return warns
-    
-    async def open_guild(self, guild):
-        warns = await self.get_warns()
-        if str(guild.id) not in warns:
-            warns[str(guild.id)] = {}
-            return True
-        else:
-            return False
-
-        with open("warns.json", "w") as f:
-            json.dump(warns, f)
-
-    async def addwarns(self, guild, user, number : int):
-        warns = await self.get_warns()
-        await self.open_guild(guild)
-
-        if str(user.id) not in warns[str(guild.id)]:
-            warns[str(guild.id)][str(user.id)] = number
-        else:
-            warns[str(guild.id)][str(user.id)] += number
-
-        with open("warns.json", "w") as f:
-            json.dump(warns, f)
-    
-    async def removewarns(self, guild, user, number : int):
-        warns = await self.get_warns()
-        await self.open_guild(guild)
-
-        if str(user.id) not in warns[str(guild.id)]:
-            return [False, 1]
-        else:
-            if warns[str(guild.id)][str(user.id)] < number:
-                return [False, 2]
-            warns[str(guild.id)][str(user.id)] -= number
-
-        with open("warns.json", "w") as f:
-            json.dump(warns, f)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ping a user to Ban them!`")
+            await ctx.send(embed = em)
     
     @commands.command()
     @has_permissions(administrator = True)
@@ -467,6 +268,40 @@ class Mod(commands.Cog):
             embed.add_field(name = "Automod Status:", value = f"`<:fail:761292267360485378> Not set up!`")
             embed.add_field(name = "What to do?", value = "Ask a mod to set this up!")
             await ctx.send(embed = embed)
+
+    @commands.command()
+    @commands.has_permissions(manage_channels = True)
+    async def announce(ctx, channel : discord.TextChannel, *, msg):
+        embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
+        embed.add_field(name = "Announcement:", value = f"`{msg}`")
+        embed.add_field(name = "Moderator:", value = f"`{ctx.autor.name}`")
+        await channel.send(embed = embed)
+
+    @announce.error
+    async def announce_error(ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            embed = discord.Embed(title = "Announcement failed!", color = ctx.author.color)
+            embed.add_field(name = 'Reason:', value = "Some perms are missing")
+            await ctx.send(embed = embed)
+        if isinstance(error, commands.BadArgument):
+            embed = discord.Embed(title = "Announcement failed!", color = ctx.author.color)
+            embed.add_field(name = 'Reason:', value = f"Mention a channel properly! And write a message after it!")
+            await ctx.send(embed = embed)
+
+    async def get_warns(self):
+        with open("./data/warns.json", "r") as f:
+            warns = json.load(f)
+        return warns
+
+    async def open_guild(self, guild):
+        warns = await self.get_warns()
+        if str(guild.id) in warns:
+            return False
+        else:
+            warns[str(guild.id)] = {}
+
+        with open("./data/warns.json", "w") as f:
+            json.dump(warns,f)
 
 
 def setup(client):

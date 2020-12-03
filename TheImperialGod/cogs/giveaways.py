@@ -1,9 +1,8 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import has_permissions
 import asyncio
-import time
-import datetime
-import json
+import random
 
 class Giveaways(commands.Cog):
     def __init__(self, client):
@@ -11,8 +10,8 @@ class Giveaways(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("Giveaways are ready to rumble!")
-    
+        print("Giveaways are now ready!")
+
     def convert(self, time):
         pos = ["s","m","h","d"]
 
@@ -30,25 +29,23 @@ class Giveaways(commands.Cog):
         return val * time_dict[unit]
 
     @commands.command()
-    @commands.has_permissions(manage_guild = True)
     async def gstart(self, ctx):
         await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
 
-        questions = ["Which channel should it be hosted in?",
+        questions = ["Which channel should it be hosted in?", 
                     "What should be the duration of the giveaway? (s|m|h|d)",
-                    "What is the prize of the giveaway?",
-        ]
+                    "What is the prize of the giveaway?"]
 
         answers = []
 
-        def check(self, m):
-            return m.author == ctx.author and m.channel == ctx.channel
+        def check(m):
+            return m.author == ctx.author and m.channel == ctx.channel 
 
         for i in questions:
             await ctx.send(i)
 
             try:
-                msg = await client.wait_for('message', timeout=30.0, check=check)
+                msg = await self.client.wait_for('message', timeout=15.0, check=check)
             except asyncio.TimeoutError:
                 await ctx.send('You didn\'t answer in time, please be quicker next time!')
                 return
@@ -60,70 +57,66 @@ class Giveaways(commands.Cog):
             await ctx.send(f"You didn't mention a channel properly. Do it like this {ctx.channel.mention} next time.")
             return
 
-        channel = client.get_channel(c_id)
-        time = self.convert(answers[1])
+        channel = self.client.get_channel(c_id)
 
+        time = self.convert(answers[1])
         if time == -1:
             await ctx.send(f"You didn't answer the time with a proper unit. Use (s|m|h|d) next time!")
             return
         elif time == -2:
             await ctx.send(f"The time must be an integer. Please enter an integer next time")
-            return
+            return            
 
         prize = answers[2]
 
         await ctx.send(f"The Giveaway will be in {channel.mention} and will last {answers[1]}!")
 
-
         embed = discord.Embed(title = "Giveaway!", description = f"{prize}", color = ctx.author.color)
         embed.add_field(name = "Hosted by:", value = ctx.author.mention)
         embed.set_footer(text = f"Ends {answers[1]} from now!")
-
         my_msg = await channel.send(embed = embed)
-        await my_msg.add_reaction("🎉")
 
+        await my_msg.add_reaction("🎉")
         await asyncio.sleep(time)
         new_msg = await channel.fetch_message(my_msg.id)
 
         users = await new_msg.reactions[0].users().flatten()
-        users.pop(users.index(client.user))
-        try:
-            winner = random.choice(users)
-        except:
-            await ctx.send("No-one entered the giveaway can't decide winner")
-            return
+        users.pop(users.index(self.client.user))
 
-        with open("data/automod.json", "r") as f:
-            guilds = json.load(f)
+        winner = random.choice(users)
+        await channel.send(f"Congratulations! {winner.mention} won {prize}!")
+
 
     @gstart.error
-    async def gstart_error(ctx, error):
+    async def gstart_error(self,ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            embed = discord.Embed(title = "Giveaway failed!", color = ctx.author.color)
-            embed.add_field(name = 'Reason:', value = "Some perms are missing")
+            embed = discord.Embed(title = "<:fail:761292267360485378> Giveaway failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = "`Administrator Permission is missing!`")
+            embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
             await ctx.send(embed = embed)
     
     @commands.command()
-    @commands.has_permissions(manage_roles=  True)
-    async def reroll(ctx, channel : discord.TextChannel, id_ : int):
+    @has_permissions(manage_guild = True)
+    async def reroll(self,ctx, channel : discord.TextChannel, id_ : int):
         try:
             new_msg = await channel.fetch_message(id_)
         except:
-            await ctx.send("The id was entered incorrectly.")
+            await ctx.send("The id was entered incorrectly.\nNext time mention a channel and then the id!")
             return
-
+        
         users = await new_msg.reactions[0].users().flatten()
-        users.pop(users.index(client.user))
+        users.pop(users.index(self.client.user))
 
         winner = random.choice(users)
-        await channel.send(f"Congratulations! The new winner is {winner.mention}.!")
+        await channel.send(f"Congratulations! The new winner is {winner.mention}.!")    
 
 
     @reroll.error
-    async def reroll_error(ctx, error):
+    async def reroll_error(self,ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            embed = discord.Embed(title = "Giveaway failed!", color = ctx.author.color)
-            embed.add_field(name = 'Reason:', value = "Some perms are missing")
+            embed = discord.Embed(title = "<:fail:761292267360485378> Reroll failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = "`Manage Server is missing!`")
+            embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
             await ctx.send(embed = embed)
 
 def setup(client):
