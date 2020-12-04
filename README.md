@@ -61,12 +61,27 @@ But GIVE THE CREDITS, if you don't you can be doing illegal activity due to the 
 In that config.json file simply type in this code:
 ```
 {
-  "token" : "your-token-here",
-  "prefix" : "botprefix",
-  "client.id" : "yourclientid"
+    "token" : "yourToken",
+    "clientId" : 768695035092271124,
+    "clientSecret" : "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH",
+    "publicKey" : "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292",
+    "prefix" : "imp ",
+    "reddit" : {
+        "clientId" : "clientId",
+        "clientSecret" : "",
+        "username" : "yourUsername",
+        "password" : "yourPassword",
+        "userAgent" : "canBeAnything"
+    },
+    "IDs" : {
+        "ownerId" : 291829898,
+        "serverLogId" : 28738273827
+    }
 }
 ```
 Replace all of that with your correct data, and it should be working
+For the reddit section create an app [here](https://reddit.com/prefs/apps) make your own **script** and you should have all the data. 
+Yeah and then its simple throw your data into config.json and done it should work. 
 
 6. Then immediately go to cmd and type `python bot.py`
 7. The bot is running and use the invite link to invite it to your server, replace the client id with your bots client id. 
