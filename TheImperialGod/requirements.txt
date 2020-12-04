@@ -23,3 +23,4 @@ wikipedia==1.4.0
 yarl==1.5.1
 youtube-dl==2020.11.1.1
 pyyaml==5.3.1
+DiscordUtils==1.2.4

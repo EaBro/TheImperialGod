@@ -29,7 +29,6 @@ import math
 import json
 import traceback
 
-
 def load_cogs(): #loading all our cogs
     extensions = [
         "cogs.animals",
@@ -41,6 +40,7 @@ def load_cogs(): #loading all our cogs
         "cogs.mod",
         "cogs.owner",
         "cogs.utils",
+        "cogs.warns",
     ]
     for filename in os.listdir("./cogs"):
         if filename.endswith(".py"):
@@ -51,17 +51,13 @@ def load_cogs(): #loading all our cogs
 with open("config.json", "r") as f:
     config = json.load(f)
 
+#consts
 BOT_TOKEN = config["token"]
-#constants
-CLIENT_ID = 768695035092271124
-CLIENT_SECRET = "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH"
-INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
-PUBLIC_KEY = "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292"
-LINES_OF_CODE = 500
-DATABASES = 'data/mainbank.json'
-PACKAGING_DATA = "package.json"
+CLIENT_ID = config["clientId"]
+CLIENT_SECRET = config["clientSecret"]
+PUBLIC_KEY = config["publicKey"]
 BOT_PREFIX = config["prefix"]
-ZAN_ID = 575706831192719370
+INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 
 client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
 
@@ -86,7 +82,6 @@ async def on_message(msg):
         if guilds[str(ctx.guild.id)]["automod"] == "true":
             for word in filtered_words:
                 if word in msg.content.lower():
-                    warns = await read_json("data/warns.json")
                     await msg.delete()
     except:
         pass
@@ -110,7 +105,7 @@ async def on_message(msg):
 
 @client.event
 async def on_guild_join(guild):
-    sguild = client.get_guild(781057246092197898)
+    sguild = client.get_guild(config["IDs"]["serverLogId"])
     embed = discord.Embed(title = "I joined a new server!", color = discord.Color.red())
 
     embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
@@ -125,7 +120,7 @@ async def on_guild_join(guild):
             
 @client.event
 async def on_guild_remove(guild):
-    sguild = client.get_guild(781057246092197898)
+    sguild = client.get_guild(config["IDs"]["serverLogId"])   
     embed = discord.Embed(title = "I left a server!", color = discord.Color.red())
 
     embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
@@ -833,203 +828,6 @@ async def serve_error(ctx, error):
         embed.add_field(name = "Try again in:", value = f"`{error.retry_after}`")
         await ctx.send(embed)
 
-mainshop = [{"name":"Watch","price":100,"description":"Time"},
-            {"name":"Laptop","price":1000,"description":"Work"},
-            {"name":"PC","price":10000,"description":"Gaming"}]
-
-
-@client.command()
-async def shop(ctx):
-    em = discord.Embed(title = "Shop")
-
-    for item in mainshop:
-        name = item["name"]
-        price = item["price"]
-        desc = item["description"]
-        em.add_field(name = name, value = f"${price} | {desc}")
-
-    await ctx.send(embed = em)
-
-@client.command()
-async def buy(ctx,item,amount = 1):
-    await open_account(ctx.author)
-
-    res = await buy_this(ctx.author,item,amount)
-
-    if not res[0]:
-        if res[1]==1:
-            await ctx.send("That Object isn't there!")
-            return
-        if res[1]==2:
-            await ctx.send(f"You don't have enough money in your wallet to buy {amount} {item}")
-            return
-
-
-    await ctx.send(f"You just bought {amount} {item}")
-
-
-@client.command(aliases = ["inv", "inventory"])
-async def bag(ctx):
-    await open_account(ctx.author)
-    user = ctx.author
-    users = await get_bank_data()
-
-    try:
-        bag = users[str(user.id)]["bag"]
-    except:
-        bag = []
-
-
-    em = discord.Embed(title = "Inventory")
-    for item in bag:
-        name = item["item"]
-        amount = item["amount"]
-
-        em.add_field(name = name, value = amount)    
-
-    await ctx.send(embed = em)    
-async def buy_this(user,item_name,amount):
-    item_name = item_name.lower()
-    name_ = None
-    for item in mainshop:
-        name = item["name"].lower()
-        if name == item_name:
-            name_ = name
-            price = item["price"]
-            break
-
-    if name_ == None:
-        return [False,1]
-
-    cost = price*amount
-
-    users = await get_bank_data()
-
-    bal = await update_bank(user)
-
-    if bal[0]<cost:
-        return [False,2]
-
-
-    try:
-        index = 0
-        t = None
-        for thing in users[str(user.id)]["bag"]:
-            n = thing["item"]
-            if n == item_name:
-                old_amt = thing["amount"]
-                new_amt = old_amt + amount
-                users[str(user.id)]["bag"][index]["amount"] = new_amt
-                t = 1
-                break
-            index+=1 
-        if t == None:
-            obj = {"item":item_name , "amount" : amount}
-            users[str(user.id)]["bag"].append(obj)
-    except:
-        obj = {"item":item_name , "amount" : amount}
-        users[str(user.id)]["bag"] = [obj]        
-
-    with open("mainbank.json","w") as f:
-        json.dump(users,f)
-
-    await update_bank(user,cost*-1,"wallet")
-
-    return [True,"Worked"]
-
-@client.command()
-async def sell(ctx,item,amount = 1):
-    await open_account(ctx.author)
-
-    res = await sell_this(ctx.author,item,amount)
-
-    if not res[0]:
-        if res[1]==1:
-            await ctx.send("That Object isn't there!")
-            return
-        if res[1]==2:
-            await ctx.send(f"You don't have {amount} {item} in your bag.")
-            return
-        if res[1]==3:
-            await ctx.send(f"You don't have {item} in your bag.")
-            return
-
-    await ctx.send(f"You just sold {amount} {item}.")
-
-async def sell_this(user,item_name,amount,price = None):
-    item_name = item_name.lower()
-    name_ = None
-    for item in mainshop:
-        name = item["name"].lower()
-        if name == item_name:
-            name_ = name
-            if price==None:
-                price = 0.9* item["price"]
-            break
-
-    if name_ == None:
-        return [False,1]
-
-    cost = price*amount
-
-    users = await get_bank_data()
-
-    bal = await update_bank(user)
-
-
-    try:
-        index = 0
-        t = None
-        for thing in users[str(user.id)]["bag"]:
-            n = thing["item"]
-            if n == item_name:
-                old_amt = thing["amount"]
-                new_amt = old_amt - amount
-                if new_amt < 0:
-                    return [False,2]
-                users[str(user.id)]["bag"][index]["amount"] = new_amt
-                t = 1
-                break
-            index+=1 
-        if t == None:
-            return [False,3]
-    except:
-        return [False,3]    
-
-    with open("mainbank.json","w") as f:
-        json.dump(users,f)
-
-    await update_bank(user,cost,"wallet")
-
-    return [True,"Worked"]
-
-@client.command(aliases = ["lb"])
-async def leaderboard(ctx,x = 1):
-    users = await get_bank_data()
-    leader_board = {}
-    total = []
-    for user in users:
-        name = int(user)
-        total_amount = users[user]["wallet"] + users[user]["bank"]
-        leader_board[total_amount] = name
-        total.append(total_amount)
-
-    total = sorted(total,reverse=True)
-
-    em = discord.Embed(title = f"Top {x} Richest People" , description = "This is decided on the basis of raw money in the bank and wallet",color = discord.Color(0xfa43ee))
-    index = 1
-    for amt in total:
-        id_ = leader_board[amt]
-        member = client.get_user(id_)
-        name = member.name
-        em.add_field(name = f"{index}. {name}" , value = f"{amt}",  inline = False)
-        if index == x:
-            break
-        else:
-            index += 1
-
-    await ctx.send(embed = em)
-
 #Helperfunctions
 async def open_account(user):
     with open("data/mainbank.json", "r") as f:
@@ -1059,7 +857,7 @@ async def update_bank(user, change = 0, mode = "wallet"):
         json.dump(users, f)
 
     bal = users[str(user.id)]["wallet"], users[str(user.id)]["bank"]
-    return bal
+    return bal  
 
 '''
 Some fun data about this code:
