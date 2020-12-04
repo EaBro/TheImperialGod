@@ -63,8 +63,8 @@ In that config.json file simply type in this code:
 {
     "token" : "yourToken",
     "clientId" : 768695035092271124,
-    "clientSecret" : "dOT7giQx_zJKPPbk3QLRQkl0QrGdSMgH",
-    "publicKey" : "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292",
+    "clientSecret" : "secret",
+    "publicKey" : "key",
     "prefix" : "imp ",
     "reddit" : {
         "clientId" : "clientId",
