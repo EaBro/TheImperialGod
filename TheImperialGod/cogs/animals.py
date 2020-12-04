@@ -2,16 +2,20 @@ import discord
 from discord.ext import commands
 import praw
 import random
+from json import load
 
 class Animals(commands.Cog):
     def __init__(self, client):
         self.client = client
+        with open("./config.json", "r") as f:
+            config = load(f)
+        
         self.reddit = praw.Reddit(
-            client_id = 'NY_kPmfmJV1VAg',
-            client_secret = "GNKjyvMHErF9yYqZGrhx6MxG55WtVw",
-            username = "NightZan999",
-            password = "python123_praw",
-            user_agent = "python_praw"
+            client_id = config["reddit"]["clientId"],
+            client_secret = config["reddit"]["clientSecret"],
+            username = config["reddit"]["username"],
+            password = config["reddit"]["password"],
+            user_agent = config["reddit"]["userAgent"]
         )
 
     @commands.Cog.listener()

@@ -288,21 +288,5 @@ class Mod(commands.Cog):
             embed.add_field(name = 'Reason:', value = f"Mention a channel properly! And write a message after it!")
             await ctx.send(embed = embed)
 
-    async def get_warns(self):
-        with open("./data/warns.json", "r") as f:
-            warns = json.load(f)
-        return warns
-
-    async def open_guild(self, guild):
-        warns = await self.get_warns()
-        if str(guild.id) in warns:
-            return False
-        else:
-            warns[str(guild.id)] = {}
-
-        with open("./data/warns.json", "w") as f:
-            json.dump(warns,f)
-
-
 def setup(client):
     client.add_cog(Mod(client))
