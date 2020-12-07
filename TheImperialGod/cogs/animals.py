@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import cooldown, BucketType
 import praw
 import random
 from json import load
@@ -175,6 +176,29 @@ class Animals(commands.Cog):
         embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
         embed.set_image(url = sub.url)
         await ctx.send(embed = embed)
+
+    @commands.command(aliases = ["mem", "goodmem", "meme"])
+    @cooldown(1, 10, BucketType.user)
+    async def _meme(self, ctx):
+        subreddit = self.reddit.subreddit("meme")
+        top = subreddit.top(limit = 100)
+
+        all_subs = []
+        for submission in top:
+            all_subs.append(submission)
+
+        sub = random.choice(all_subs)
+        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
+        embed.set_image(url = sub.url)
+        await ctx.send(embed = embed)
+    
+    @_meme.error
+    async def _meme_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title = "<:fail:761292267360485378> Meme Error", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Stop seeing memes too much, or you will become a meme!")
+            em.add_field(name = "Try Again In:", value = "{:.2}s".format(error.retry_after))
+            await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(Animals(client))

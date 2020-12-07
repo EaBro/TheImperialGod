@@ -101,7 +101,7 @@ class Information(commands.Cog):
         embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
-        embed.add_field(name = "Number of Commands:", value = f"`70` (including special owner commands)")
+        embed.add_field(name = "Number of Commands:", value = f"`75` (including special owner commands)")
         embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         await ctx.send(embed = embed)

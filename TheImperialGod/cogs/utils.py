@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
 import random
+import asyncio
 
 class Utils(commands.Cog):
     def __init__(self, client):
@@ -183,6 +184,32 @@ class Utils(commands.Cog):
 
             return
     
+    @commands.command()
+    async def treat(ctx, member:discord.Member):
+        if member == ctx.author:
+            await ctx.send("You can't treat youself!")
+            return
+        embed=discord.Embed(title = "Treats!",
+            description=f'You offered {member.name} a treat! {member.mention} react to the emoji below to accept!',
+            color=0x006400
+        )
+        timeout=int(15.0)
+        message = await ctx.channel.send(embed=embed)
+
+        await message.add_reaction('🍫')
+        
+        def check(reaction, user):
+            return user == member and str(reaction.emoji) == '🍫'
+            
+        try:
+            reaction, user = await client.wait_for('reaction_add', timeout=timeout, check=check)
+            
+        except asyncio.TimeoutError:
+            msg=(f"{member.mention} didn't accept the treat in time!!")
+            await ctx.channel.send(msg)
+
+        else:
+            await ctx.channel.send(f"{member.mention} You have accepted {ctx.author.name}'s offer!")
     
 def setup(client):
     client.add_cog(Utils(client))
