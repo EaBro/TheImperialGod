@@ -99,6 +99,7 @@ NightZan999
 * You must give credits in your source code
 * Either **fully self host and say I made it and that you found it on github, but don't steal 1 or 2 commands without explicit permission. If you do steal commands without giving credits, due to licenses is illegal.**
 * Do not brag or say that you made it when you did not. 
+* Do not make your self hosted bot public!
 
 For more information check out LICENSE
 ### Public Bot
