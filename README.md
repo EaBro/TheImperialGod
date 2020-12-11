@@ -92,6 +92,15 @@ Thanks for your patience.
 Regards, 
 NightZan999
 
+# **Self Hosting Guildlines and Agreement**
+**By self hosting you agree to follow these terms and conditions:**
+* All credit goes to NightZan999 for the work of the bot
+* You must not **say you made the bot which I made**
+* You must give credits in your source code
+* Either **fully self host and say I made it and that you found it on github, but don't steal 1 or 2 commands without explicit permission. If you do steal commands without giving credits, due to licenses is illegal.**
+* Do not brag or say that you made it when you did not. 
+
+For more information check out LICENSE
 ### Public Bot
 I guess, well you read that and your a new programmer. <br>**Note:** This code may be hard for inexperienced programmers, so if you don't understand stuff, just add the public bot!!!
 
