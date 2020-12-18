@@ -8,9 +8,9 @@ from json import load
 class Animals(commands.Cog):
     def __init__(self, client):
         self.client = client
-        with open("../config.json", "r") as f:
+        with open("./config.json", "r") as f:
             config = load(f)
-        
+
         self.reddit = praw.Reddit(
             client_id = config["reddit"]["clientId"],
             client_secret = config["reddit"]["clientSecret"],
@@ -162,7 +162,7 @@ class Animals(commands.Cog):
         embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
         embed.set_image(url = sub.url)
         await ctx.send(embed = embed)
-    
+
     @commands.command(aliases = ["pandared", "rpanda", "pandr"])
     async def redpanda(self, ctx):
         subreddit = self.reddit.subreddit("redpanda")
@@ -191,7 +191,7 @@ class Animals(commands.Cog):
         embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
         embed.set_image(url = sub.url)
         await ctx.send(embed = embed)
-    
+
     @_meme.error
     async def _meme_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):

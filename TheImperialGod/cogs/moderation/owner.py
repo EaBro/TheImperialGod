@@ -12,7 +12,7 @@ class Owner(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("owner commands are loaded!")
-    
+
     @commands.command()
     async def leaveguild(self, ctx, guild_id : int):
         if ctx.author.id != self.ownerId:
@@ -38,6 +38,15 @@ class Owner(commands.Cog):
 
         with open("./data/mainbank.json", "w") as f:
             json.dump(users, f)
+
+    @commands.command()
+    async def osay(self, ctx, *, arg):
+        if ctx.author.id != 575706831192719370:
+            return
+        """Says what you tell it to
+        Uses: `imp osay <message>`"""
+        await ctx.message.delete()
+        await ctx.send(arg)
 
 def setup(client):
     client.add_cog(Owner(client))

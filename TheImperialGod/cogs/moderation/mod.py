@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 from discord.ext.commands import MissingPermissions, BadArgument
-from asyncio import sleep
 from discord.ext.commands import cooldown, BucketType
 import random
 import json
@@ -19,7 +18,7 @@ class Mod(commands.Cog):
     @has_permissions(manage_messages = True)
     async def clear(self, ctx, amount = 1):
         await ctx.channel.purge(limit = amount)
-        
+
     @clear.error
     async def clear_error(self, ctx, error):
         if isinstance(error, MissingPermissions):
@@ -35,8 +34,8 @@ class Mod(commands.Cog):
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
         em.add_field(name=  "Description", value = "You are not muted this channel is locked! No one but mods can type in this channel!", inline = False)
-        await ctx.channel.send(embed = em)    
-        
+        await ctx.channel.send(embed = em)
+
     @lock.error
     async def lock_error(self, ctx, error):
         if isinstance(error, MissingPermissions):
@@ -52,7 +51,7 @@ class Mod(commands.Cog):
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
         em.add_field(name=  "Description", value = "You are not unmuted this channel is unlocked! No one but mods can type in this channel!", inline = False)
-        await ctx.channel.send(embed = em)    
+        await ctx.channel.send(embed = em)
 
     @unlock.error
     async def unlock_error(self, ctx, error):
@@ -179,7 +178,7 @@ class Mod(commands.Cog):
             await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
         except:
             pass
-    
+
     @ban.error
     async def ban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
@@ -202,13 +201,29 @@ class Mod(commands.Cog):
     @announce.error
     async def announce_error(ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            embed = discord.Embed(title = "Announcement failed!", color = ctx.author.color)
+            embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
             embed.add_field(name = 'Reason:', value = "Some perms are missing")
             await ctx.send(embed = embed)
         if isinstance(error, commands.BadArgument):
-            embed = discord.Embed(title = "Announcement failed!", color = ctx.author.color)
+            embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
             embed.add_field(name = 'Reason:', value = f"Mention a channel properly! And write a message after it!")
             await ctx.send(embed = embed)
+
+    @commands.command()
+    @commands.has_permissions(manage_roles = True)
+    async def createrole(self, ctx, *, name):
+        await ctx.guild.create_role(name = name)
+        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color)
+        em.add_field(name = "Role:", value = f"Created role {name}")
+        em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
+        await ctx.send(embed = em)
+
+    @createrole.error
+    async def createrole_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Role Creation Failed")
+            em.add_field(name = "Reason:", value = "`Manage Roles perms missing!`")
+            await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(Mod(client))

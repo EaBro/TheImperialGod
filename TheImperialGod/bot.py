@@ -17,18 +17,18 @@ import asyncio
 
 def load_cogs(): #loading all our cogs
     extensions = [
-        "cogs.giveaways",
-        "cogs.info",
-        "cogs.math",
-        "cogs.misc",
-        "cogs.economy",
         "cogs.help",
         "cogs.fun.animals",
-        "cogs.fun.imageManipulation",
+        "cogs.economy",
+        "cogs.fun.misc",
         "cogs.fun.utils",
+        "cogs.info.info",
+        "cogs.info.math",
         "cogs.moderation.admin",
+        "cogs.moderation.giveaways",
         "cogs.moderation.mod",
         "cogs.moderation.owner",
+        "cogs.tickets.tickets"
     ]
     for extension in extensions:
         client.load_extension(extension)
@@ -42,7 +42,8 @@ CLIENT_ID = config["clientId"]
 CLIENT_SECRET = config["clientSecret"]
 PUBLIC_KEY = config["publicKey"]
 BOT_PREFIX = config["prefix"]
-INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
+new_link ="https://discordapp.com/oauth2/authorize?&client_id=".join(str(CLIENT_ID))
+new_link.join("&scope=bot&permissions=21474836398")
 
 client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
 
@@ -56,7 +57,7 @@ async def on_ready():
 
 async def ch_pr(): #changing the bots status every 5 secs!!!
     await client.wait_until_ready()
-    
+
     while not client.is_closed():
         statuses = [
             f"The Protection of {len(client.guilds)} servers",
@@ -67,7 +68,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
             "Using utils!",
             f"Serving {len(client.users)} users",
             "Calculating inflation!",
-            "Changing statuses!"            
+            "Changing statuses!"
         ]
         status = random.choice(statuses)
 
@@ -80,7 +81,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
 
 @client.event
 async def on_guild_join(guild):
-    sguild = client.get_guild(config["IDs"]["serverLogId"])
+    sguild = client.get_guild(config["IDs"]["supportGuildId"])
     embed = discord.Embed(title = "I joined a new server!", color = discord.Color.red())
 
     embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
@@ -89,13 +90,13 @@ async def on_guild_join(guild):
     embed.add_field(name = "Name:", value = f"{str(guild.name)}")
 
     for channel in sguild.channels:
-        if channel.id == 781366606202798080:
+        if channel.id == config["IDs"]["channelLogId"]:
             await channel.send(embed = embed)
             break
-            
+
 @client.event
 async def on_guild_remove(guild):
-    sguild = client.get_guild(config["IDs"]["serverLogId"])   
+    sguild = client.get_guild(config["IDs"]["supportGuildId"])
     embed = discord.Embed(title = "I left a server!", color = discord.Color.red())
 
     embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
@@ -104,7 +105,7 @@ async def on_guild_remove(guild):
     embed.add_field(name = "Name:", value = f"{str(guild.name)}")
 
     for channel in sguild.channels:
-        if channel.id == 781366606202798080:
+        if channel.id == config["IDs"]["channelLogId"]:
             await channel.send(embed = embed)
             break
 
@@ -139,22 +140,6 @@ async def on_message(msg):
 
     await client.process_commands(msg)
 
-@client.command()
-async def load(ctx, extension):
-    if ZAN_ID != ctx.author.id:
-        await ctx.send("Only for bot devs")
-        return
-    client.load_extension(f"cogs.{extension}")
-    await ctx.send("loaded the cog...")
-
-@client.command()
-async def unload(ctx, extension):
-    if ZAN_ID != ctx.author.id:
-        await ctx.send("Only for bot devs")
-        return
-    client.unload_extension(f"cogs.{extension}")
-    await ctx.send('unloaded the cog...')
-
 @client.command(case_insensitive=True)
 async def treat(ctx, member:discord.Member):
     if member == ctx.author:
@@ -168,13 +153,13 @@ async def treat(ctx, member:discord.Member):
     message = await ctx.channel.send(embed=embed)
 
     await message.add_reaction('🍫')
-    
+
     def check(reaction, user):
         return user == member and str(reaction.emoji) == '🍫'
-        
+
     try:
         reaction, user = await client.wait_for('reaction_add', timeout=timeout, check=check)
-        
+
     except asyncio.TimeoutError:
         msg=(f"{member.mention} didn't accept the treat in time!!")
         await ctx.channel.send(msg)
@@ -193,6 +178,6 @@ Some fun data about this code:
 2000 Lines of Code = 11/11/2020
 5000 Lines of Code =
 '''
-load_cogs() 
+load_cogs()
 client.loop.create_task(ch_pr())
 client.run(BOT_TOKEN)

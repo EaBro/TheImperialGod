@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import DiscordUtils
+
 
 class Help(commands.Cog):
     def __init__(self, client):
@@ -72,7 +72,7 @@ class Help(commands.Cog):
         :link: [Website](https://theimperialgodwebsite.nightzan.repl.co/)
         """)
         page1.add_field(name = f":dollar: Economy Commands: [11]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
-        page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Warn`, `nick`, `setmuterole`")
+        page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
         page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
         page1.add_field(name = f":tools: Utilities: [{len(self.utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`, `treat`")
         page1.add_field(name = f"<:pepethink:779232211336822804> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")

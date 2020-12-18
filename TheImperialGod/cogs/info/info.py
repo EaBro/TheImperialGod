@@ -12,10 +12,10 @@ class Information(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Information is ready")
-    
+
     @commands.command(aliases = ["guild", "guildinfo", "si"])
     async def serverinfo(self, ctx):
-        
+
         findbots = sum(1 for member in ctx.guild.members if member.bot)
         roles = sum(1 for role in ctx.guild.roles)
 
@@ -29,7 +29,7 @@ class Information(commands.Cog):
         embed.add_field(name="Bots", value=f"`{findbots}`", inline=True)
         embed.add_field(name = "Guild created at: ", value = str(ctx.guild.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
         embed.add_field(name = "Number of Roles:", value = f"`{roles}`")
-        
+
         # check if they have automod enabled or disabled
         with open("./data/automod.json", "r") as f:
             guilds = json.load(f)
@@ -43,7 +43,7 @@ class Information(commands.Cog):
                 embed.add_field(name = "Automod Status:", value = f"`False`")
 
         await ctx.send(embed =  embed)
-    
+
     @commands.command(aliases = ["ci"])
     async def channelinfo(self, ctx, channel : discord.TextChannel = None):
         if channel == None:
@@ -59,7 +59,7 @@ class Information(commands.Cog):
         embed.add_field(name = 'Channel Type: ', value = str(channel.type))
         embed.add_field(name = "Channel's Announcement Status: ", value = str(news))
         await ctx.send(embed = embed)
-    
+
     @commands.command()
     async def userinfo(self, ctx, member : discord.Member = None):
         if member == None:
@@ -87,7 +87,7 @@ class Information(commands.Cog):
         em.add_field(name = "ID:", value = user.id)
         em.set_thumbnail(url = user.avatar_url)
         await ctx.send(embed = em)
-    
+
     @commands.command(aliases = ["bi"])
     async def botinfo(self, ctx):
         embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
@@ -101,7 +101,7 @@ class Information(commands.Cog):
         embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
-        embed.add_field(name = "Number of Commands:", value = f"`75` (including special owner commands)")
+        embed.add_field(name = "Number of Commands:", value = f"`80` (including special owner commands)")
         embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         await ctx.send(embed = embed)
@@ -113,7 +113,7 @@ class Information(commands.Cog):
         embed.add_field(name = "API Latency", value = f"`{random.randint(1, 20)}`")
         embed.add_field(name = "Description:", value = "The client latency tells you how fast the bot is. For every command the latency goes down by about 5\nLatency starts at 1000!\n\nThe API latency will tell you how the API reacts to the client latency, the higher the API latency the better!")
         await ctx.send(embed = embed)
-    
+
 
 def setup(client):
     client.add_cog(Information(client))
