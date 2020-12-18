@@ -19,36 +19,17 @@ class Admin(commands.Cog):
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
         msg = await ctx.send(embed = embed)
 
-        # adding the reaction
-        await msg.add_reaction("<:success:761297849475399710>")
-        await msg.add_reaction("<:fail:761292267360485378>")
+        with open("../data/automod.json", "r") as f:
+            guilds = json.load(f)
 
-        def check(reaction, user):
-            if str(reaction.emoji) == "<:fail:761292267360485378>" or str(reaction.emoji) == "<:success:761297849475399710>":
-                isValidReaction = True
-                return user == ctx.author and isValidReaction
-            isValidReaction = False
-            return user == ctx.author and isValidReaction
-        try:
-            reaction, user = await self.client.wait_for('reaction_add', timeout=15.0, check=check)
-            
-        except asyncio.TimeoutError:
-            await ctx.send("Too late")
+        if str(ctx.guild.id) in guilds:
+            guilds[str(ctx.guild.id)]["automod"] = "true"
         else:
-            with open("./data/automod.json", "r") as f:
-                guilds = json.load(f)
-            
-            with open("./data/emojis.json", "r") as f:
-                emojis = json.load(f)
+            guilds[str(ctx.guild.id)] = {}
+            guilds[str(ctx.guild.id)]["automod"] = "true"
 
-            if str(ctx.guild.id) in guilds:
-                guilds[str(ctx.guild.id)]["automod"] = "true"
-            else:
-                guilds[str(ctx.guild.id)] = {}
-                guilds[str(ctx.guild.id)]["automod"] = "true"
-
-            with open("./data/automod.json", "w") as f:
-                json.dump(guilds, f)
+        with open("../data/automod.json", "w") as f:
+            json.dump(guilds, f)
 
     @enableautomod.error
     async def enableautomod_error(self, ctx, error):
@@ -58,11 +39,8 @@ class Admin(commands.Cog):
     @commands.command()
     @has_permissions(administrator = True)
     async def disableautomod(self, ctx, *, reason = None):
-        with open("./data/automod.json", "r") as f:
+        with open("../data/automod.json", "r") as f:
             guilds = json.load(f)
-
-        with open("./data/emojis.json","r") as f:
-            emojis = json.load(f)
 
         if str(ctx.guild.id) in guilds:
             guilds[str(ctx.guild.id)]["automod"] = "false"
@@ -76,7 +54,7 @@ class Admin(commands.Cog):
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
         await ctx.send(embed = embed)
     
-        with open("./data/automod.json", "w") as f:
+        with open("../data/automod.json", "w") as f:
             json.dump(guilds, f)
 
     @disableautomod.error
@@ -86,7 +64,7 @@ class Admin(commands.Cog):
 
     @commands.command()
     async def checkautomod(self,ctx):
-        with open("./data/automod.json", "r") as f:
+        with open("../data/automod.json", "r") as f:
             guilds = json.load(f)
         
         embed = discord.Embed(title = f"Automoderation status of {ctx.guild.name}", color = ctx.author.color)

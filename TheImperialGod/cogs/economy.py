@@ -15,7 +15,7 @@ class Economy(commands.Cog):
             users = json.load(f)
         return users
     
-    async def open_account(self, ctx):
+    async def open_account(self, user):
         users = await self.get_bank_data()
         if str(user.id) in users:
             return False

@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import DiscordUtils
 
 class Help(commands.Cog):
     def __init__(self, client):
@@ -57,32 +58,32 @@ class Help(commands.Cog):
             "serverinfo",
             "userinfo"
         ]
-    
+
     @commands.Cog.listener()
     async def on_ready(self):
         print("Help command ready!")
-    
+
     @commands.group(invoke_without_command = True)
     async def help(self, ctx, category = None):
-        embed = discord.Embed(title = "Help", color = ctx.author.color, description = f"""
+        page1 = discord.Embed(title = "Help", color = ctx.author.color, description = f"""
         **Type `imp help` and then a __category__ for more information for even more information!**\n
         :link: [Invite Link](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)\n
-        :link: [Support Server](https://discord.gg/hEbjHrKBqp)\n            
+        :link: [Support Server](https://discord.gg/hEbjHrKBqp)\n
         :link: [Website](https://theimperialgodwebsite.nightzan.repl.co/)
         """)
-        embed.add_field(name = f":dollar: Economy Commands: [11]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
-        embed.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Warn`, `nick`, `setmuterole`")
-        embed.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
-        embed.add_field(name = f":tools: Utilities: [{len(self.utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`, `treat`")
-        embed.add_field(name = f"<:pepethink:779232211336822804> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
-        embed.add_field(name = f"Image Module [1]: ", value = f"`wanted`")
-        embed.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
-        embed.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
-        embed.add_field(name = f":question: Misc: [{len(self.misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`, `support`")
-        embed.add_field(name = f"<:settings:761301883792654386> Admin: [{len(self.owner_commands)}]", value = "`enableautomod`, `disableautomod`, `checkautomod`, `addmemechannel`, `removememechannel`")
-        embed.set_footer(text = f"My prefix is `imp`")
-        await ctx.send(embed = embed)
-    
+        page1.add_field(name = f":dollar: Economy Commands: [11]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
+        page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `Addrole`, `Delrole`, `Announce`, `Warn`, `nick`, `setmuterole`")
+        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
+        page1.add_field(name = f":tools: Utilities: [{len(self.utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`, `treat`")
+        page1.add_field(name = f"<:pepethink:779232211336822804> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
+        page1.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
+        page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
+        page1.add_field(name = f":ticket: Tickets [3]", value = f"`new`, `close`, `addticketrole`")
+        page1.add_field(name = f":question: Misc: [{len(self.misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`, `support`")
+        page1.set_footer(text = f"My prefix is `imp`")
+        msg = await ctx.send(embed = page1)
+
+
     @help.command(aliases= ["eco"])
     async def economy(self, ctx):
         em = discord.Embed(title = 'Help Economy', color =ctx.author.color)
@@ -95,7 +96,7 @@ class Help(commands.Cog):
         em.add_field(name = "Rob", value = "Robs a user!")
         msg = await ctx.send(embed = em)
         await msg.add_reaction('💰')
-    
+
     @help.command(aliases=["mod"])
     async def moderation(self, ctx):
         em = discord.Embed(title = 'Help Moderation', color =ctx.author.color)
@@ -111,7 +112,7 @@ class Help(commands.Cog):
         em.add_field(name = "Setdelay", value = "Sets a **custom slowmode in the channel**")
         msg  = await ctx.send(embed = em)
         await msg.add_reaction("🗡")
-    
+
     @help.command(aliases = ["utilties"])
     async def utils(self,ctx):
         em = discord.Embed(title = "Help Utils:", color = ctx.author.color)
@@ -163,12 +164,14 @@ class Help(commands.Cog):
         embed.add_field(name = "checkautomod", value = "Tells you automod status")
         msg = await ctx.send(embed = embed)
         await msg.add_reaction("🐯")
-    
-    @help.command(aliases=["images", "imageManipulation", 'imagemanipulation', "imagemani"])
-    async def image(self, ctx):
-        em = discord.Embed(title=  "Help Images", color= ctx.author.color)
-        em.add_field(name = "Wanted", value = "Shows you wanted in a bounty!")
-        await ctx.send(embed = em)
+
+    @help.command(aliases=["ticket"])
+    async def tickets(self, ctx):
+        em = discord.Embed(title = "Help Tickets", color = ctx.author.color)
+        em.add_field(name = "New", value = "Creates a new ticket")
+        em.add_field(name = "Delete", value = 'Deletes a ticket')
+        em.add_field(name = "Setmodrole", value = "Set a role which can access tickets")
+        await ctx.send(embed  = em)
 
 
 def setup(client):

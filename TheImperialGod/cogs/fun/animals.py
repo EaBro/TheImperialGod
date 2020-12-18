@@ -8,7 +8,7 @@ from json import load
 class Animals(commands.Cog):
     def __init__(self, client):
         self.client = client
-        with open("./config.json", "r") as f:
+        with open("../config.json", "r") as f:
             config = load(f)
         
         self.reddit = praw.Reddit(
