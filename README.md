@@ -1,4 +1,4 @@
-### TheImperialGod 
+## TheImperialGod 
 
 <a href="https://top.gg/bot/768695035092271124">
     <img src="https://top.gg/api/widget/768695035092271124.svg" alt="The Imperial God" />
@@ -26,7 +26,7 @@ The bot is even smart enough NOT to filter automod in NSFW channels even if its 
 ## Economy
 Okay economy systems are hard, they take about 1000 lines just to write a shop and have a wallet and arcade system. See this is hard!
 
-But don't worry I have used a database system called .json (JavaScript Object Notation)
+But don't worry, for we have used [a database system called JSON!](https://www.quora.com/Is-it-okay-to-use-JSON-as-a-database "Quick Note: JSON is NOT a database :)  -Makiyu-py") (JavaScript Object Notation)
 
 ## Utilities
 Yes, TheImperialGod has like plenty of utility features including a changing status that changes his status every 10 seconds, which to me is really cool.
@@ -35,28 +35,28 @@ Now, it has coinflip and plenty of stuff, so yeah have fun with your friends.
 So till now good going and before you touch the code.
 
 ## Giveaways
-So we have some Giveaway features which simply reroll and start a giveaway, kinda basic but that's all we have for the bot. The rest of the commands are just customizable
+So we have some Giveaway features which simply reroll and start a giveaway, kinda basic but that's all we have for the bot. The rest of the commands are just customizable.
 
-We have error handling for all commands! 
-
-## Contribution
-Contribute by first reading Contributing.md and then later on, fork and send hack to `nightzan999@gmail.com`.
-
-If your stuff gets approved it gets into the source and to the public bot. Don't worry we WILL give you credits. 
+###### (We also have *error handling* for all commands!)
 
 ## Issues
 Issues with the public bot will probably be outages and we cannot help those, rather than making them, please refrain from doing that.
 
 You have the code in front of you, please download it and host it. 
 
-### Self Hosting.
+## Contribution
+Contribute by first reading Contributing.md and then later on, fork and send hack to `nightzan999@gmail.com`.
+
+If your stuff gets approved it gets into the source and to the public bot. Don't worry we WILL give you credits. 
+
+# Self Hosting
 Yes this is the most important place here. <br>**Note:** Self hosting is suggested as the public bot goes offline sometimes and that may disrupt your giveaways.
 
 Just in bot.py check the bot token and replace it with yours. As TheImperialGod doesn't have changing prefixes, so change the prefix as well if you would like!
 
-But GIVE THE CREDITS, if you don't you can be doing illegal activity due to the MIT LICENSE. If you keep the credits and don't brag that you made the bot. Its fine that you can use the bot!
+But please, **GIVE THE CREDITS.** If you keep the credits and don't brag that you made the bot. Its fine that you can use the bot!
 
-### Steps for Self Hosting
+## Steps for Self Hosting
 Please note, this is expected to be done with basic Python knowledge. If you do not know how Python works, please do not attempt to self-host.
 1. Download the bot files either by downloading as a zip in github or doing `git clone https://github.com/NightZan999/TheImperialGod.git`, make sure you have git installed or  github CLI (Client Line Interface).
 3. Then go to cmd of that directory and type `pip install -r requirements.txt`. Once its done, go to config.json and fill it in with all the correct details.
@@ -68,7 +68,7 @@ Yeah and then its simple throw your data into config.json and done it should wor
 5. Enjoy the bot! <br>
 **Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WON'T work!
 
-# **Self Hosting Guildlines and Agreement.**
+## **Self Hosting Guildlines and Agreement.**
 
 You **must** give credits to Nightzan999.
 You **cannot** say you made the bot yourself. You must give credits in your source code.
@@ -76,9 +76,9 @@ You **cannot** brag or say that you made it when you did not.
 You **cannot** make your self-hosted bot a public bot.
 If you're self-hosting the bot as it is, you **must** give all credits.
 If you're using the source code to add just a few commands (1-5), credits is not necessary, **but it will be appreciated**. If you're adding more than 5 commands from the source code, you must give credits.
-**Please respect the [LICENSE](https://github.com/NightZan999/TheImperialGod/blob/main/LICENSE).
+**Please respect the [LICENSE](https://github.com/NightZan999/TheImperialGod/blob/main/LICENSE).**
 
-Due to this having a LICENSE, you breaking any of the following rules could cause legal issues.**
+Due to this having a LICENSE, you breaking any of the following rules could **cause legal issues.**
 
 ### Public Bot
 I guess, well you read that and your a new programmer. <br>**Note:** This code may be hard for inexperienced programmers, so if you don't understand stuff, just add the public bot!
@@ -105,7 +105,7 @@ The main developer of TheImperialGod, not only coded all the cogs and the code h
 **2. Dragonizedpizza:**
 The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation but even got the bot hosted and told me how it got hosted. Big thanks to him <br>
 **3. Superzackx:**
-From helping NightZan999 with the website and making the full backend for the website and basically helping the full crew but also giving suggestion on the bot. Which are now implemented. <br> He even **made the full logic of the website and figured out an error** for more information about this. Click [here](https://github.com/NightZan999/TheImperialGod/issues/9). 
+From helping NightZan999 with the website and making the full backend for the website and basically helping the full crew but also giving suggestion on the bot, Which are now implemented. <br> He even **made the full logic of the website and figured out an error.** For more information about this, Click [here](https://github.com/NightZan999/TheImperialGod/issues/9). <br>
 **4. Makiyu-py:**
 he helped in 2 commands...
 
