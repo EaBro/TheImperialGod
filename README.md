@@ -68,16 +68,18 @@ Yeah and then its simple throw your data into config.json and done it should wor
 5. Enjoy the bot! <br>
 **Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WON'T work!
 
-# **Self Hosting Guildlines and Agreement**
-**By self hosting you agree to follow these terms and conditions:**
-* All credit goes to NightZan999 for the work of the bot
-* You must not **say you made the bot which I made**
-* You must give credits in your source code
-* Either **fully self host and say I made it and that you found it on github, but don't steal 1 or 2 commands without explicit permission. If you do steal commands without giving credits, due to licenses is illegal.**
-* Do not brag or say that you made it when you did not. 
-* Do not make your self hosted bot public!
+# **Self Hosting Guildlines and Agreement.**
 
-For more information check out LICENSE
+You **must** give credits to Nightzan999.
+You **cannot** say you made the bot yourself. You must give credits in your source code.
+You **cannot** brag or say that you made it when you did not.
+You **cannot** make your self-hosted bot a public bot.
+If you're self-hosting the bot as it is, you **must** give all credits.
+If you're using the source code to add just a few commands (1-5), credits is not necessary, **but it will be appreciated**. If you're adding more than 5 commands from the source code, you must give credits.
+**Please respect the [LICENSE](https://github.com/NightZan999/TheImperialGod/blob/main/LICENSE).
+
+Due to this having a LICENSE, you breaking any of the following rules could cause legal issues.**
+
 ### Public Bot
 I guess, well you read that and your a new programmer. <br>**Note:** This code may be hard for inexperienced programmers, so if you don't understand stuff, just add the public bot!
 
