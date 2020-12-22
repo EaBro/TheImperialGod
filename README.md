@@ -1,7 +1,4 @@
 # TheImperialGod
-<a href="https://top.gg/bot/768695035092271124">
-    <img src="https://top.gg/api/widget/768695035092271124.svg" alt="The Imperial God" />
-</a> <br> <br>
 # Features
 TheImperialGod is a perfect bot with plenty of utilities and good for server owners!
 <br>
