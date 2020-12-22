@@ -1,4 +1,9 @@
-# TheImperialGod
+### TheImperialGod 
+
+<a href="https://top.gg/bot/768695035092271124">
+    <img src="https://top.gg/api/widget/768695035092271124.svg" alt="The Imperial God" />
+</a>
+
 # Features
 TheImperialGod is a perfect bot with plenty of utilities and good for server owners!
 <br>
@@ -44,8 +49,7 @@ Issues with the public bot will probably be outages and we cannot help those, ra
 
 You have the code in front of you, please download it and host it. 
 
-## Self Hosting? Public Bot?
-### Self Hosting
+### Self Hosting.
 Yes this is the most important place here. <br>**Note:** Self hosting is suggested as the public bot goes offline sometimes and that may disrupt your giveaways.
 
 Just in bot.py check the bot token and replace it with yours. As TheImperialGod doesn't have changing prefixes, so change the prefix as well if you would like!
@@ -53,44 +57,16 @@ Just in bot.py check the bot token and replace it with yours. As TheImperialGod 
 But GIVE THE CREDITS, if you don't you can be doing illegal activity due to the MIT LICENSE. If you keep the credits and don't brag that you made the bot. Its fine that you can use the bot!
 
 ### Steps for Self Hosting
-1. Download Python from [here](https://python.org) (lastest version please)
-2. Then download the bot files either by downloading as a zip in github or doing `git clone https://github.com/NightZan999/TheImperialGod`, make sure you have git installed and the github CLI (Client Line Interface)
-3. Then unzip the zipped folder
-4. Then go to cmd of that directory and type `pip install -r requirements.txt`
-**5. Okay now create a file in the same directory as bot.py and name it `config.json`**
-In that config.json file simply type in this code:
-```
-{
-    "token" : "yourToken",
-    "clientId" : 768695035092271124,
-    "clientSecret" : "secret",
-    "publicKey" : "key",
-    "prefix" : "imp ",
-    "reddit" : {
-        "clientId" : "clientId",
-        "clientSecret" : "",
-        "username" : "yourUsername",
-        "password" : "yourPassword",
-        "userAgent" : "canBeAnything"
-    },
-    "IDs" : {
-        "ownerId" : 291829898,
-        "serverLogId" : 28738273827
-    }
-}
-```
-Replace all of that with your correct data, and it should be working
+Please note, this is expected to be done with basic Python knowledge. If you do not know how Python works, please do not attempt to self-host.
+1. Download the bot files either by downloading as a zip in github or doing `git clone https://github.com/NightZan999/TheImperialGod.git`, make sure you have git installed or  github CLI (Client Line Interface).
+3. Then go to cmd of that directory and type `pip install -r requirements.txt`. Once its done, go to config.json and fill it in with all the correct details.
+
 For the reddit section create an app [here](https://reddit.com/prefs/apps) make your own **script** and you should have all the data. 
 Yeah and then its simple throw your data into config.json and done it should work. 
 
-6. Then immediately go to cmd and type `python bot.py`
-7. The bot is running and use the invite link to invite it to your server, replace the client id with your bots client id. 
-8. Enjoy the bot! <br>
-**Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WONT work!
-
-Thanks for your patience.
-Regards, 
-NightZan999
+4. Then you can go to cmd and type `python bot.py`, which should start the bot.
+5. Enjoy the bot! <br>
+**Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WON'T work!
 
 # **Self Hosting Guildlines and Agreement**
 **By self hosting you agree to follow these terms and conditions:**
@@ -103,11 +79,11 @@ NightZan999
 
 For more information check out LICENSE
 ### Public Bot
-I guess, well you read that and your a new programmer. <br>**Note:** This code may be hard for inexperienced programmers, so if you don't understand stuff, just add the public bot!!!
+I guess, well you read that and your a new programmer. <br>**Note:** This code may be hard for inexperienced programmers, so if you don't understand stuff, just add the public bot!
 
 You can find the invite link in the main bot file, just copy paste that into your browser, so yes continue and your bot is here!
 
-Or of course if you don't know how to read variables simply click [this](https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398)
+Or of course if you don't know how to read variables simply click [this](https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398)!
 
 He will be up most of the time, but when he is down please cope with it!
 But anyways, if you are interested in the public bot. Then you are in the currency system, and if you want coins join my server where there are giveaways happening.
@@ -131,4 +107,6 @@ From helping NightZan999 with the website and making the full backend for the we
 **4. Makiyu-py:**
 he helped in 2 commands...
 
-**Consider following most of these creators of the bot if you enjoy the public bot or the code which it relies on. Huge thanks if you do follow them**
+**Consider following most of these creators of the bot if you enjoy the public bot or the code which it relies on. Huge thanks if you do follow them!**
+
+From TheImperialGod team.
