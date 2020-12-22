@@ -16,7 +16,7 @@ class Utils(commands.Cog):
         embed.add_field(name = "We rolled a:", value = f"`{res}`")
         embed.set_image(url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnWL81FKwiyIak8DR8azPVHryuOFNlS5esVw&usqp=CAU")
         await ctx.send(embed = embed)
-    
+
     @commands.command()
     async def random_number(self, ctx, range1: int, range2: int):
         bool = True
@@ -50,7 +50,7 @@ class Utils(commands.Cog):
             await ctx.send("You have to provide a valid message:\n `imp code hello there`")
 
         await ctx.send("```" + msg.replace("`", "") +("```"))
-    
+
     @commands.command()
     async def guess(self, ctx, start, end, guess):
         async with ctx.channel.typing():
@@ -162,7 +162,7 @@ class Utils(commands.Cog):
             await ctx.author.send(f'Password Generated: {fnpss}')
         except Exception as e:
             print(e)
-    
+
     @commands.command(aliases = ["av"])
     @commands.cooldown(1, 5, commands.BucketType.user)
     async def avatar(self, ctx, *, member: discord.Member = None):
@@ -183,6 +183,17 @@ class Utils(commands.Cog):
             await ctx.send(embed=em)
 
             return
-    
+
+    @commands.command()
+    async def embed(self,ctx, *, content):
+        """
+        Sends a embed    Format: `Title | Description`
+        """
+        if ctx.author.id != 575706831192719370:
+            return
+        title, description = content.split('|')
+        embed = discord.Embed(title=title, description=description, color=ctx.author.color, timestamp=ctx.message.created_at)
+        await ctx.send(embed=embed)
+
 def setup(client):
     client.add_cog(Utils(client))

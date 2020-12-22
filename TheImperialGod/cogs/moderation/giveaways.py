@@ -33,14 +33,14 @@ class Giveaways(commands.Cog):
     async def gstart(self, ctx):
         await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
 
-        questions = ["Which channel should it be hosted in?", 
+        questions = ["Which channel should it be hosted in?",
                     "What should be the duration of the giveaway? (s|m|h|d)",
                     "What is the prize of the giveaway?"]
 
         answers = []
 
         def check(m):
-            return m.author == ctx.author and m.channel == ctx.channel 
+            return m.author == ctx.author and m.channel == ctx.channel
 
         for i in questions:
             await ctx.send(i)
@@ -52,7 +52,7 @@ class Giveaways(commands.Cog):
                 return
             else:
                 answers.append(msg.content)
-                
+
         try:
             c_id = int(answers[0][2:-1])
         except:
@@ -67,7 +67,7 @@ class Giveaways(commands.Cog):
             return
         elif time == -2:
             await ctx.send(f"The time must be an integer. Please enter an integer next time")
-            return            
+            return
 
         prize = answers[2]
 
@@ -100,7 +100,7 @@ class Giveaways(commands.Cog):
             embed.add_field(name = "Reason:", value = "`Administrator Permission is missing!`")
             embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
             await ctx.send(embed = embed)
-    
+
     @commands.command()
     @has_permissions(manage_guild = True)
     async def reroll(self,ctx, channel : discord.TextChannel, id_ : int):
@@ -109,12 +109,12 @@ class Giveaways(commands.Cog):
         except:
             await ctx.send("The id was entered incorrectly.\nNext time mention a channel and then the id!")
             return
-        
+
         users = await new_msg.reactions[0].users().flatten()
         users.pop(users.index(self.client.user))
 
         winner = random.choice(users)
-        await channel.send(f"Congratulations! The new winner is {winner.mention}.!")    
+        await channel.send(f"Congratulations! The new winner is {winner.mention}.!")
 
 
     @reroll.error
