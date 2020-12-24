@@ -19,10 +19,6 @@ app.get("/faq", function(req, res) {
     res.render("faq")
 });
 
-app.get("/", function(req, res) {
-    res.render("support")
-});
-
 app.get("*", function(req, res) {
     res.render("404")
 });
