@@ -151,6 +151,7 @@ class Mod(commands.Cog):
         em.add_field(name = f"Victim:", value = f"`{member.name}`")
         em.add_field(name = "Reason: ", value = f"`{reason}`")
         em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
+        em.set_footer(text = f"{member.name} said bye!")
         await ctx.send(embed = em)
 
     @kick.error
@@ -182,6 +183,7 @@ class Mod(commands.Cog):
         em.add_field(name = f"Victim:", value = f"`{member.name}`")
         em.add_field(name = "Reason: ", value = f"`{reason}`")
         em.add_field(name = "**Moderator**:", value = f"`{ctx.author.name}`")
+        em.set_footer(text = f"{member.name} said bye!")
         await ctx.send(embed = em)
 
     @ban.error
@@ -225,6 +227,7 @@ class Mod(commands.Cog):
         em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color)
         em.add_field(name = "Role:", value = f"Created role {name}")
         em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
+        em.set_footer(text = "Good job creating roles!")
         await ctx.send(embed = em)
 
     @createrole.error

@@ -166,6 +166,8 @@ async def treat(ctx, member:discord.Member):
 
     else:
         await ctx.channel.send(f"{member.mention} You have accepted {ctx.author.name}'s offer!")
+
+
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020

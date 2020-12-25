@@ -80,14 +80,19 @@ class Help(commands.Cog):
         page1.set_footer(text = f"My prefix is `imp`")
         msg = await ctx.send(embed = page1)
 
-        links = discord.Embed(title = "Help Center", color = ctx.author.color)
-        links.add_field(name = ":link: Invite", value = "[Click Me](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)")
-        links.add_field(name = ":link: Support Server",value = "[Click Me](https://discord.com/invite/hEbjHrKBqp)")
-        links.add_field(name = ":link: Web Dashboard", value = "[Click Me](http://theimperialgodwebsite.herokuapp.com/)")
+        links = discord.Embed(title = "Help Center", color = ctx.author.color,
+        description = """:bell: [Invite](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)\n
+        :radioactive: [Top.gg](https://top.gg/bot/768695035092271124)\n
+        :scorpius: [Vote](https://top.gg/bot/768695035092271124/vote)\n
+        <:info:761298826907746386> [Support Server](https://discord.gg/KuPzxqHe)\n
+        <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://theimperialgodwebsite.herokuapp.com)
+        """
+        )
         try:
             await ctx.author.send(embed = links)
         except:
-            pass
+            await ctx.send(f"{ctx.author.mention}, please open direct messages. Since I need to send you a DM!")
+            return
 
     @help.command(aliases= ["eco"])
     async def economy(self, ctx):
