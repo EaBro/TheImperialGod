@@ -78,37 +78,6 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
     if client.is_closed():
         print("Offline again, f in the chat for the discord devs!")
 
-
-@client.event
-async def on_guild_join(guild):
-    sguild = client.get_guild(config["IDs"]["supportGuildId"])
-    embed = discord.Embed(title = "I joined a new server!", color = discord.Color.red())
-
-    embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
-    embed.add_field(name = "New Servercount:", value = f"`{len(client.guilds)}`")
-    embed.add_field(name = "New Usercount:", value = f"`{len(client.users)}`")
-    embed.add_field(name = "Name:", value = f"{str(guild.name)}")
-
-    for channel in sguild.channels:
-        if channel.id == config["IDs"]["channelLogId"]:
-            await channel.send(embed = embed)
-            break
-
-@client.event
-async def on_guild_remove(guild):
-    sguild = client.get_guild(config["IDs"]["supportGuildId"])
-    embed = discord.Embed(title = "I left a server!", color = discord.Color.red())
-
-    embed.add_field(name = "Owner:", value = f"`{guild.owner}`")
-    embed.add_field(name = "New Servercount:", value = f"`{len(client.guilds)}`")
-    embed.add_field(name = "New Usercount:", value = f"`{len(client.users)}`")
-    embed.add_field(name = "Name:", value = f"{str(guild.name)}")
-
-    for channel in sguild.channels:
-        if channel.id == config["IDs"]["channelLogId"]:
-            await channel.send(embed = embed)
-            break
-
 @client.event
 async def on_message(msg):
     with open("data/automod.json", "r") as f:
@@ -139,35 +108,6 @@ async def on_message(msg):
 
 
     await client.process_commands(msg)
-
-@client.command(case_insensitive=True)
-async def treat(ctx, member:discord.Member):
-    if member == ctx.author:
-        await ctx.send("You can't treat youself!")
-        return
-    embed=discord.Embed(
-        description=f'You offered {member.name} a treat! {member.mention} react to the emoji below to accept!',
-        color=0x006400
-    )
-    timeout=int(15.0)
-    message = await ctx.channel.send(embed=embed)
-
-    await message.add_reaction('🍫')
-
-    def check(reaction, user):
-        return user == member and str(reaction.emoji) == '🍫'
-
-    try:
-        reaction, user = await client.wait_for('reaction_add', timeout=timeout, check=check)
-
-    except asyncio.TimeoutError:
-        msg=(f"{member.mention} didn't accept the treat in time!!")
-        await ctx.channel.send(msg)
-
-    else:
-        await ctx.channel.send(f"{member.mention} You have accepted {ctx.author.name}'s offer!")
-
-
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
