@@ -80,7 +80,7 @@ class Information(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def whois(ctx, user : discord.Member = None):
+    async def whois(self,ctx, user : discord.Member = None):
         if user == None:
             user = ctx.author
         em = discord.Embed(title = user.name, color = user.color)
@@ -109,7 +109,7 @@ class Information(commands.Cog):
     @commands.command()
     async def ping(self, ctx):
         embed = discord.Embed(title = ":ping_pong: Pong!", color = ctx.author.color)
-        embed.add_field(name=  "Client Latency", value = f"`{self.client.latency}`")
+        embed.add_field(name=  "Client Latency", value = f"`{round(self.client.latency * 1000)}ms`")
         embed.add_field(name = "API Latency", value = f"`{random.randint(1, 20)}`")
         embed.add_field(name = "Description:", value = "The client latency tells you how fast the bot is. For every command the latency goes down by about 5\nLatency starts at 1000!\n\nThe API latency will tell you how the API reacts to the client latency, the higher the API latency the better!")
         await ctx.send(embed = embed)

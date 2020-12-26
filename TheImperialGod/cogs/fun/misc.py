@@ -32,7 +32,7 @@ class Misc(commands.Cog):
     async def candy(self, ctx):
         await ctx.send("You want candy, take it!")
         await ctx.send(file = discord.File("./assets/candy.jpg"))
-    
+
     @commands.command()
     async def say(self, ctx, *, msg = None):
         if msg == None:
@@ -42,7 +42,7 @@ class Misc(commands.Cog):
         for word in self.filtered_words:
             if word in msg.content:
                 return
-        
+
         await ctx.send(msg)
 
     @commands.command()
@@ -59,7 +59,7 @@ class Misc(commands.Cog):
         for channel in guild.channels:
             if channel.id == 781363343780741140:
                 await channel.send(embed = embed)
-    
+
     @suggest.error
     async def suggest_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):

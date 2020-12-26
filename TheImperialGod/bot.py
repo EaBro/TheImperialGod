@@ -83,6 +83,10 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
     if client.is_closed():
         print("Offline again, f in the chat for the discord devs!")
 
+filtered_words = [
+"idiot", "die", "bitch", "dick", "ass", "asshole"
+]
+racial_slurs = ["nigga"]
 @client.event
 async def on_message(msg):
     with open("data/automod.json", "r") as f:
@@ -95,6 +99,13 @@ async def on_message(msg):
             for word in filtered_words:
                 if word in msg.content.lower():
                     await msg.delete()
+                    await msg.author.send("Watch your language!")
+            for slur in racial_slurs:
+                if slur in msg.content.lower():
+                    await msg.delete()
+                    await msg.author.ban(reason = "Used a racial slur!")
+                    await msg.author.send("You were banned because you used a racial slur!")
+                    return
     except:
         pass
 
