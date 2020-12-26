@@ -37,9 +37,6 @@ class Help(commands.Cog):
                 'enableautomod',
                 "disableautomod",
                 "checkautomod",
-                "addwinnerrole",
-                "removewinnerrole",
-                "automemechannel"
         ]
         self.economy_commands = [
             "Withdraw",
@@ -77,6 +74,7 @@ class Help(commands.Cog):
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`, `support`")
+        page1.add_field(name =f"<:settings:761301883792654386> Admin Commands: [{len(self.owner_commands)}]", value = f"`enableautomod`, `disableautomod`, `checkautomod`")
         page1.set_footer(text = f"My prefix is `imp`")
         msg = await ctx.send(embed = page1)
 
@@ -88,6 +86,7 @@ class Help(commands.Cog):
         <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://theimperialgodwebsite.herokuapp.com)
         """
         )
+        links.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
         try:
             await ctx.author.send(embed = links)
         except:
