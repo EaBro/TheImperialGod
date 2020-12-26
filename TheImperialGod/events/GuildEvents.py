@@ -6,14 +6,10 @@ class GuildEvents(commands.Cog):
     def __init__(self, client):
         self.client = client
         with open("./config.json", "r") as f:
-            self.config = json.load(f)
+            config = json.load(f)
 
     @commands.Cog.listener()
-    async def on_ready(self):
-        print("GuildEvents are ready!")
-
-    @commands.Cog.listener()
-    async def on_guild_join(self, guild):
+    async def on_guild_join(self,guild):
         sguild = self.client.get_guild(self.config["IDs"]["supportGuildId"])
         embed = discord.Embed(title = "I joined a new server!", color = discord.Color.red())
 
@@ -26,9 +22,8 @@ class GuildEvents(commands.Cog):
             if channel.id == self.config["IDs"]["channelLogId"]:
                 await channel.send(embed = embed)
                 break
-
     @commands.Cog.listener()
-    async def on_guild_remove(self, guild):
+    async def on_guild_remove(self,guild):
         sguild = self.client.get_guild(self.config["IDs"]["supportGuildId"])
         embed = discord.Embed(title = "I left a server!", color = discord.Color.red())
 
@@ -41,7 +36,9 @@ class GuildEvents(commands.Cog):
             if channel.id == self.config["IDs"]["channelLogId"]:
                 await channel.send(embed = embed)
                 break
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("GuildEvents are loaded!")
 
 def setup(client):
-    # adding the container class as a cog!
     client.add_cog(GuildEvents(client))

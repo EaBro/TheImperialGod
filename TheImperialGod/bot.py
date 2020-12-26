@@ -16,7 +16,7 @@ import json
 import asyncio
 
 def load_cogs(): #loading all our cogs
-    extensions = [
+    cogs = [
         "cogs.help",
         "cogs.fun.animals",
         "cogs.economy",
@@ -30,8 +30,13 @@ def load_cogs(): #loading all our cogs
         "cogs.moderation.owner",
         "cogs.tickets.tickets"
     ]
-    for extension in extensions:
-        client.load_extension(extension)
+    events = [
+        "events.GuildEvents"
+    ]
+    for cog in cogs:
+        client.load_extension(cog)
+    for event in events:
+        client.load_extension(event)
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -108,6 +113,35 @@ async def on_message(msg):
 
 
     await client.process_commands(msg)
+
+@client.command(case_insensitive=True)
+async def treat(ctx, member:discord.Member):
+    if member == ctx.author:
+        await ctx.send("You can't treat youself!")
+        return
+    embed=discord.Embed(
+        description=f'You offered {member.name} a treat! {member.mention} react to the emoji below to accept!',
+        color=0x006400
+    )
+    timeout=int(15.0)
+    message = await ctx.channel.send(embed=embed)
+
+    await message.add_reaction('🍫')
+
+    def check(reaction, user):
+        return user == member and str(reaction.emoji) == '🍫'
+
+    try:
+        reaction, user = await client.wait_for('reaction_add', timeout=timeout, check=check)
+
+    except asyncio.TimeoutError:
+        msg=(f"{member.mention} didn't accept the treat in time!!")
+        await ctx.channel.send(msg)
+
+    else:
+        await ctx.channel.send(f"{member.mention} You have accepted {ctx.author.name}'s offer!")
+
+
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
