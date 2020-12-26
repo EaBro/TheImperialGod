@@ -9,12 +9,12 @@ import random
 class Economy(commands.Cog):
     def __init__(self, client):
         self.client = client
-    
+
     async def get_bank_data(self):
         with open("./data/mainbank.json", "r") as f:
             users = json.load(f)
         return users
-    
+
     async def open_account(self, user):
         users = await self.get_bank_data()
         if str(user.id) in users:
@@ -36,7 +36,7 @@ class Economy(commands.Cog):
 
         with open("./data/mainbank.json", "w") as f:
             json.dump(users,f)
-    
+
     @commands.command(aliases=["bal"])
     @cooldown(1, 5, BucketType.user)
     async def balance(self, ctx, user : discord.Member = None):
@@ -52,7 +52,7 @@ class Economy(commands.Cog):
         em.add_field(name = "Wallet Balance:", value = f"{wallet_amt} :coin:")
         em.add_field(name = "Bank Balance:", value = f"{bank_amt} :coin:")
         await ctx.send(embed = em)
-    
+
     @commands.command()
     @cooldown(1, 15, BucketType.user)
     async def beg(self, ctx):
@@ -69,7 +69,7 @@ class Economy(commands.Cog):
         em.add_field(name = "Bank Balance:", value = f"{bank_amt} :coin:")
         em.add_field(name = f"Amount Earned:", value = f"{earnings} :coin:", inline = False)
         await ctx.send(embed = em)
-    
+
     @beg.error
     async def beg_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
@@ -84,7 +84,7 @@ class Economy(commands.Cog):
         if amount == None:
             await ctx.send("Type an amount!")
             return
-        
+
         users = await self.get_bank_data()
         await self.open_account(ctx.author)
         if amount == 0 or amount < 0:
@@ -120,7 +120,7 @@ class Economy(commands.Cog):
         if amount == None:
             await ctx.send("Type an amount!")
             return
-        
+
         users = await self.get_bank_data()
         await self.open_account(ctx.author)
         if amount == 0 or amount < 0:
@@ -141,7 +141,7 @@ class Economy(commands.Cog):
         em.add_field(name = "Bank Balance:", value = f"{bank_amt} :coin:")
         em.add_field(name = f"Amount Deposited:", value = f"{amount} :coin:", inline = False)
         await ctx.send(embed = em)
-    
+
     @deposit.error
     async def deposit_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
@@ -149,14 +149,14 @@ class Economy(commands.Cog):
             em.add_field(name = 'Reason:', value = 'Stop depositing so much, makes you look like a tax accountant!')
             em.add_field(name = "Try again in:", value = "{:.2}s".format(error.retry_after))
             await ctx.send(embed = em)
-    
+
     @commands.command()
     @cooldown(1, 30, BucketType.user)
     async def slots(self, ctx, amount = None):
         if amount == None:
             await ctx.send("Type an amount!")
             return
-        
+
         users = await self.get_bank_data()
         await self.open_account(ctx.author)
         if amount == 0 or amount < 0:
@@ -171,14 +171,14 @@ class Economy(commands.Cog):
         for i in range(0, 3):
             a = random.choice(["👻", "👾", "🔱"])
             final.append(a)
-        
+
         if final[0] == final[1] or final[1] == final[2] or final[0] == final[2]:
             winTrue = True
             await self.update_bank(ctx.author, amount)
         else:
             winTrue = False
             await self.update_bank(ctx.author, -1*amount)
-        
+
         wallet_amt = users[str(ctx.author.id)]["wallet"]
         bank_amt = users[str(ctx.author.id)]["bank"]
         em = discord.Embed(title = f"{ctx.author.name} bets!",color = ctx.author.color)
@@ -191,7 +191,7 @@ class Economy(commands.Cog):
         else:
             em.add_field(name = "Loss", value = f"{amount} :coin:")
         await ctx.send(embed = em)
-    
+
     @slots.error
     async def slots_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
@@ -209,7 +209,7 @@ class Economy(commands.Cog):
         if member == None:
             await ctx.send("Type a person to send money to!")
             return
-        
+
         users = await self.get_bank_data()
         await self.open_account(ctx.author)
         await self.open_account(member)
@@ -238,7 +238,7 @@ class Economy(commands.Cog):
         if member == None:
             await ctx.send("Type a person to rob!")
             return
-        
+
         users = await self.get_bank_data()
         await self.open_account(ctx.author)
         await self.open_account(member)
@@ -252,7 +252,7 @@ class Economy(commands.Cog):
         if member.bot:
             await ctx.send("You can't rob a bot back of my kind!")
             return
-        
+
         wallet_amt = users[str(member.id)]["wallet"]
         amount = random.randint(1, wallet_amt)
 

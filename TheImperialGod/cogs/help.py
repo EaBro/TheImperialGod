@@ -37,6 +37,9 @@ class Help(commands.Cog):
                 'enableautomod',
                 "disableautomod",
                 "checkautomod",
+                "addwinnerrole",
+                "removewinnerrole",
+                "automemechannel"
         ]
         self.economy_commands = [
             "Withdraw",
@@ -74,8 +77,7 @@ class Help(commands.Cog):
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`, `support`")
-        page1.add_field(name = "<:settings:761301883792654386> Admin Commands [3]", value = "`enableautomod`, `disableautomod`, `checkautomod`")
-        page1.set_footer(text = "My prefix is imp")
+        page1.set_footer(text = f"My prefix is `imp`")
         msg = await ctx.send(embed = page1)
 
         links = discord.Embed(title = "Help Center", color = ctx.author.color,
