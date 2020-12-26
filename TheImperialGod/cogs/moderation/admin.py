@@ -19,7 +19,7 @@ class Admin(commands.Cog):
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
         msg = await ctx.send(embed = embed)
 
-        with open("../data/automod.json", "r") as f:
+        with open("./data/automod.json", "r") as f:
             guilds = json.load(f)
 
         if str(ctx.guild.id) in guilds:
@@ -28,18 +28,18 @@ class Admin(commands.Cog):
             guilds[str(ctx.guild.id)] = {}
             guilds[str(ctx.guild.id)]["automod"] = "true"
 
-        with open("../data/automod.json", "w") as f:
+        with open("./data/automod.json", "w") as f:
             json.dump(guilds, f)
 
     @enableautomod.error
     async def enableautomod_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("Bruh you really think you can use that?")
-    
+
     @commands.command()
     @has_permissions(administrator = True)
     async def disableautomod(self, ctx, *, reason = None):
-        with open("../data/automod.json", "r") as f:
+        with open("./data/automod.json", "r") as f:
             guilds = json.load(f)
 
         if str(ctx.guild.id) in guilds:
@@ -53,8 +53,8 @@ class Admin(commands.Cog):
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
         await ctx.send(embed = embed)
-    
-        with open("../data/automod.json", "w") as f:
+
+        with open("./data/automod.json", "w") as f:
             json.dump(guilds, f)
 
     @disableautomod.error
@@ -64,9 +64,9 @@ class Admin(commands.Cog):
 
     @commands.command()
     async def checkautomod(self,ctx):
-        with open("../data/automod.json", "r") as f:
+        with open("./data/automod.json", "r") as f:
             guilds = json.load(f)
-        
+
         embed = discord.Embed(title = f"Automoderation status of {ctx.guild.name}", color = ctx.author.color)
 
         if str(ctx.guild.id) in guilds:
@@ -80,6 +80,6 @@ class Admin(commands.Cog):
             embed.add_field(name = "What to do?", value = "Ask a mod to set this up!")
             await ctx.send(embed = embed)
 
-    
+
 def setup(client):
     client.add_cog(Admin(client))
