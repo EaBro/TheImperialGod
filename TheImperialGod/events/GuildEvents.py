@@ -49,3 +49,5 @@ class GuildEvents(commands.Cog):
             if channel.id == channelId:
                 await channel.send(embed = embed)
                 break
+def setup(client):
+    client.add_cog(GuildEvents(client))
