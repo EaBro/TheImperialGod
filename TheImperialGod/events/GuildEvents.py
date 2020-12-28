@@ -6,7 +6,7 @@ class GuildEvents(commands.Cog):
     def __init__(self, client):
         self.client = client
         with open("./config.json", "r") as f:
-            config = json.load(f)
+            self.config = json.load(f)
 
     @commands.Cog.listener()
     async def on_guild_join(self,guild):
