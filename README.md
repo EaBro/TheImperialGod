@@ -21,7 +21,8 @@ The bot is even smart enough NOT to filter automod in NSFW channels even if its 
 ## Economy
 Okay economy systems are hard, they take about 1000 lines just to write a shop and have a wallet and arcade system. See this is hard!
 
-But don't worry, for we have used [a database system called JSON!](https://www.quora.com/Is-it-okay-to-use-JSON-as-a-database "Quick Note: JSON is NOT a database :)  -Makiyu-py") (JavaScript Object Notation)
+But don't worry, for we have used SQLite3. Oh you must be wondering, isn't sqlite not usable for discord.py, yes it is. So I use aiosqlite as a databse!
+**Sadly we still use JSON for minor stuff like automod or server settings. But we will be switching very soon!**
 
 ## Utilities
 Yes, TheImperialGod has like plenty of utility features including a changing status that changes his status every 10 seconds, which to me is really cool.
