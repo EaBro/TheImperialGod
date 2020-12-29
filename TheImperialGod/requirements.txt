@@ -1,4 +1,4 @@
 asyncio
 discord.py
 praw
-DiscordUtils
+aiosqlite

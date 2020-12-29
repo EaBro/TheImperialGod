@@ -17,21 +17,21 @@ import asyncio
 
 def load_cogs(): #loading all our cogs
     cogs = [
-        "cogs.help",
-        "cogs.fun.animals",
-        "cogs.economy",
-        "cogs.fun.misc",
-        "cogs.fun.utils",
-        "cogs.info.info",
-        "cogs.info.math",
-        "cogs.moderation.admin",
-        "cogs.moderation.giveaways",
-        "cogs.moderation.mod",
-        "cogs.moderation.owner",
-        "cogs.tickets.tickets"
+        "cogs.info.help", # help command
+        "cogs.fun.animals", # searching reddit
+        "cogs.economy.economy", # economy with sqlite3
+        "cogs.fun.misc", # misc commands
+        "cogs.fun.utils", # utilities
+        "cogs.info.info", # information
+        "cogs.info.math", # math commands
+        "cogs.moderation.admin", # admin commands with JSON
+        "cogs.moderation.giveaways", # giveaway commands!
+        "cogs.moderation.mod", # moderation commands
+        "cogs.moderation.owner", # owner commands
+        "cogs.tickets.tickets" # ticket commands
     ]
     events = [
-        "events.GuildEvents"
+        "events.GuildEvents" # when the bot leaves or joins a guild!
     ]
     for cog in cogs:
         client.load_extension(cog)
@@ -50,7 +50,8 @@ BOT_PREFIX = config["prefix"]
 new_link ="https://discordapp.com/oauth2/authorize?&client_id=".join(str(CLIENT_ID))
 new_link.join("&scope=bot&permissions=21474836398")
 
-client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True) #making a client object
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True, intents = intents) #making a client object
 
 #when the bot gets ready
 @client.event
