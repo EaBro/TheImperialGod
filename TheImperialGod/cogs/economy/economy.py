@@ -172,10 +172,16 @@ class Economy(commands.Cog):
                             return
                         else:
                             await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + amount,rows[0] - amount,ctx.author.id,))
-                            await ctx.send(f"Successfully withdrew {amount} from your bank")
+                            em = discord.Embed(title = "<:success:761297849475399710> Deposit successful!", color = ctx.author.color)
+                            em.add_field(name = ":bank: Amount Deposited:", value = f"{amount} :coin:")
+                            em.set_thumbnail(url = ctx.author.avatar_url)
+                            await ctx.send(embed = em)
                     else:
                         await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + rows[0],0,ctx.author.id,))
-                        await ctx.send(f"Successfully withdrew {rows[0]} from your bank")
+                        em = discord.Embed(title = "<:success:761297849475399710> Deposit successful!", color = ctx.author.color)
+                        em.add_field(name = ":bank: Amount Deposited:", value = f"{rows[0]} :coin:")
+                        em.set_thumbnail(url = ctx.author.avatar_url)
+                        await ctx.send(embed = em)
                 await connection.commit()
 
     @withdraw.error
