@@ -1,103 +1,39 @@
 <%- include("partials/header.ejs") -%>
-<style>
-  body {
-      position: relative;
-      background-color: yellow;
-      text-align : left;
-  }
-  .jumbotron {
-      text-align: center;
-      background-image : linear-gradient(to right, rgb(5, 245, 49), rgb(5, 245, 221), rgb(5, 21, 245));
-  }
-  ::-moz-selection { /* Code for Firefox */
-      color: red;
-      background: yellow;
-  }
-
-  ::selection {
-      color: red;
-      background: yellow;
-  }
-  #text {text-align: center;}
-  p {
-      font-size : 18px;
-      text-align: left;
-  }
-  li {
-      font-size : 18px;
-  }
-
-  .dropdown-menu a {
-      background-color: black;
-      color : white;
-      font-size : 16px;
-      width : inherit;
-      height: inherit;
-  }
-  .dropdown-menu a:hover {
-      background-color: blue;
-      color : white;
-  }
-  .dropdown-menu {background-color: black}
-  .status {
-    background-color : orange;
-    color : black;
-  }
-  .status ul li {
-    font-size : 20px;
-    font-emphasis : none;display : inherit;
-    text-align : center;
-  }
-  .status p {
-    font-size : 20px;
-    font-emphasis : none;
-    display : inherit;
-    text-align : center;
-  }
-  .status h1 {
-    text-align : center;
-    font-emphasis : none;
-    display : inherit;
-  }
-  .accordion-item h2 button {
-    background-color : black;
-    color : white;
-  }
-  .accordion-body {
-    background-color : black;
-    color : white;
-    font-size : 17px;
-  }
-</style>
-<div class="jumbotron">
-  <h1>TheImperialGod's FAQ</h1>
-  <p id = "text">FAQ - Frequently Asked Questions about TheImperialGod</p>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Accordion Item #1
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the first item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Accordion Item #2
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Accordion Item #3
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
 </div>
-<div class="accordion accordion-flush" id="accordionFlushFAQ">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingOne">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-        Changing Bot Prefix!
-      </button>
-    </h2>
-    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">
-        Sorry, but you can't change TheImperialGod's prefix! <br> We used to work on
-        this feature! But realized that having a unique prefix meant more servers
-        not having to change the prefix. <br> <br>
-        If this feature does ever come, then we will let you know!
-      </div>
-  </div>
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="flush-headingTwo">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-        Adding Blacklisted words in Automoderation
-      </button>
-    </h2>
-    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-      <div class="accordion-body">
-        Currently, in Automoderation the bot will blacklist bad words
-        but not all. We are trying to work on a system
-        in which server admins can blacklist their own words!
-      </div>
-  </div>

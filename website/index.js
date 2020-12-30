@@ -15,12 +15,12 @@ app.get("/support", function(req, res) {
     res.render("support")
 });
 
-app.get("/faq", function(req, res) {
-    res.render("faq")
-});
-
 app.get("*", function(req, res) {
     res.render("404")
+});
+
+app.get("/faq", function(req, res) {
+    res.render("faq")
 });
 
 app.listen(process.env.PORT, process.env.IP, function() {
