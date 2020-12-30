@@ -85,9 +85,9 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         print("Offline again, f in the chat for the discord devs!")
 
 filtered_words = [
-"idiot", "die", "bitch", "dick", "ass", "asshole"
+"badword1", "badword2"
 ]
-racial_slurs = ["nigga"]
+racial_slurs = ["hello there"]
 @client.event
 async def on_message(msg):
     with open("data/automod.json", "r") as f:
