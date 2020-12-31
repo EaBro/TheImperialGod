@@ -38,6 +38,16 @@ class Tickets(commands.Cog):
                 await ctx.send(embed = em)
 
             else:
+                channelname = "ticket-{}".format(ctx.author.name)
+                ticket = True
+                for echannel in ctx.guild.channels:
+                    if echannel.name == channelname:
+                        ticket = False
+
+                if not ticket:
+                    await ctx.send("You already have a ticket! Please contact staff on your already made ticket!")
+                    return  
+
                 warning = f"""{ctx.author.mention} it is good to provide a reason for your inquires with the EMPIRE\nNext time try `imp new <reason>`
                 """
                 tickets = await self.get_tickets()
@@ -85,7 +95,7 @@ class Tickets(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> New Error", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "If your trying to spam the server then get off!")
-            em.add_field(name = "Try again in:", value = "{:.2}s".format(error.retry_after))
+            em.add_field(name = "Try again in:", value = "{:.2f}s".format(error.retry_after))
             await ctx.send(embed = em)
 
     @commands.command()
@@ -127,7 +137,16 @@ class Tickets(commands.Cog):
             tickets = json.load(f)
         return tickets
 
-    # TODO: add the close command
+    @commands.command()
+    @commands.has_permissions(manage_channels = True)
+    async def close(self, ctx):
+        channel = ctx.channel
+        name = channel.name
+        if name.startswith("ticket-"):
+            await channel.delete()
+        else:
+            await ctx.send("Not a previous ticket channel!")
+            return
 
 def setup(client):
     client.add_cog(Tickets(client))
