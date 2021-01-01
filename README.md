@@ -1,8 +1,15 @@
 ## TheImperialGod 
+TheImperialGod is an awesome discord.py bot which has plenty of features!
+
+It has many features, so you dont have to have many bots in your server just to get the commands that you want. It is always being improved, so if you see a bug or have a suggestion, dont hesitate to use the report bug or suggest commands to contact the devloper. It is always online, so no need to worry about it going offline randomly
 # Features
 TheImperialGod is a perfect bot with plenty of utilities and good for server owners!
 <br>
 With a nice themed base and some useful features, comes at you TheImperialGod
+
+# License warning
+DO NOT COPY CODE FROM THIS REPOSITORY WITHOUT PROPERLY CREDITING ME! I don't want to DMCA anyone, but I will do what is necessary to defend the license. 
+<br> If you are not familiar with how to give credit then please DM me on discord (NightZan999#0194) or you can obviously create an issue!
 
 ## Introduction
 Before touching the code and stuff please read till the end of the MD file. There is a ton of important information in this README file. Also once you read this, read the code of conduct. <br>
