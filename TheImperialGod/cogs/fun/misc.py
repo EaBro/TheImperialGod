@@ -80,7 +80,7 @@ class Misc(commands.Cog):
         embed.add_field(name = "Website:", value = f":link: [Website](https://theimperialgodwebsite.nightzan.repl.co/)")
         embed.add_field(name = "Why Support me?", inline = False, value = f"""Look, its your choice whether or not you would like to help me out.\n
         But if you like how I roll and think that I help your servers, just by doing these small tasks you can take me to other people who
-        are in need like you.\n\nPlus I have 70 commands and am in just {len(self.client.guilds)} servers.
+        are in need like you.\n\nPlus I have 85 commands and am in just {len(self.client.guilds)} servers.
         """)
         await ctx.send(embed = embed)
 

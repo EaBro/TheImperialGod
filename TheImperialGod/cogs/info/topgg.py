@@ -14,7 +14,7 @@ class TopGG(commands.Cog):
         self.update_stats.start()
 
     @commands.Cog.listener()
-    async def on_readu(self):
+    async def on_ready(self):
         print("Top.gg stuff is ready!")
 
     @tasks.loop(minutes=30.0)

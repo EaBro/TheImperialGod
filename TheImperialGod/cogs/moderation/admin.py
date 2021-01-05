@@ -17,6 +17,7 @@ class Admin(commands.Cog):
         embed.add_field(name = "Automod Status:", value = f"`Automod = True`")
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+        em.set_footer(text="Bot Made By NightZan999#0194")
         msg = await ctx.send(embed = embed)
 
         with open("./data/automod.json", "r") as f:
@@ -52,6 +53,7 @@ class Admin(commands.Cog):
         embed.add_field(name = 'Automod:', value = "`Automod = False`")
         embed.add_field(name = "Reason:", value = f"`{reason}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.author.name}`", inline = False)
+        em.set_footer(text="Bot Made By NightZan999#0194")
         await ctx.send(embed = embed)
 
         with open("./data/automod.json", "w") as f:
@@ -78,6 +80,7 @@ class Admin(commands.Cog):
         else:
             embed.add_field(name = "Automod Status:", value = f"`<:fail:761292267360485378> Not set up!`")
             embed.add_field(name = "What to do?", value = "Ask a mod to set this up!")
+            embed.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = embed)
 
 

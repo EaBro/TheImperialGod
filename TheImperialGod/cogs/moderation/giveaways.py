@@ -111,6 +111,7 @@ class Giveaways(commands.Cog):
             embed = discord.Embed(title = "<:fail:761292267360485378> Giveaway failed!", color = ctx.author.color)
             embed.add_field(name = "Reason:", value = "`Administrator Permission is missing!`")
             embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
+            embed.set_footer(text = 'Bot Made by NightZan999#0194')
             await ctx.send(embed = embed)
 
     @commands.command()
@@ -126,7 +127,7 @@ class Giveaways(commands.Cog):
         users.pop(users.index(self.client.user))
 
         winner = random.choice(users)
-        await channel.send(f"Congratulations! The new winner is {winner.mention}.!")
+        await channel.send(f"Congratulations! The new winner is {winner.mention}!")
 
 
     @reroll.error
@@ -135,6 +136,7 @@ class Giveaways(commands.Cog):
             embed = discord.Embed(title = "<:fail:761292267360485378> Reroll failed!", color = ctx.author.color)
             embed.add_field(name = "Reason:", value = "`Manage Server is missing!`")
             embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
+            embed.set_footer(text='Bot Made by NightZan999#0194')
             await ctx.send(embed = embed)
 
 def setup(client):

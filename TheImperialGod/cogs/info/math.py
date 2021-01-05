@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import math
-import random
 
 class Math(commands.Cog):
     def __init__(self, client):
@@ -18,6 +17,7 @@ class Math(commands.Cog):
         res = num1 + num2
         embed = discord.Embed(title = "Sum:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -27,6 +27,7 @@ class Math(commands.Cog):
         res = num1 - num2
         embed = discord.Embed(title = "Difference:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -36,6 +37,7 @@ class Math(commands.Cog):
         res = num1 * num2
         embed = discord.Embed(title = "Product:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -45,6 +47,7 @@ class Math(commands.Cog):
         res = num1 / num2
         embed = discord.Embed(title = "Quotient:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -53,6 +56,7 @@ class Math(commands.Cog):
         res = num1 * num1
         embed = discord.Embed(title = "Square:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -62,6 +66,7 @@ class Math(commands.Cog):
 
         embed = discord.Embed(title = "Sum:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -72,6 +77,7 @@ class Math(commands.Cog):
 
         embed = discord.Embed(title = "Sum:", color = ctx.author.color)
         embed.add_field(name = "Result:", value = f"`{res}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
 def setup(client):

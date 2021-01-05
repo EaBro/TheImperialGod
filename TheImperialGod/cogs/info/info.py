@@ -29,6 +29,7 @@ class Information(commands.Cog):
         embed.add_field(name="Bots", value=f"`{findbots}`", inline=True)
         embed.add_field(name = "Guild created at: ", value = str(ctx.guild.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
         embed.add_field(name = "Number of Roles:", value = f"`{roles}`")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
 
         # check if they have automod enabled or disabled
         with open("./data/automod.json", "r") as f:
@@ -58,6 +59,7 @@ class Information(commands.Cog):
         embed.add_field(name = 'Channel Created At: ', value = str(channel.created_at.strftime("%a, %d %B %Y, %I:%M %p UTC")))
         embed.add_field(name = 'Channel Type: ', value = str(channel.type))
         embed.add_field(name = "Channel's Announcement Status: ", value = str(news))
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -77,6 +79,7 @@ class Information(commands.Cog):
         embed.add_field(name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles[:1]]))
         embed.add_field(name='Join position', value=pos)
         embed.set_footer(icon_url=member.avatar_url, text=f'Requested By: {ctx.author.name}')
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -86,6 +89,7 @@ class Information(commands.Cog):
         em = discord.Embed(title = user.name, color = user.color)
         em.add_field(name = "ID:", value = user.id)
         em.set_thumbnail(url = user.avatar_url)
+        em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = em)
 
     @commands.command(aliases = ["bi"])
@@ -104,6 +108,7 @@ class Information(commands.Cog):
         embed.add_field(name = "Number of Commands:", value = f"`80` (including special owner commands)")
         embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -112,6 +117,7 @@ class Information(commands.Cog):
         embed.add_field(name=  "Client Latency", value = f"`{round(self.client.latency * 1000)}ms`")
         embed.add_field(name = "API Latency", value = f"`{random.randint(1, 20)}`")
         embed.add_field(name = "Description:", value = "The client latency tells you how fast the bot is. For every command the latency goes down by about 5\nLatency starts at 1000!\n\nThe API latency will tell you how the API reacts to the client latency, the higher the API latency the better!")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
 

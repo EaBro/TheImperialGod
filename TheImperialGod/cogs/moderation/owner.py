@@ -69,6 +69,7 @@ class Owner(commands.Cog):
             return
         else:
             em = discord.Embed(title = title, color = ctx.author.color, description= desc)
+            em.set_footer(text='Bot Made by NightZan999#0194')
             await ctx.send(embed = em)
 
 

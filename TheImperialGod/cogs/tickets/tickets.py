@@ -18,6 +18,7 @@ class Tickets(commands.Cog):
         em = discord.Embed(title = "Confirm New Ticket", color =  ctx.author.color)
         em.add_field(name = "Reason:", value = "We don't want people to spam!")
         em.add_field(name = "Steps to do:", value = "Type `confirm` in the chat to confirm this ticket!")
+        em.set_footer(text = "Bot Made By NightZan999#0194")
         msg = await ctx.send(embed = em)
 
         def msg_check(m):
@@ -72,6 +73,7 @@ class Tickets(commands.Cog):
                 em.add_field(name = "Description:", value = "Staff will be with your shortly")
                 em.add_field(name = "Member:", value = f"{ctx.author.mention}")
                 em.add_field(name = "Reason:", value = f"`{reason}`")
+                em.set_footer(text="Bot Made By NightZan999#0194")
                 # Perms
                 # Make sure the author can type!
                 await channel.set_permissions(ctx.author, read_messages = True, send_messages = True)
@@ -96,6 +98,7 @@ class Tickets(commands.Cog):
             em = discord.Embed(title = "<:fail:761292267360485378> New Error", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "If your trying to spam the server then get off!")
             em.add_field(name = "Try again in:", value = "{:.2f}s".format(error.retry_after))
+            em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
 
     @commands.command()
@@ -118,6 +121,7 @@ class Tickets(commands.Cog):
             tickets[str(guild.id)]["ticketrole"] = int(role.id)
             em.add_field(name = "Role:", value = f"{role.mention}")
         em.add_field(name = "Features:", value = "Users can now type `imp new <reason>`")
+        em.set_footer(text="Bot Made By NightZan999#0194")
         await ctx.send(embed = em)
 
         # Updating the database
@@ -130,6 +134,7 @@ class Tickets(commands.Cog):
             em = discord.Embed(title = "<:fail:761292267360485378> Ticket Error", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You don't have the perms")
             em.add_field(name = "Perms:", value = "`Manage Server permission missing!`")
+            em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
 
     async def get_tickets(self):
@@ -148,6 +153,7 @@ class Tickets(commands.Cog):
             em = discord.Embed(title = "<:fail:761292267360485378> Closing Failed!", color= ctx.author.color)
             em.add_field(name = "Reason:", value = f'This channel ({ctx.channel.mention}) is not a ticket channel!')
             em.add_field(name = "Try again later!", value = "Only a channel which has been a ticket can be closed!")
+            em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
 
     @close.error
@@ -156,6 +162,7 @@ class Tickets(commands.Cog):
             em = discord.Embed(title = '<:fail:761292267360485378> Close Failed', color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Manage Channels permission is missing!`")
             em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
 
 

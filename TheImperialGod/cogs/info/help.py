@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import asyncio
 
 class Help(commands.Cog):
     def __init__(self, client):
@@ -87,11 +88,17 @@ class Help(commands.Cog):
         """
         )
         links.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
+        links.add_field(name = 'Embed Info', value = "This message deletes after 30 seconds due to congestion! So does the other one!")
+        links.set_footer(text='Bot Made by NightZan999#0194')
         try:
-            await ctx.author.send(embed = links)
+            mesg = await ctx.author.send(embed = links)
         except:
             await ctx.send(f"{ctx.author.mention}, please open direct messages. Since I need to send you a DM!")
             return
+        else:
+            await asyncio.sleep(30)
+            await mesg.delete()
+            await msg.delete()
 
     @help.command(aliases= ["eco"])
     async def economy(self, ctx):
@@ -103,6 +110,7 @@ class Help(commands.Cog):
         em.add_field(name=  "Deposit", value = "Deposit some coins into your bank!")
         em.add_field(name= "Slots", value = "Bet some money and lose or win!")
         em.add_field(name = "Rob", value = "Robs a user!")
+        em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction('💰')
 
@@ -119,6 +127,7 @@ class Help(commands.Cog):
         em.add_field(name = "Addrole", value = "Give a role")
         em.add_field(name = "Removerole", value = "Remove a role from a user")
         em.add_field(name = "Setdelay", value = "Sets a **custom slowmode in the channel**")
+        em.set_footer(text='Bot Made by NightZan999#0194')
         msg  = await ctx.send(embed = em)
         await msg.add_reaction("🗡")
 
@@ -139,6 +148,7 @@ class Help(commands.Cog):
         em.add_field(name=  "Whois", value = "Show information about people")
         em.add_field(name=  "Osay:", value = "Make the bot say something in a channel")
         em.add_field(name = "Treat", value = "Treat someone to a treat!")
+        em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🍩")
 
@@ -147,6 +157,7 @@ class Help(commands.Cog):
         em = discord.Embed(title = "Help Giveaways:", color = ctx.author.color)
         em.add_field(name = "gstart", value = "Starts a giveaway")
         em.add_field(name = "reroll", value = "Rerolls a giveaway")
+        em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🎉")
 
@@ -161,7 +172,7 @@ class Help(commands.Cog):
         em.add_field(name = "userinfo", value = "Shows you information about a user")
         em.add_field(name = "channelinfo", value = "Shows you information about a channel!")
         em.add_field(name = "avatar", value = "Shows you an avatar of a person")
-        em.add_field(name = "hypesquad", value = "Shows you the true story of hypesquad.")
+        em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🐬")
 
@@ -171,6 +182,7 @@ class Help(commands.Cog):
         embed.add_field(name = "enableautomod", value = "Enables automod for the server, if anyone types a bad word. It deletes")
         embed.add_field(name = "disableautomod", value = "Disable automoderation for the entire server!")
         embed.add_field(name = "checkautomod", value = "Tells you automod status")
+        embed.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = embed)
         await msg.add_reaction("🐯")
 
@@ -185,6 +197,7 @@ class Help(commands.Cog):
         em.add_field(name = "Close", value = 'Deletes a ticket')
         em.add_field(name = "Addticketrole", value = "Add a role which can access tickets")
         em.add_field(name = 'Setuptickets', value = "Set up tickets to the **max** you can. Type this before you set a role!")
+        em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed  = em)
 
 
