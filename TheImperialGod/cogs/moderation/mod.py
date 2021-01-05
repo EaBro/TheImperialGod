@@ -2,13 +2,128 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 from discord.ext.commands import MissingPermissions, BadArgument
-from discord.ext.commands import cooldown, BucketType
-import random
-import json
 
-class Mod(commands.Cog):
+class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    @commands.command()
+    @has_permissions(kick_members = True)
+    async def kick(self, ctx, member : discord.Member = None, *, reason = None):
+        try:
+            if member == None:
+                embed = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color= ctx.author.color)
+                embed.add_field(name = "Reason:", value = "Ping a user to kick them!")
+                await ctx.send(embed = embed)
+                return
+            try:
+                await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
+            except:
+                pass
+            await member.kick(reason = reason)
+            em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color)
+            em.add_field(name = f"Victim:", value = f"`{member.name}`")
+            em.add_field(name = "Reason: ", value = f"`{reason}`")
+            em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
+            em.set_footer(text = f"{member.name} said bye!")
+            await ctx.send(embed = em)
+        except commands.CommandInvokeError:
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = discor.Color.red())
+            em.add_field(name = 'Reason', value =f"{member.mention} is a moderator or an admin!")
+            em.add_field(name = "Contact support!", value = "This could also be due to the hierarchy!")
+            await ctx.send(embed = em)
+
+    @kick.error
+    async def kick_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Kick members Permission Missing!`")
+            em.set_footer(text = "Imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ping a user to kick them!`")
+            em.set_footer(text = "Kick properly already!")
+            await ctx.send(embed = em)
+
+    @commands.command()
+    @has_permissions(ban_members = True)
+    async def ban(self, ctx, member : discord.Member = None, *,reason = None):
+        try:
+            if member == None:
+                embed = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color= ctx.author.color)
+                embed.add_field(name = "Reason:", value = "Ping a user to ban them!")
+                await ctx.send(embed = embed)
+                return
+            try:
+                await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
+            except:
+                pass
+            await member.ban(reason = reason)
+            em = discord.Embed(title = f"<:success:761297849475399710> Ban was successful!", color = ctx.author.color)
+            em.add_field(name = f"Victim:", value = f"`{member.name}`")
+            em.add_field(name = "Reason: ", value = f"`{reason}`")
+            em.add_field(name = "**Moderator**:", value = f"`{ctx.author.name}`")
+            em.set_footer(text = f"{member.name} said bye!")
+            await ctx.send(embed = em)
+
+        except commands.CommandInvokeError:
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = discor.Color.red())
+            em.add_field(name = 'Reason', value =f"{member.mention} is a moderator or an admin!")
+            em.add_field(name = "Contact support!", value = "This could also be due to the hierarchy!")
+            await ctx.send(embed = em)
+
+    @ban.error
+    async def ban_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ban members Permission Missing!`")
+            em.set_footer(text = "Imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ping a user to Ban them!`")
+            em.set_footer(text = "Ban properly already!")
+            await ctx.send(embed = em)
+
+    @commands.command()
+    @commands.has_permissions(manage_channels = True)
+    async def announce(ctx, channel : discord.TextChannel, *, msg):
+        embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
+        embed.add_field(name = "Announcement:", value = f"`{msg}`")
+        embed.add_field(name = "Moderator:", value = f"`{ctx.autor.name}`")
+        await channel.send(embed = embed)
+
+    @announce.error
+    async def announce_error(ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
+            embed.add_field(name = 'Reason:', value = "Some perms are missing")
+            em.set_footer(text = "Imagine thinking you have the perms!")
+            await ctx.send(embed = embed)
+        if isinstance(error, commands.BadArgument):
+            embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
+            embed.add_field(name = 'Reason:', value = f"Mention a channel properly! And write a message after it!")
+            embed.set_footer(text = 'Do stuff properly!')
+            await ctx.send(embed = embed)
+
+    @commands.command()
+    @commands.has_permissions(manage_roles = True)
+    async def createrole(self, ctx, *, name):
+        role=  await ctx.guild.create_role(name = name)
+        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color)
+        em.add_field(name = "Role:", value = f"{role.mention}")
+        em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
+        em.set_footer(text = "Good job creating roles!")
+        await ctx.send(embed = em)
+
+    @createrole.error
+    async def createrole_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Role Creation Failed")
+            em.add_field(name = "Reason:", value = "`Manage Roles perms missing!`")
+            em.set_footer(text = "Imagine thinking you have the perms!")
+            await ctx.send(embed = em)
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -135,108 +250,6 @@ class Mod(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command()
-    @has_permissions(kick_members = True)
-    async def kick(self, ctx, member : discord.Member = None, *, reason = None):
-        if member == None:
-            embed = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color= ctx.author.color)
-            embed.add_field(name = "Reason:", value = "Ping a user to kick them!")
-            await ctx.send(embed = embed)
-        try:
-            await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
-        except:
-            pass
-        await member.kick(reason = reason)
-        em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color)
-        em.add_field(name = f"Victim:", value = f"`{member.name}`")
-        em.add_field(name = "Reason: ", value = f"`{reason}`")
-        em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
-        em.set_footer(text = f"{member.name} said bye!")
-        await ctx.send(embed = em)
-
-    @kick.error
-    async def kick_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
-            em.add_field(name = "Reason:", value = "`Kick members Permission Missing!`")
-            em.set_footer(text = "Imagine thinking you have the perms!")
-            await ctx.send(embed = em)
-        if isinstance(error, commands.BadArgument):
-            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
-            em.add_field(name = "Reason:", value = "`Ping a user to kick them!`")
-            em.set_footer(text = "Kick properly already!")
-            await ctx.send(embed = em)
-
-    @commands.command()
-    @has_permissions(ban_members = True)
-    async def ban(self, ctx, member : discord.Member = None, *,reason = None):
-        if member == None:
-            embed = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color= ctx.author.color)
-            embed.add_field(name = "Reason:", value = "Ping a user to ban them!")
-            await ctx.send(embed = embed)
-        try:
-            await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
-        except:
-            pass
-        await member.ban(reason = reason)
-        em = discord.Embed(title = f"<:success:761297849475399710> Ban was successful!", color = ctx.author.color)
-        em.add_field(name = f"Victim:", value = f"`{member.name}`")
-        em.add_field(name = "Reason: ", value = f"`{reason}`")
-        em.add_field(name = "**Moderator**:", value = f"`{ctx.author.name}`")
-        em.set_footer(text = f"{member.name} said bye!")
-        await ctx.send(embed = em)
-
-    @ban.error
-    async def ban_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
-            em.add_field(name = "Reason:", value = "`Ban members Permission Missing!`")
-            em.set_footer(text = "Imagine thinking you have the perms!")
-            await ctx.send(embed = em)
-        if isinstance(error, commands.BadArgument):
-            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
-            em.add_field(name = "Reason:", value = "`Ping a user to Ban them!`")
-            em.set_footer(text = "Ban properly already!")
-            await ctx.send(embed = em)
-
-    @commands.command()
-    @commands.has_permissions(manage_channels = True)
-    async def announce(ctx, channel : discord.TextChannel, *, msg):
-        embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
-        embed.add_field(name = "Announcement:", value = f"`{msg}`")
-        embed.add_field(name = "Moderator:", value = f"`{ctx.autor.name}`")
-        await channel.send(embed = embed)
-
-    @announce.error
-    async def announce_error(ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
-            embed.add_field(name = 'Reason:', value = "Some perms are missing")
-            em.set_footer(text = "Imagine thinking you have the perms!")
-            await ctx.send(embed = embed)
-        if isinstance(error, commands.BadArgument):
-            embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
-            embed.add_field(name = 'Reason:', value = f"Mention a channel properly! And write a message after it!")
-            embed.set_footer(text = 'Do stuff properly!')
-            await ctx.send(embed = embed)
-
-    @commands.command()
-    @commands.has_permissions(manage_roles = True)
-    async def createrole(self, ctx, *, name):
-        await ctx.guild.create_role(name = name)
-        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color)
-        em.add_field(name = "Role:", value = f"Created role {name}")
-        em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
-        em.set_footer(text = "Good job creating roles!")
-        await ctx.send(embed = em)
-
-    @createrole.error
-    async def createrole_error(self, ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            em = discord.Embed(title = "<:fail:761292267360485378> Role Creation Failed")
-            em.add_field(name = "Reason:", value = "`Manage Roles perms missing!`")
-            em.set_footer(text = "Imagine thinking you have the perms!")
-            await ctx.send(embed = em)
 
 def setup(client):
-    client.add_cog(Mod(client))
+    client.add_cog(Moderation(client))

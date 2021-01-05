@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
-import asyncio
 from discord.ext.commands import cooldown, BucketType
 import json
+import asyncio
 
 class Tickets(commands.Cog):
     def __init__(self, client):
@@ -46,7 +46,7 @@ class Tickets(commands.Cog):
 
                 if not ticket:
                     await ctx.send("You already have a ticket! Please contact staff on your already made ticket!")
-                    return  
+                    return
 
                 warning = f"""{ctx.author.mention} it is good to provide a reason for your inquires with the EMPIRE\nNext time try `imp new <reason>`
                 """
@@ -145,8 +145,19 @@ class Tickets(commands.Cog):
         if name.startswith("ticket-"):
             await channel.delete()
         else:
-            await ctx.send("Not a previous ticket channel!")
-            return
+            em = discord.Embed(title = "<:fail:761292267360485378> Closing Failed!", color= ctx.author.color)
+            em.add_field(name = "Reason:", value = f'This channel ({ctx.channel.mention}) is not a ticket channel!')
+            em.add_field(name = "Try again later!", value = "Only a channel which has been a ticket can be closed!")
+            await ctx.send(embed = em)
+
+    @close.error
+    async def close_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = '<:fail:761292267360485378> Close Failed', color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Manage Channels permission is missing!`")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+
 
 def setup(client):
     client.add_cog(Tickets(client))

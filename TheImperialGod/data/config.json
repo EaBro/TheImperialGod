@@ -1,0 +1,19 @@
+{
+    "token" : "NzY4Njk1MDM1MDkyMjcxMTI0.X5ENCg.jz0euB76LQXlWN9yEylL51pr1i8",
+    "clientId" : 768695035092271124,
+    "clientSecret" : "BQ3wxUEdrrf37WQY9VEEUZtybKoB2-v8",
+    "publicKey" : "cb1c82b5894134285d3313d67742d62d75e72149b9a7bab0bec4f29bd0b90292",
+    "prefix" : "imp ",
+    "reddit" : {
+        "clientId" : "6VBi78TB4PshMQ",
+        "clientSecret" : "91rOPPEfYKaOINA4ubz-KRyixHb3kQ",
+        "username" : "Fun-Emotion-9484",
+        "password" : "python123_praw",
+        "userAgent" : "praw4life"
+    },
+    "IDs" : {
+        "ownerId" : 575706831192719370,
+        "serverLogId" : 781057246092197898,
+        "channelLogId" : 781366606202798080
+    }
+}

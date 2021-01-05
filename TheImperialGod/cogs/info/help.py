@@ -176,10 +176,15 @@ class Help(commands.Cog):
 
     @help.command(aliases=["ticket"])
     async def tickets(self, ctx):
-        em = discord.Embed(title = "Help Tickets", color = ctx.author.color)
+        em = discord.Embed(title = "Help Tickets", color = ctx.author.color,
+        description = """Tickets are the easiest way for members getting their answers via the staff!\n
+        A user types `imp new [reason]` and gets a private channel only, the user, the owner and a role can get access to.\n
+        Conversations are completely safe and we respect your privacy. To fully setup tickets see the commands!
+        """)
         em.add_field(name = "New", value = "Creates a new ticket")
-        em.add_field(name = "Delete", value = 'Deletes a ticket')
-        em.add_field(name = "Setmodrole", value = "Set a role which can access tickets")
+        em.add_field(name = "Close", value = 'Deletes a ticket')
+        em.add_field(name = "Addticketrole", value = "Add a role which can access tickets")
+        em.add_field(name = 'Setuptickets', value = "Set up tickets to the **max** you can. Type this before you set a role!")
         await ctx.send(embed  = em)
 
 

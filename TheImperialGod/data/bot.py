@@ -14,36 +14,6 @@ import random #random
 import json
 import asyncio
 
-def load_cogs(): #loading all our cogs
-    cogs = [
-        "cogs.info.help", # help command
-        "cogs.fun.animals", # searching reddit
-        "cogs.economy.bankcommands", # bank commands in economy
-        "cogs.economy.moneymaking", # moneymaking commands in economy
-        "cogs.economy.shop", # making a shop with database in economy!
-        "cogs.fun.misc", # misc commands
-        "cogs.fun.utils", # utilities
-        "cogs.info.info", # information
-        "cogs.info.math", # math commands
-        "cogs.moderation.admin", # admin commands with JSON
-        "cogs.moderation.giveaways", # giveaway commands!
-        "cogs.moderation.mod", # moderation commands
-        "cogs.moderation.owner", # owner commands
-        "cogs.tickets.tickets", # ticket commands
-        "cogs.info.topgg" # has top.gg stuff bois!
-    ]
-    for cog in cogs:
-        client.load_extension(cog)
-
-    events = [
-        "events.GuildEvents", # when the bot leaves or joins a guild!
-    ]
-
-    for event in events:
-        client.load_extension(event)
-    print("===============================")
-    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")
-
 with open("config.json", "r") as f:
     config = json.load(f)
 
@@ -58,6 +28,37 @@ new_link.join("&scope=bot&permissions=21474836398")
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True, intents = intents) #making a client object
+
+
+def load_cogs(): #loading all our cogs
+    cogs = [
+        "cogs.info.help", # help command
+        "cogs.fun.animals", # searching reddit
+        "cogs.economy.bankcommands", # bank commands in economy
+        "cogs.economy.moneymaking", # moneymaking commands in economy
+        "cogs.fun.misc", # misc commands
+        "cogs.fun.utils", # utilities
+        "cogs.info.info", # information
+        "cogs.info.math", # math commands
+        "cogs.moderation.admin", # admin commands with JSON
+        "cogs.moderation.giveaways", # giveaway commands!
+        "cogs.moderation.mod", # moderation commands
+        "cogs.moderation.owner", # owner commands
+        "cogs.tickets.tickets" # ticket commands
+    ]
+    # loop through the cogs and load them!
+    for cog in cogs:
+        client.load_extension(cog)
+
+    # loop through the events and load them!
+    events = [
+        "events.GuildEvents" # when the bot leaves or joins a guild!
+    ]
+
+    for event in events:
+        client.load_extension(event)
+    print("===============================")
+    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")
 
 #when the bot gets ready
 @client.event
@@ -90,8 +91,10 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
     if client.is_closed():
         print("Offline again, f in the chat for the discord devs!")
 
-
-
+filtered_words = [
+"idiot", "die", "bitch", "dick", "ass", "asshole"
+]
+racial_slurs = ["nigga"]
 @client.event
 async def on_message(msg):
     with open("data/automod.json", "r") as f:
@@ -124,34 +127,6 @@ async def on_message(msg):
 
     await client.process_commands(msg)
 
-@client.command(case_insensitive=True)
-async def treat(ctx, member:discord.Member):
-    if member == ctx.author:
-        await ctx.send("You can't treat youself!")
-        return
-    embed=discord.Embed(
-        description=f'You offered {member.name} a treat! {member.mention} react to the emoji below to accept!',
-        color=0x006400
-    )
-    timeout=int(15.0)
-    message = await ctx.channel.send(embed=embed)
-
-    await message.add_reaction('🍫')
-
-    def check(reaction, user):
-        return user == member and str(reaction.emoji) == '🍫'
-
-    try:
-        reaction, user = await client.wait_for('reaction_add', timeout=timeout, check=check)
-
-    except asyncio.TimeoutError:
-        msg=(f"{member.mention} didn't accept the treat in time!!")
-        await ctx.channel.send(msg)
-
-    else:
-        await ctx.channel.send(f"{member.mention} You have accepted {ctx.author.name}'s offer!")
-
-
 '''
 Some fun data about this code:
 1 Line of Code = 26/09/2020
@@ -162,7 +137,7 @@ Some fun data about this code:
 1000 Lines of Code = 19/10/2020
 1500 Lines of Code = 05/11/2020
 2000 Lines of Code = 11/11/2020
-5000 Lines of Code =
+5000 Lines of Code = 17/12/2020
 '''
 load_cogs()
 client.loop.create_task(ch_pr())

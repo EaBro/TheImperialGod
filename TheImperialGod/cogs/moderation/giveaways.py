@@ -70,25 +70,37 @@ class Giveaways(commands.Cog):
             return
 
         prize = answers[2]
-
+        
+        # send a message for the user to know the giveaway started!
         await ctx.send(f"The Giveaway will be in {channel.mention} and will last {answers[1]}!")
-
+        # now send the embed in the channel!
         embed = discord.Embed(title = "Giveaway!", description = f"{prize}", color = ctx.author.color)
         embed.add_field(name = "Hosted by:", value = ctx.author.mention)
         embed.set_footer(text = f"Ends {answers[1]} from now!")
         my_msg = await channel.send(embed = embed)
-
+        # and then add the reactions
         await my_msg.add_reaction("🎉")
+        # sleep for the time!
         await asyncio.sleep(time)
+        # and then fetch it back
         new_msg = await channel.fetch_message(my_msg.id)
-
+        # get a list of users
         users = await new_msg.reactions[0].users().flatten()
         users.pop(users.index(self.client.user))
-
         winner = random.choice(users)
+        # now have some checks
+        if len(users) == 0:
+            em = discord.Embed(title = '<:fail:761292267360485378> Giveaway Failed', color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "No one joined D:")
+            em.add_field(name = "Next steps:", value = "Dont make a giveaway which you don't enter!")
+            await channel.send(embed = em)
+            return
+        
+        # edit embed to show winner
         newembed = discord.Embed(title = "Giveaway!", description = f"{prize}", color = ctx.author.color)
         newembed.add_field(name = "Hosted by:", value = ctx.author.mention)
-        newembed.add_field(name = "Winner:", value = f"{winner.mention}")
+        # now do winers gizmo
+        newembed.add_field(name = "Winner", value = f"{winner.mention}")
         newembed.set_footer(text = f"Ends {answers[1]} from now!")
         await my_msg.edit(embed = newembed)
         await channel.send(f"Congratulations! {winner.mention} won {prize}!")

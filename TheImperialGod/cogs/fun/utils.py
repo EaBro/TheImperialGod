@@ -184,16 +184,5 @@ class Utils(commands.Cog):
 
             return
 
-    @commands.command()
-    async def embed(self,ctx, *, content):
-        """
-        Sends a embed    Format: `Title | Description`
-        """
-        if ctx.author.id != 575706831192719370:
-            return
-        title, description = content.split('|')
-        embed = discord.Embed(title=title, description=description, color=ctx.author.color, timestamp=ctx.message.created_at)
-        await ctx.send(embed=embed)
-
 def setup(client):
     client.add_cog(Utils(client))

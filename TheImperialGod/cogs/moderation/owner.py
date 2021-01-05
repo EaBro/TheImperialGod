@@ -11,42 +11,67 @@ class Owner(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("owner commands are loaded!")
+        print("Owner commands are loaded!")
 
     @commands.command()
+    @commands.is_owner()
     async def leaveguild(self, ctx, guild_id : int):
-        if ctx.author.id != self.ownerId:
-            await ctx.send("Only bot devs can use this command!")
-            return
-
         guild = self.client.get_guild(guild_id)
         await guild.leave()
-        embed = discord.Embed(title = "Imperial Bot leaves a guild", color = ctx.author.color)
+        # send an embed
+        embed = discord.Embed(title = "Imperial God leaves a guild", color = ctx.author.color)
         embed.add_field(name = f"Guild:", value = f"`{guild.name}`")
+        embed.add_field(name = "New Usercount:", value = f"`{len(self.client.users)}`")
+        embed.add_field(name = "New Servercount:", value = f'`{len(self.client.guilds)}`')
         await ctx.send(embed = embed)
 
     @commands.command()
-    async def devwith(self, ctx, amount = 1000000):
-        with open("./data/mainbank.json", "r") as f:
-            users = json.load(f)
-
-        if ctx.author.id != self.ownerId:
-            return
-
-        # assuming the user has an account
-        users[str(self.ownerId)]["wallet"] += amount
-
-        with open("./data/mainbank.json", "w") as f:
-            json.dump(users, f)
-
-    @commands.command()
+    @commands.is_owner()
     async def osay(self, ctx, *, arg):
-        if ctx.author.id != 575706831192719370:
-            return
         """Says what you tell it to
         Uses: `imp osay <message>`"""
         await ctx.message.delete()
         await ctx.send(arg)
+
+    @commands.command(aliases=["enable"])
+    @commands.is_owner()
+    async def load(self, ctx, *, extension):
+        if extension not in ["cogs.moderation.owner", "cogs.moderation.admin"]:
+            await self.client.load_extension(extension)
+            await ctx.send(f"Loaded {extension}!")
+        else:
+            await ctx.send("Admin or owner commands cannot be enabled or disabled!")
+            return
+
+    @commands.command()
+    @commands.is_owner()
+    async def unload(self, ctx, *, extension):
+        if extension not in ["cogs.moderation.owner", "cogs.moderation.admin"]:
+            await self.client.unload_extension(extension)
+            await ctx.send(f"Unloaded {extension}!")
+        else:
+            await ctx.send("Admin or owner commands cannot be disabled!")
+            return
+
+    @commands.command()
+    @commands.is_owner()
+    async def reload(self, ctx, *, extension):
+        await self.client.reload_extension(extension)
+        await ctx.send(f"Reloaded {extension}!")
+
+    @commands.command()
+    @commands.is_owner()
+    async def embed(self, ctx, *, content):
+        try:
+            title, desc = content.split("|")
+        except:
+            await ctx.send("Type an embed in this format: `imp embed {title} | {description}`")
+            return
+        else:
+            em = discord.Embed(title = title, color = ctx.author.color, description= desc)
+            await ctx.send(embed = em)
+
+
 
 def setup(client):
     client.add_cog(Owner(client))
