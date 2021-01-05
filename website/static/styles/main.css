@@ -17,18 +17,3 @@
     background: blue;
     color : cyan; 
 }
-
-body::-webkit-scrollbar {
-    background-color: cyan;
-}
-/*Bootstrap carousel styling*/
-#customerReviewsCarousel {
-    background-color: black;
-    color : whitesmoke;
-    font-size: 16px;
-}
-#customerReviewsCarousel h1 {
-    background-color: inherit;
-    color : inherit;
-    font-size: 50px;
-}
