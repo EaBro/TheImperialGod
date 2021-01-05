@@ -1,0 +1,5 @@
+asyncio
+discord.py
+praw
+aiosqlite
+dblpy
