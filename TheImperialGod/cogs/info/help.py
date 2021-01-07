@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
+import random
 
 class Help(commands.Cog):
     def __init__(self, client):
@@ -56,6 +57,13 @@ class Help(commands.Cog):
             "serverinfo",
             "userinfo"
         ]
+        self.tips = [
+            "Did you know that TheImperialGod has an economy system!",
+            "Did you know that TheImperialGod was made by NightZan999?",
+            "Did you know that TheImperialGod was coded in a language called Python!",
+            f"Did you know that TheImperialGod is in {len(self.client.guilds)} servers!",
+            "Did you know that TheImperialGod has over 8,000 lines of code if put in one file!"
+        ]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -68,13 +76,13 @@ class Help(commands.Cog):
         """)
         page1.add_field(name = f":dollar: Economy Commands: [11]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
-        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`")
+        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`")
         page1.add_field(name = f":tools: Utilities: [{len(self.utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`, `treat`, `embed`")
         page1.add_field(name = f"<:pepethink:791969112771395625> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
         page1.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`")
-        page1.add_field(name = f":question: Misc: [{len(self.misc_commands)}]", value = "`invite`, `show_toprole`, `avatar`, `candy`, `hypesquad`, `suggest`, `support`")
+        page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
         page1.add_field(name =f"<:settings:761301883792654386> Admin Commands: [{len(self.owner_commands)}]", value = f"`enableautomod`, `disableautomod`, `checkautomod`")
         page1.set_footer(text = f"My prefix is `imp`")
         msg = await ctx.send(embed = page1)
@@ -89,6 +97,7 @@ class Help(commands.Cog):
         )
         links.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
         links.add_field(name = 'Embed Info', value = "This message deletes after 30 seconds due to congestion! So does the other one!")
+        links.add_field(name = "Tip :coin::", value =f"**{random.choice(self.tips)}**")
         links.set_footer(text='Bot Made by NightZan999#0194')
         try:
             mesg = await ctx.author.send(embed = links)
@@ -98,7 +107,6 @@ class Help(commands.Cog):
         else:
             await asyncio.sleep(30)
             await mesg.delete()
-            await msg.delete()
 
     @help.command(aliases= ["eco"])
     async def economy(self, ctx):
@@ -196,7 +204,6 @@ class Help(commands.Cog):
         em.add_field(name = "New", value = "Creates a new ticket")
         em.add_field(name = "Close", value = 'Deletes a ticket')
         em.add_field(name = "Addticketrole", value = "Add a role which can access tickets")
-        em.add_field(name = 'Setuptickets', value = "Set up tickets to the **max** you can. Type this before you set a role!")
         em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed  = em)
 

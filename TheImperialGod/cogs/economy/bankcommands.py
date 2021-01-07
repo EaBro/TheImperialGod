@@ -184,12 +184,25 @@ class BankCommands(commands.Cog):
         em.add_field(name = ":tada: Money:", value = "Give your money! :tada:")
         await ctx.send(embed = em)
 
+    # error handling
     @give.error
     async def give_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = f"<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
             em.add_field(name = f"Reason:", value = f"Stop giving money it makes you poor!")
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Give Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
+            em.add_field(name = "Args", value = "```\nimp give <@user> <amount>\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.MissingRequiredArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Give Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"You didn't provide the right arguments!")
+            em.add_field(name = "Args", value = "```\nimp give <@user> <amount>\n```")
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
@@ -201,6 +214,19 @@ class BankCommands(commands.Cog):
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Withdraw Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
+            em.add_field(name = "Args", value = "```\nimp with <amount>\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.MissingRequiredArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Withdraw Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"You didn't provide the right arguments!")
+            em.add_field(name = "Args", value = "```\nimp with <amount>\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+
 
     @balance.error
     async def balance_error(self, ctx, error):
@@ -210,6 +236,14 @@ class BankCommands(commands.Cog):
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Balance Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
+            em.add_field(name = "Args", value = "```\nimp balance [@user]\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+
 
     @deposit.error
     async def deposit_error(self, ctx, error):
@@ -219,6 +253,19 @@ class BankCommands(commands.Cog):
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Deposit Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
+            em.add_field(name = "Args", value = "```\nimp deposit <amount>\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.MissingRequiredArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Deposit Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"You didn't provide the right arguments!")
+            em.add_field(name = "Args", value = "```\nimp dep <amount>\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+
 
 def setup(client):
     client.add_cog(BankCommands(client))

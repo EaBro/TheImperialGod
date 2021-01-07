@@ -40,14 +40,9 @@ class Tickets(commands.Cog):
 
             else:
                 channelname = "ticket-{}".format(ctx.author.name)
-                ticket = True
-                for echannel in ctx.guild.channels:
-                    if echannel.name == channelname:
-                        ticket = False
-
-                if not ticket:
-                    await ctx.send("You already have a ticket! Please contact staff on your already made ticket!")
-                    return
+                for _channel in ctx.guild.channels:
+                    if _channel == channelname:
+                        return await ctx.channel.send(f"You already have a ticket! Please contact staff in {_channel.mention}")
 
                 warning = f"""{ctx.author.mention} it is good to provide a reason for your inquires with the EMPIRE\nNext time try `imp new <reason>`
                 """

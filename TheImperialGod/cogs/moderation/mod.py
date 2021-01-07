@@ -240,15 +240,12 @@ class Moderation(commands.Cog):
     @commands.command()
     @has_permissions(manage_channels = True)
     async def count(ctx, channel: discord.TextChannel = None):
-        channel = channel or ctx.channel #or since sometimes people have it locked!
+        if channel is None:
+            channel = ctx.channel
         messages = await channel.history(limit = None).flatten()
         count = len(messages)
-        embed = discord.Embed(
-        title="Total Messages",
-        colour=ctx.author.color,
-        description=f"There were {count} messages in {channel.mention}")
-
-        await ctx.send(embed=embed)
+        em = await createEmbed(f"Count of {channel.mention}", f"There are {count} messages in {channel.mention}!")
+        await ctx.send(embed=em)
 
 
 def setup(client):

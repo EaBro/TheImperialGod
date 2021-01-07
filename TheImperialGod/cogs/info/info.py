@@ -81,6 +81,16 @@ class Information(commands.Cog):
         embed.set_footer(icon_url=member.avatar_url, text=f'Requested By: {ctx.author.name}')
         embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed=embed)
+    
+    @userinfo.error
+    async def userinfo_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Userinfo Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
+            em.add_field(name = "Args", value = "```\nimp userinfo [@user]\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+
 
     @commands.command()
     async def whois(self,ctx, user : discord.Member = None):
@@ -92,6 +102,15 @@ class Information(commands.Cog):
         em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = em)
 
+    @whois.error
+    async def whois_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Whois Error", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
+            em.add_field(name = "Args", value = "```\nimp whois [@user]\n```")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+            
     @commands.command(aliases = ["bi"])
     async def botinfo(self, ctx):
         embed = discord.Embed(title = "Botinfo", color = ctx.author.color,
@@ -105,7 +124,7 @@ class Information(commands.Cog):
         embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
-        embed.add_field(name = "Number of Commands:", value = f"`80` (including special owner commands)")
+        embed.add_field(name = "Number of Commands:", value = f"`85` (including special owner commands)")
         embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : DanBot Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         embed.set_footer(text='Bot Made by NightZan999#0194')
