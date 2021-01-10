@@ -16,14 +16,25 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def leaveguild(self, ctx, guild_id : int):
-        guild = self.client.get_guild(guild_id)
-        await guild.leave()
         # send an embed
-        embed = discord.Embed(title = "Imperial God leaves a guild", color = ctx.author.color)
+        embed = discord.Embed(title = "TheImperialGod leaves a guild", color = ctx.author.color)
         embed.add_field(name = f"Guild:", value = f"`{guild.name}`")
         embed.add_field(name = "New Usercount:", value = f"`{len(self.client.users)}`")
         embed.add_field(name = "New Servercount:", value = f'`{len(self.client.guilds)}`')
         await ctx.send(embed = embed)
+        # now leave the guild
+        guild = self.client.get_guild(guild_id)
+        await guild.leave()
+
+    @commands.command()
+    @commands.is_owner()
+    async def joinguild(self, ctx, guild_id : int):
+        # logic
+        guild = self.client.get_guild(guild_id)
+        for channel in guild.text_channels:
+            invite = await channel.create_invite()
+            await ctx.send(invite)
+            return
 
     @commands.command()
     @commands.is_owner()
@@ -72,7 +83,14 @@ class Owner(commands.Cog):
             em.set_footer(text='Bot Made by NightZan999#0194')
             await ctx.send(embed = em)
 
-
+    @commands.command()
+    @commands.is_owner()
+    async def guilds(self, ctx):
+        msg = f"```\nTheImperialGod is in {len(self.client.guilds)} servers and has {len(self.client.users)} users!\n\n"
+        for guild in self.client.guilds:
+            msg += f"{guild.name} ({guild.id}) - {guild.member_count}\n"
+        msg += "\n```"
+        await ctx.send(msg)
 
 def setup(client):
     client.add_cog(Owner(client))

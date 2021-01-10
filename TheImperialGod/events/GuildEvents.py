@@ -24,7 +24,7 @@ class GuildEvents(commands.Cog):
         embed.add_field(name = "Name:", value = f"{str(guild.name)}")
 
 
-        guild = await self.client.get_guild(serverId)
+        guild = self.client.get_guild(serverId)
         for channel in guild.channels:
             if channel.id == channelId:
                 await channel.send(embed = embed)
@@ -44,7 +44,7 @@ class GuildEvents(commands.Cog):
         embed.add_field(name = "Name:", value = f"{str(guild.name)}")
 
 
-        guild = await self.client.get_guild(serverId)
+        guild = self.client.get_guild(serverId)
         for channel in guild.channels:
             if channel.id == channelId:
                 await channel.send(embed = embed)

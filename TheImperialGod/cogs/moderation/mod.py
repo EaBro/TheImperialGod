@@ -239,12 +239,12 @@ class Moderation(commands.Cog):
 
     @commands.command()
     @has_permissions(manage_channels = True)
-    async def count(ctx, channel: discord.TextChannel = None):
+    async def count(self,ctx, channel: discord.TextChannel = None):
         if channel is None:
             channel = ctx.channel
         messages = await channel.history(limit = None).flatten()
         count = len(messages)
-        em = await createEmbed(f"Count of {channel.mention}", f"There are {count} messages in {channel.mention}!")
+        em = discord.Embed(title = f"Count of {channel.mention}", color = ctx.author.color, description = "There are {} messages in {}".format(count, channel.mention))
         await ctx.send(embed=em)
 
 
