@@ -102,6 +102,60 @@ Firstly you should simply, check BETA_FEATURES.md for some new things the bot mi
 
 Otherwise you also can suggest stuff in my discord server, so you could join it and make things easy!
 
+# File Tree
+
+```text
+nightzan999/theimperialgod/
+├── theimperialgod/
+│   ├── bot.py
+│   ├── Procfile
+│   ├── requirements.txt
+│   ├── project.yml
+│   ├── config.json
+|   ├── utils/
+|   |   ├── embeds.py
+|   |   ├── emojis.py
+|   |   ├── jsonfile.py 
+|   ├── events/
+|   |   ├── GuildEvents.py
+|   ├── cogs/
+|   |   ├── moderation/
+|   |   ├   ├── admin.py
+|   |   ├   ├── mod.py
+|   |   ├   ├── giveaways.py
+|   |   ├   ├── owner.py
+|   |   ├── info/
+|   |   ├   ├── info.py
+|   |   ├   ├── math.py
+|   |   ├   ├── help.py
+|   |   ├   ├── topgg.py
+|   |   ├── economy/
+|   |   ├   ├── bankcommands.py
+|   |   ├   ├── moneymaking.py
+|   |   ├   ├── shop.py
+|   |   ├── tickets/
+|   |   ├   ├── tickets.py
+|   |   ├── fun/
+|   |   ├   ├── animals.py
+|   |   ├   ├── misc.py
+|   |   ├   ├── utils.py
+|   ├── assets/
+|   |   ├── bot_pic.jpg
+|   |   ├── candy.jpg
+|   |   ├── wanted.jpg 
+|   ├── data/
+|   |   ├── admin.db
+|   |   ├── automod.json
+|   |   ├── economy.db
+|   |   ├── emojis.json
+|   |   ├── guilds.json
+|   |   ├── mainbank.json
+|   |   ├── muterole.json
+|   |   ├── tickets.json
+|   |   ├── warns.json
+```
+
+
 # Credits:
 **1. NightZan999:**
 The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. <br>
