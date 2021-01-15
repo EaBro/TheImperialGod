@@ -39,7 +39,7 @@ class Tickets(commands.Cog):
                 await ctx.send(embed = em)
 
             else:
-                channelname = "ticket-{}".format(ctx.author.name)
+                channelname = f"ticket-{ctx.author.name}"
                 for _channel in ctx.guild.channels:
                     if _channel == channelname:
                         return await ctx.channel.send(f"You already have a ticket! Please contact staff in {_channel.mention}")
@@ -143,6 +143,8 @@ class Tickets(commands.Cog):
         channel = ctx.channel
         name = channel.name
         if name.startswith("ticket-"):
+            await ctx.channel.send("Ticket closing in 3 seconds")
+            await asyncio.sleep(3)
             await channel.delete()
         else:
             em = discord.Embed(title = "<:fail:761292267360485378> Closing Failed!", color= ctx.author.color)
