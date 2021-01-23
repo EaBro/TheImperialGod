@@ -119,23 +119,22 @@ class Information(commands.Cog):
         embed.add_field(name = "First went live on:", value = "1 / 10 / 2020")
         embed.add_field(name = "Started coding on:", value = "26 / 9 / 2020")
         embed.add_field(name = f"Creator", value = f"NightZan999#0194")
-        embed.add_field(name = 'Hosting', value = f"Chaotic Destiny ")
+        embed.add_field(name = 'Hosting', value = f"Chaotic Destiny Hosting ")
         embed.add_field(name = "Servers:", value = f'`{len(self.client.guilds)}`')
         embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
         embed.add_field(name = "Number of Commands:", value = f"`85` (including special owner commands)")
-        embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : SQLite3\n+ Hosting Services : Chaotic Destiny!\n```", inline = False)
+        embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : AIOSQLite\n+ Hosting Services : Chaotic Destiny Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 
     @commands.command()
     async def ping(self, ctx):
-        embed = discord.Embed(title = ":ping_pong: Pong!", color = ctx.author.color)
+        embed = discord.Embed(title = ":ping_pong: Pong!", color = ctx.author.color,
+        description = "The number rlly doesn't matter. Smh!")
         embed.add_field(name=  "Client Latency", value = f"`{round(self.client.latency * 1000)}ms`")
-        embed.add_field(name = "API Latency", value = f"`{random.randint(1, 20)}`")
-        embed.add_field(name = "Description:", value = "The client latency tells you how fast the bot is. For every command the latency goes down by about 5\nLatency starts at 1000!\n\nThe API latency will tell you how the API reacts to the client latency, the lower the API latency the better!")
         embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
 

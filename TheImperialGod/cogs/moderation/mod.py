@@ -27,7 +27,7 @@ class Moderation(commands.Cog):
             em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
             em.set_footer(text = f"{member.name} said bye!")
             await ctx.send(embed = em)
-        except commands.CommandInvokeError:
+        except:
             em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = discor.Color.red())
             em.add_field(name = 'Reason', value =f"{member.mention} is a moderator or an admin!")
             em.add_field(name = "Contact support!", value = "This could also be due to the hierarchy!")
@@ -67,7 +67,7 @@ class Moderation(commands.Cog):
             em.set_footer(text = f"{member.name} said bye!")
             await ctx.send(embed = em)
 
-        except commands.CommandInvokeError:
+        except:
             em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = discor.Color.red())
             em.add_field(name = 'Reason', value =f"{member.mention} is a moderator or an admin!")
             em.add_field(name = "Contact support!", value = "This could also be due to the hierarchy!")

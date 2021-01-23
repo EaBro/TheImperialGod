@@ -39,9 +39,9 @@ class Tickets(commands.Cog):
                 await ctx.send(embed = em)
 
             else:
-                channelname = f"ticket-{ctx.author.name}"
+                channelname = "ticket-{}".format(ctx.author.name)
                 for _channel in ctx.guild.channels:
-                    if _channel == channelname:
+                    if _channel.name == channelname:
                         return await ctx.channel.send(f"You already have a ticket! Please contact staff in {_channel.mention}")
 
                 warning = f"""{ctx.author.mention} it is good to provide a reason for your inquires with the EMPIRE\nNext time try `imp new <reason>`
@@ -139,12 +139,20 @@ class Tickets(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_channels = True)
-    async def close(self, ctx):
+    async def close(self, ctx, *, reason = None):
         channel = ctx.channel
         name = channel.name
         if name.startswith("ticket-"):
-            await ctx.channel.send("Ticket closing in 3 seconds")
-            await asyncio.sleep(3)
+            messageEmbed = discord.Embed(title = "<:success:761297849475399710> Ticket Will Close!", color = ctx.author.color,
+            description = "This ticket will close in ten seconds")
+            seconds = 10
+            messageEmbed.add_field(name= "Time remaining:", value = f"`{seconds}`")
+            messageEmbed.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
+            messageEmbed.add_field(name = "Reason:", value = f"`{reason}`")
+            messageEmbed.set_footer(text = "Wanna invite me eh? [Click here](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)")
+            await ctx.send(embed = messageEmbed)
+            await asyncio.sleep(10)
+            # now delete the channel
             await channel.delete()
         else:
             em = discord.Embed(title = "<:fail:761292267360485378> Closing Failed!", color= ctx.author.color)
@@ -161,7 +169,6 @@ class Tickets(commands.Cog):
             em.set_thumbnail(url = ctx.author.avatar_url)
             em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
-
 
 def setup(client):
     client.add_cog(Tickets(client))
