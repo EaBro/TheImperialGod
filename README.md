@@ -162,10 +162,8 @@ The main developer of TheImperialGod, not only coded all the cogs and the code h
 **2. Dragonizedpizza:**
 The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation but even got the bot hosted and told me how it got hosted. Big thanks to him <br>
 **3. Makiyu-py:**
-he helped me out in grammar errors 😎 and in some commands!
+he helped me out in grammar errors 😎 and in some commands! <br>
 **4. JakeLion:**
 Jake has helped in tickets and fixing code to the modern style (im old school RIP). 
 
-**Consider following most of these creators of the bot if you enjoy the public bot or the code which it relies on. Huge thanks if you do follow them!**
 
-From TheImperialGod team.
