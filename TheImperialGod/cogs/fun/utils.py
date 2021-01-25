@@ -13,7 +13,8 @@ class Utils(commands.Cog):
     @commands.command()
     async def coinflip(self, ctx):
         em = discord.Embed(title = "Coinflip", color = ctx.author.color)
-        em.add_field(name = "Roll:", value = f"`{choice(["Heads", "Tails"])}` :coin:")
+        choices = ["Heads", "Tails"]
+        em.add_field(name = "Roll:", value = f"`{choice(choices)}` :coin:")
         return await ctx.send(embed = em)
 
     @commands.command(aliases=["rn"])

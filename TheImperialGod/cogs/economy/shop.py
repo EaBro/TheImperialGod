@@ -117,7 +117,5 @@ class Shop(commands.Cog):
                 await connection.commit()
         await ctx.send(f"Successfully changed price of item `{item_id}` to `{price}`")
 
-
-
 def setup(client):
     client.add_cog(Shop(client))

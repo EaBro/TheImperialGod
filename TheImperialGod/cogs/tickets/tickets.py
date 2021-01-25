@@ -13,7 +13,7 @@ class Tickets(commands.Cog):
         print("Tickets are ready!")
 
     @commands.command()
-    @cooldown(1, 60, BucketType.user)
+    @cooldown(1, 10, BucketType.user)
     async def new(self, ctx, *, reason = None):
         em = discord.Embed(title = "Confirm New Ticket", color =  ctx.author.color)
         em.add_field(name = "Reason:", value = "We don't want people to spam!")
@@ -42,7 +42,7 @@ class Tickets(commands.Cog):
                 channelname = "ticket-{}".format(ctx.author.name)
                 for _channel in ctx.guild.channels:
                     if _channel.name == channelname:
-                        return await ctx.channel.send(f"You already have a ticket! Please contact staff in {_channel.mention}")
+                        return await ctx.channel.send(f"You already have a ticket! Please contact staff in {_channel.mention}!")
 
                 warning = f"""{ctx.author.mention} it is good to provide a reason for your inquires with the EMPIRE\nNext time try `imp new <reason>`
                 """
@@ -92,7 +92,7 @@ class Tickets(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> New Error", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "If your trying to spam the server then get off!")
-            em.add_field(name = "Try again in:", value = "{:.2f}s".format(error.retry_after))
+            em.add_field(name = "Try again in:", value = "`{:.2f}s`".format(error.retry_after))
             em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
 
@@ -134,8 +134,8 @@ class Tickets(commands.Cog):
 
     async def get_tickets(self):
         with open("./data/tickets.json", "r") as f:
-            tickets = json.load(f)
-        return tickets
+            data = json.load(f)
+        return data
 
     @commands.command()
     @commands.has_permissions(manage_channels = True)
@@ -144,12 +144,12 @@ class Tickets(commands.Cog):
         name = channel.name
         if name.startswith("ticket-"):
             messageEmbed = discord.Embed(title = "<:success:761297849475399710> Ticket Will Close!", color = ctx.author.color,
-            description = "This ticket will close in ten seconds")
+            description = "This ticket will close in ten seconds. Thanks for your time!")
             seconds = 10
             messageEmbed.add_field(name= "Time remaining:", value = f"`{seconds}`")
             messageEmbed.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
             messageEmbed.add_field(name = "Reason:", value = f"`{reason}`")
-            messageEmbed.set_footer(text = "Wanna invite me eh? [Click here](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)")
+            messageEmbed.set_footer(text = "Wanna invite me eh? `imp invite`)")
             await ctx.send(embed = messageEmbed)
             await asyncio.sleep(10)
             # now delete the channel
