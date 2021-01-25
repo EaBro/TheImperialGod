@@ -1,15 +1,24 @@
 ## TheImperialGod 
 TheImperialGod is an awesome discord.py bot which has plenty of features!
+**If you like TheImperialGod as a discord bot, starring the repo is the best that you can do and is very much appreciated. 
+This is because starring the repo, brings it higher in search results and makes the repo more popular.**
 
 It has many features, so you dont have to have many bots in your server just to get the commands that you want. It is always being improved, so if you see a bug or have a suggestion, dont hesitate to use the report bug or suggest commands to contact the devloper. It is always online, so no need to worry about it going offline randomly
 # Features
-TheImperialGod is a perfect bot with plenty of utilities and good for server owners!
-<br>
-With a nice themed base and some useful features, comes at you TheImperialGod
+TheImperialGod is an awesome bot with plenty of utilities and good for all the roles in a discord server
+The Roles in a discord server are:
+* Member
+* Moderator
+* Admin
+
+For each of these, TheImperialGod has its very own commands, and is easily self-hostable. 
+With a nice themed topic and useful features, that is TheImperialGod in a nutshell. 
 
 # License warning
 DO NOT COPY CODE FROM THIS REPOSITORY WITHOUT PROPERLY CREDITING ME! I don't want to DMCA anyone, but I will do what is necessary to defend the license. 
 <br> If you are not familiar with how to give credit then please DM me on discord (NightZan999#0194) or you can obviously create an issue!
+
+Read LICENSE, for more information about the license.
 
 ## Introduction
 Before touching the code and stuff please read till the end of the MD file. There is a ton of important information in this README file. Also once you read this, read the code of conduct. <br>
@@ -160,10 +169,9 @@ nightzan999/theimperialgod/
 **1. NightZan999:**
 The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. <br>
 **2. Dragonizedpizza:**
-The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation but even got the bot hosted and told me how it got hosted. Big thanks to him <br>
+The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation and gave me very useful suggestions <br>
+He also helped me with Github stuff. 
 **3. Makiyu-py:**
 he helped me out in grammar errors 😎 and in some commands! <br>
 **4. JakeLion:**
 Jake has helped in tickets and fixing code to the modern style (im old school RIP). 
-
-
