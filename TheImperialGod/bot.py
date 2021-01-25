@@ -37,6 +37,8 @@ def load_cogs(): #loading all our cogs
 
     events = [
         "events.GuildEvents", # when the bot leaves or joins a guild!
+        "events.ReactionAdd",
+        "events.ReactionRemove"
     ]
 
     for event in events:
