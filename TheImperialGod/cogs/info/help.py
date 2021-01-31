@@ -6,23 +6,6 @@ import random
 class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.utils_commands = [
-            'Coinflip',
-            'Random_Number',
-            'Code',
-            'Guess',
-            'respect',
-            'Poll',
-            'Thank',
-            'Reverse',
-            'eightball',
-            'fight',
-            'whois',
-            'wanted',
-            "quote",
-            "osay",
-            "embed"
-        ]
         self.gaws_commands = [
             'gstart',
             'reroll'
@@ -62,7 +45,9 @@ class Help(commands.Cog):
             "Did you know that TheImperialGod was made by NightZan999?",
             "Did you know that TheImperialGod was coded in a language called Python!",
             f"Did you know that TheImperialGod is in {len(self.client.guilds)} servers!",
-            "Did you know that TheImperialGod has over 8,000 lines of code if put in one file!"
+            "Did you know that TheImperialGod has over 20,000 lines of code if put in one file!",
+            "Did you know that TheImperialGod has a starboard system. Its in BETA but still there!",
+            "Did you know that TheImperialGod has tickets and an automoderation system!"
         ]
 
     @commands.Cog.listener()
@@ -77,13 +62,13 @@ class Help(commands.Cog):
         page1.add_field(name = f":dollar: Economy Commands: [11]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
         page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`")
-        page1.add_field(name = f":tools: Utilities: [{len(self.utils_commands)}]", value = "`Coinflip`, `Random_Number`, `code`, `guess`, `respect`, `poll`, `thank`, `reverse`, `eightball`, `fight`, `quote`, `osay`, `nick`, `treat`, `embed`")
+        page1.add_field(name = f":tools: Utilities: [12]", value = "`coinflip`, `random_number`, `code`, `thank`, `reverse`, `8ball`, `poll`, `show_toprole`, `passwordgenerator`, `avatar`, `respect`, `beer`, `guess`")
         page1.add_field(name = f"<:pepethink:791969112771395625> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
         page1.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
-        page1.add_field(name =f"<:settings:761301883792654386> Admin Commands: [{len(self.owner_commands)}]", value = f"`enableautomod`, `disableautomod`, `checkautomod`")
+        page1.add_field(name =f"<:settings:761301883792654386> Admin Commands: [{len(self.owner_commands)}]", value = f"`enableautomod`, `disableautomod`, `checkautomod`, `setstarboardchannel`")
         page1.set_footer(text = f"My prefix is `imp`")
         msg = await ctx.send(embed = page1)
 
@@ -139,23 +124,22 @@ class Help(commands.Cog):
         msg  = await ctx.send(embed = em)
         await msg.add_reaction("🗡")
 
-    @help.command(aliases = ["utilties"])
+    @help.command(aliases = ["utilities"])
     async def utils(self,ctx):
         em = discord.Embed(title = "Help Utils:", color = ctx.author.color)
-        em.add_field(name = "Coinflip", value = "Flips a coin")
-        em.add_field(name = "Random Number", value = "Gives a random number in a range")
-        em.add_field(name = "Code", value = "Turns a message into code")
-        em.add_field(name = "Guess", value = "Selects a random number in a range and plays a guess game!")
-        em.add_field(name = "Respect", value = "Shows your respect for anything")
-        em.add_field(name = "Poll", value = "Creates a poll")
-        em.add_field(name = "Thank", value = "Thanks someone for something")
-        em.add_field(name = "Reverse", value = "Reverses a message")
-        em.add_field(name = "Eightball", value = "Classic Eightball")
-        em.add_field(name = "Fight", value = "Fight someone with lightsabers!")
-        em.add_field(name = "Wanted", value = "Can't spoil the fun try it yourself!")
-        em.add_field(name=  "Whois", value = "Show information about people")
-        em.add_field(name=  "Osay:", value = "Make the bot say something in a channel")
-        em.add_field(name = "Treat", value = "Treat someone to a treat!")
+        em.add_field(name = "Coinflip", value = "Flips a coin!")
+        em.add_field(name = "random_number", value = "Returns a random number in 2 given ranges")
+        em.add_field(name = "code", value = "Encodes a message and turns it into code")
+        em.add_field(name = "Thank", value = "Thanks a user, for something that they have done!")
+        em.add_field(name = "Reverse", value = "Reverses your message!")
+        em.add_field(name = "8ball", value = "Predicts the future!")
+        em.add_field(name = "poll", value = "Creates a poll!")
+        em.add_field(name = "show_toprole", value = "Shows a users toprole")
+        em.add_field(name ="passswordgenerator", value = "Generates you a random password and DMs it!")
+        em.add_field(name = "avatar", value = "Check beatufiul avatars!")
+        em.add_field(name= "Respect", value = "Respect something!")
+        em.add_field(name = "Beer", value = "Have beer with someone!")
+        em.add_field(name = "Guess", value = "Play a guess game with me boi!")
         em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🍩")
@@ -207,6 +191,21 @@ class Help(commands.Cog):
         em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed  = em)
 
+    @help.command(aliases=["mathematics", 'mafs', "maf", "maths"])
+    async def math(self, ctx):
+        em = discord.Embed(title = "Help Mafs", color = ctx.author.color, description = """
+        I decided to make maths a part of this discord bot, as
+        many times people in discord would have mathematic applications 
+        and I want people who are not skilled to do maths to let us do it for you!
+        Quick mafs bois!
+        """)
+        em.add_field(name = "add", value = 'Add two numbers!')
+        em.add_field(name = "subtract", value = 'Subtract two numbers!')
+        em.add_field(name = "multiply", value = 'Multiply two numbers!')
+        em.add_field(name = "divide", value = 'Divide two numbers!')
+        em.add_field(name = "square", value = 'Square 1 number!')
+        em.add_field(name = "sqrt", value = 'Squareroot 1 number!')
+        await ctx.send(embed = em)
 
 def setup(client):
     client.remove_command("help")

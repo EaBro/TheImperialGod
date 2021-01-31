@@ -131,7 +131,7 @@ class Mathematics(commands.Cog):
     @cooldown(1, 30, BucketType.user)
     async def square(self, ctx, num):
         try:
-            num1 = float(num1)
+            num = float(num)
         except:
             return await ctx.channel.send("Your number has to be an integer")
         else:
@@ -157,7 +157,7 @@ class Mathematics(commands.Cog):
     @cooldown(1, 30, BucketType.user)
     async def squareroot(self, ctx, num):
         try:
-            num1 = float(num1)
+            num = float(num)
         except:
             return await ctx.channel.send("Your number has to be an integer")
         else:

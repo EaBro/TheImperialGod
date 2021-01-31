@@ -30,6 +30,7 @@ class MoneyMaking(commands.Cog):
                 rows = await cursor.fetchone()
                 if not rows:
                     await cursor.execute("INSERT INTO users (userid, bank, wallet) VALUES (?,?,?)",(ctx.author.id,0,0))
+                    await connection.commit()
                 await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + earnings, rows[0], ctx.author.id))
                 rows = await cursor.fetchone()
                 await connection.commit()
@@ -37,8 +38,6 @@ class MoneyMaking(commands.Cog):
                 em.add_field(name = ":coin: Earnings", value = f"{earnings} :coin:", inline = False)
                 em.set_thumbnail(url = ctx.author.avatar_url)
                 await ctx.send(embed=em)
-
-
 
     @commands.command()
     @commands.is_owner()
@@ -133,6 +132,14 @@ class MoneyMaking(commands.Cog):
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
+    @beg.error
+    async def beg_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Begging makes you look poor which you are {ctx.author.mention}!")
+            em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(MoneyMaking(client))
