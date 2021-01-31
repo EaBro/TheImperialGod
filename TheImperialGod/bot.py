@@ -12,39 +12,24 @@ import discord.ext #external
 from discord.ext import commands #commands from external
 import random #random
 import json
+import os
 import asyncio
 
-def load_cogs(): #loading all our cogs
-    cogs = [
-        "cogs.info.help", # help command
-        "cogs.fun.animals", # searching reddit
-        "cogs.economy.bankcommands", # bank commands in economy
-        "cogs.economy.moneymaking", # moneymaking commands in economy
-        "cogs.economy.shop", # making a shop with database in economy!
-        "cogs.fun.misc", # misc commands
-        "cogs.fun.utils", # utilities
-        "cogs.info.info", # information
-        "cogs.info.math", # math commands
-        "cogs.moderation.admin", # admin commands with JSON
-        "cogs.moderation.giveaways", # giveaway commands!
-        "cogs.moderation.mod", # moderation commands
-        "cogs.moderation.owner", # owner commands
-        "cogs.tickets.tickets", # ticket commands
-        "cogs.info.topgg" # has top.gg stuff bois!
-    ]
-    for cog in cogs:
-        client.load_extension(cog)
+def load_cogs(client): #loading all our cogs
+    for folder in os.listdir("./cogs"):
+        cogCount = 0
+        for filename in os.listdir(f"./cogs/{folder}"):
+            if filename.endswith(".py"):
+                cogCount += 1
+                client.load_extension(f"cogs.{folder}.{filename[:-3]}")
 
-    events = [
-        "events.GuildEvents", # when the bot leaves or joins a guild!
-        "events.ReactionAdd",
-        "events.ReactionRemove"
-    ]
+        eventCount = 0
+        for event in os.listdir("./events"):
+            if event.endswith(".py"):
+                eventCount += 1
+                client.load_extension(f"events.{filename[:-3]}")
 
-    for event in events:
-        client.load_extension(event)
-    print("===============================")
-    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")
+        print(f"{cogCount} cogs have been loaded!\n{eventCount} events have been loaded")
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -91,9 +76,8 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
 
     if client.is_closed():
         print("Offline again, f in the chat for the discord devs!")
-
-
-
+        
+# create filtered_words and racial_slurs
 @client.event
 async def on_message(msg):
     with open("data/automod.json", "r") as f:
@@ -112,47 +96,18 @@ async def on_message(msg):
                         await msg.author.ban(reason = "Used a racial slur!")
                         await msg.author.send("You were banned because you used a racial slur!")
                         return
+        
+        if msg.mentions[0] == self.client.user:
+            em = discord.Embed(title = "Help for TheImperialGod", color = ctx.author.color,
+            description = "Check some information about me!")
+            em.add_field(name = "What can I do?", value = "I can make your server so charming! Whether you are a moderator or not!")
+            em.add_field(name = "Commands:", value = "Check out `imp help` for a list of my commands")
+            em.add_field(name = "Prefix:", value = "My prefix is `imp`")
+            em.add_field(name = "Command Types", value = "Economy, Moderation, Information, Utilities, Math, Fun, Giveaways, Tickets, Miscellanous, Admin. ")
+            await message.channel.send(embed = em)
     except:
         pass
-
-    try:
-        if msg.mentions[0] == client.user:
-            await msg.channel.send(f"My prefix for this server is `imp`\nCheck out `imp help` for more information")
-        else:
-            pass
-    except:
-        pass
-
-
     await client.process_commands(msg)
-
-@client.command(case_insensitive=True)
-async def treat(ctx, member:discord.Member):
-    if member == ctx.author:
-        await ctx.send("You can't treat youself!")
-        return
-    embed=discord.Embed(
-        description=f'You offered {member.name} a treat! {member.mention} react to the emoji below to accept!',
-        color=0x006400
-    )
-    timeout=int(15.0)
-    message = await ctx.channel.send(embed=embed)
-
-    await message.add_reaction('🍫')
-
-    def check(reaction, user):
-        return user == member and str(reaction.emoji) == '🍫'
-
-    try:
-        reaction, user = await client.wait_for('reaction_add', timeout=timeout, check=check)
-
-    except asyncio.TimeoutError:
-        msg=(f"{member.mention} didn't accept the treat in time!!")
-        await ctx.channel.send(msg)
-
-    else:
-        await ctx.channel.send(f"{member.mention} You have accepted {ctx.author.name}'s offer!")
-
 
 '''
 Some fun data about this code:
@@ -164,8 +119,8 @@ Some fun data about this code:
 1000 Lines of Code = 19/10/2020
 1500 Lines of Code = 05/11/2020
 2000 Lines of Code = 11/11/2020
-5000 Lines of Code =
+5000 Lines of Code = 31/01/2020
 '''
-load_cogs()
+load_cogs(client)
 client.loop.create_task(ch_pr())
 client.run(BOT_TOKEN)
