@@ -15,22 +15,38 @@ import json
 import os
 import asyncio
 
-def load_cogs(client): #loading all our cogs
-    for folder in os.listdir("./cogs"):
-        cogCount = 0
-        for filename in os.listdir(f"./cogs/{folder}"):
-            if filename.endswith(".py"):
-                cogCount += 1
-                client.load_extension(f"cogs.{folder}.{filename[:-3]}")
+def load_cogs(): #loading all our cogs
+    cogs = [
+        "cogs.info.help", # help command
+        "cogs.fun.animals", # searching reddit
+        "cogs.economy.bankcommands", # bank commands in economy
+        "cogs.economy.moneymaking", # moneymaking commands in economy
+        "cogs.economy.shop", # making a shop with database in economy!
+        "cogs.fun.misc", # misc commands
+        "cogs.fun.utils", # utilities
+        "cogs.info.info", # information
+        "cogs.info.math", # math commands
+        "cogs.moderation.admin", # admin commands with JSON
+        "cogs.moderation.giveaways", # giveaway commands!
+        "cogs.moderation.mod", # moderation commands
+        "cogs.moderation.owner", # owner commands
+        "cogs.tickets.tickets", # ticket commands
+        "cogs.info.topgg" # has top.gg stuff bois!
+    ]
+    for cog in cogs:
+        client.load_extension(cog)
 
-        eventCount = 0
-        for event in os.listdir("./events"):
-            if event.endswith(".py"):
-                eventCount += 1
-                client.load_extension(f"events.{filename[:-3]}")
+    events = [
+        "events.GuildEvents", # when the bot leaves or joins a guild!
+        "events.ReactionAdd",
+        "events.ReactionRemove"
+    ]
 
-        print(f"{cogCount} cogs have been loaded!\n{eventCount} events have been loaded")
-
+    for event in events:
+        client.load_extension(event)
+    print("===============================")
+    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")
+    
 with open("config.json", "r") as f:
     config = json.load(f)
 
@@ -121,6 +137,6 @@ Some fun data about this code:
 2000 Lines of Code = 11/11/2020
 5000 Lines of Code = 31/01/2020
 '''
-load_cogs(client)
+load_cogs()
 client.loop.create_task(ch_pr())
 client.run(BOT_TOKEN)
