@@ -21,6 +21,7 @@ def load_cogs(): #loading all our cogs
         "cogs.fun.animals", # searching reddit
         "cogs.economy.bankcommands", # bank commands in economy
         "cogs.economy.moneymaking", # moneymaking commands in economy
+        "cogs.economy.gambling", # gambling commands
         "cogs.economy.shop", # making a shop with database in economy!
         "cogs.fun.misc", # misc commands
         "cogs.fun.utils", # utilities
