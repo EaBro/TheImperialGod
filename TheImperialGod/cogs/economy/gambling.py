@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import random
+import aiosqlite
 
 class Gambling(commands.Cog):
     def __init__(self, client):
