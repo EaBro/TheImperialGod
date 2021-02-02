@@ -159,25 +159,32 @@ class BankCommands(commands.Cog):
         async with aiosqlite.connect("./data/economy.db") as connection:
             async with connection.cursor() as cursor:
                 await cursor.execute("SELECT bank, wallet FROM users WHERE userid = ?", (ctx.author.id))
-                rows = await cursor.fetchone()
+                bal = await cursor.fetchone()
 
-                if not rows:
-                    await cursor.execute("INSERT INTO users (userid, bank, wallet) VALUES (?,?,?)",(ctx.author.id,0,0,))
-                if rows[1] < amount:
-                    await ctx.send("You don't even have that much money!")
-                    return
+                if not bal:
+                    return await ctx.send("bruh, you've never even played-")
+
+                if amount == "all":
+                    amount = bal[1]
+
+                if bal[1] < amount:
+                    return await ctx.send("You don't even have that much money!")
+                
                 if amount == 0 or amount < 0:
                     await ctx.send("Amount must be positive!")
                     return
                 
-                await cursor.execute("SELECT bank, wallet FROM users WHERE userid = ?", (member.id))
-                membal = await cursor.fetchone()
-
-                if not membal:
-                    await cursor.execute("INSERT INTO users (userid, bank, wallet) VALUES (?,?,?)",(member.id,0,0,))
-                await cursor.execute('UPDATE users SET wallet = ?, bank = ? userid = ?', (membal[1] + amount, membal[0], member.id))
+                await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?", (bal[1] - amount, bal[0], ctx.author.id))
                 await connection.commit()
-                
+
+        async with aiosqlite.connect("./data/economy.db") as connection:
+            async with connection.cursor() as cursor:
+                await cursor.execute("SELECT bank, wallet FROM users WHERE userid = ?", (member.id))
+                rows = await cursor.fetchone()
+
+                await cursor.execute("UPDATE users SET wallet = ?, bank = ?, WHERE userid = ?", (rows[1] + amount, rows[0], member.id))
+                await connection.commit()
+
         em = discord.Embed(title = "<:success:761297849475399710> Give successful!", color = ctx.author.color)
         em.add_field(name = ":dollar: Amount Given:", value = f"{amount} :coin:")
         em.add_field(name ="Member:", value = f"{member.mention}")

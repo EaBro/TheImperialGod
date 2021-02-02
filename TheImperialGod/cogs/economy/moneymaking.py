@@ -12,7 +12,7 @@ class MoneyMaking(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print('Economy commands are ready!')
+        print('MoneyMaking commands are ready!')
         async with aiosqlite.connect("./data/economy.db") as connection:
             async with connection.cursor() as cursor:
                 await cursor.execute("CREATE TABLE IF NOT EXISTS users (userid INTEGER, bank INTEGER, wallet INTEGER);")
@@ -101,6 +101,25 @@ class MoneyMaking(commands.Cog):
                 await ctx.send(embed=em)
 
 
+    @commands.command()
+    @cooldown(1, 604800, BucketType.user)
+    async def weekly(self, ctx):
+        earnings = 15000
+        async with aiosqlite.connect("./data/economy.db") as connection:
+            async with connection.cursor() as cursor:
+                await cursor.execute("SELECT bank, wallet FROM users WHERE userid = ?",(ctx.author.id,))
+                rows = await cursor.fetchone()
+                if not rows:
+                    await cursor.execute("INSERT INTO users (userid, bank, wallet) VALUES (?,?,?)",(ctx.author.id,0,0))
+                await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + earnings, rows[0], ctx.author.id))
+                rows = await cursor.fetchone()
+                await connection.commit()
+                em = discord.Embed(title = f"<:success:761297849475399710> {ctx.author.name} begs hard!", color = ctx.author.color)
+                em.add_field(name = ":dollar: Earnings", value = f"{earnings} :coin:", inline = False)
+                em.add_field(name = ":tada: Free prize:", value = "Once a day you can claim a free price!")
+                em.set_thumbnail(url = ctx.author.avatar_url)
+                await ctx.send(embed=em)
+
     # Error handling with command handler!
     @serve.error
     async def serve_error(self, ctx, error):
@@ -120,6 +139,15 @@ class MoneyMaking(commands.Cog):
             minutes = round(seconds / 60)
             hours = round(minutes / 60)
             em.add_field(name = "Try again in:", value = f"{hours} hours, {minutes} minutes and {seconds} seconds!")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+
+    @weekly.error
+    async def weekly_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title = f"<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
+            em.add_field(name = f"Reason:", value = f"Get back to studying! Weekly prizes are called weekly for a reason!")
+            em.add_field(name = "Try again in:", value = "{:.2f}s".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
