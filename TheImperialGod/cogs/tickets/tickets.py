@@ -209,7 +209,7 @@ class Tickets(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_guild = True)
-    async def setticketlogs(self, ctx, channel : discord.Channel = None, *, reason = None):
+    async def setticketlogs(self, ctx, channel : discord.TextChannel = None, *, reason = None):
         if channel is None:
             await ctx.send("You need to provide a valid channel!")            
         
