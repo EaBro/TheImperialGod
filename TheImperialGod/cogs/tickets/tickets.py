@@ -91,7 +91,7 @@ class Tickets(commands.Cog):
                 try:
                     channelId = int(tickets[str(ctx.guild.id)]["ticketchannel"])
                     for channel in ctx.guild.channels:
-                        if channel.id = channelId:
+                        if channel.id == channelId:
                             em = discord.Embed(name = "<:success:761297849475399710> Ticket Opened!", color = ctx.author.color)
                             em.add_field(name = "Member:", value = f"{ctx.author.mention}")
                             em.add_field(name ="Reason:", value = f"`{reason}`")
@@ -179,7 +179,7 @@ class Tickets(commands.Cog):
             try:
                 channelId = int(tickets[str(ctx.guild.id)]["ticketchannel"])
                 for channel in ctx.guild.channels:
-                    if channel.id = channelId:
+                    if channel.id == channelId:
                         em = discord.Embed(name = "<:fail:761292267360485378> Ticket Closed!", color = ctx.author.color)
                         em.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
                         em.add_field(name ="Reason:", value = f"`{reason}`")
