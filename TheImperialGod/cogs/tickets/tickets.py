@@ -87,6 +87,21 @@ class Tickets(commands.Cog):
                     await channel.send(warning)
                 await ctx.send(f"Created the ticket! Check {channel.mention}")
 
+                # send the mod log
+                try:
+                    channelId = int(tickets[str(ctx.guild.id)]["ticketchannel"])
+                    for channel in ctx.guild.channels:
+                        if channel.id = channelId:
+                            em = discord.Embed(name = "<:success:761297849475399710> Ticket Opened!", color = ctx.author.color)
+                            em.add_field(name = "Member:", value = f"{ctx.author.mention}")
+                            em.add_field(name ="Reason:", value = f"`{reason}`")
+                            em.add_field(name= "Channel", value = f'{channel.mention}')
+                            em.set_thumbnail(url = ctx.author.avatar_url)
+                            await channel.send(embed = em)
+                            break
+                except:
+                    pass
+
     @new.error
     async def new_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
@@ -142,6 +157,7 @@ class Tickets(commands.Cog):
     async def close(self, ctx, *, reason = None):
         channel = ctx.channel
         name = channel.name
+
         if name.startswith("ticket-"):
             messageEmbed = discord.Embed(title = "<:success:761297849475399710> Ticket Will Close!", color = ctx.author.color,
             description = "This ticket will close in ten seconds. Thanks for your time!")
@@ -154,6 +170,26 @@ class Tickets(commands.Cog):
             await asyncio.sleep(10)
             # now delete the channel
             await channel.delete()
+            # now we will try to send the log message
+            tickets = await self.get_tickets()
+
+            if str(ctx.guild.id) not in tickets:
+                return
+            
+            try:
+                channelId = int(tickets[str(ctx.guild.id)]["ticketchannel"])
+                for channel in ctx.guild.channels:
+                    if channel.id = channelId:
+                        em = discord.Embed(name = "<:fail:761292267360485378> Ticket Closed!", color = ctx.author.color)
+                        em.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
+                        em.add_field(name ="Reason:", value = f"`{reason}`")
+                        em.set_thumbnail(url = ctx.author.avatar_url)
+                        await channel.send(embed = em)
+                        break
+            
+            except:
+                pass
+
         else:
             em = discord.Embed(title = "<:fail:761292267360485378> Closing Failed!", color= ctx.author.color)
             em.add_field(name = "Reason:", value = f'This channel ({ctx.channel.mention}) is not a ticket channel!')
@@ -167,8 +203,47 @@ class Tickets(commands.Cog):
             em = discord.Embed(title = '<:fail:761292267360485378> Close Failed', color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Manage Channels permission is missing!`")
             em.set_thumbnail(url = ctx.author.avatar_url)
-            em.set_footer(text="Bot Made By NightZan999#0194")
+            em.set_footer(text="Smh, imagine thinking you have the perms!")
             await ctx.send(embed = em)
+    
+
+    @commands.command()
+    @commands.has_permissions(manage_guild = True)
+    async def setticketlogs(self, ctx, channel : discord.Channel = None, *, reason = None):
+        if channel is None:
+            await ctx.send("You need to provide a valid channel!")            
+        
+        tickets = await self.get_tickets()
+        if str(ctx.guild.id) not in tickets:
+            tickets[str(ctx.guild.id)] = {}
+            tickets[str(ctx.guild.id)]['ticketchannel'] = int(channel.id)
+            
+        
+        with open("./data/tickets.json", "r") as f:
+            json.dump(tickets, f)
+        
+        em = discord.Embed(title ="<:success:761297849475399710> Ticket Logs Set", color = ctx.author.color)
+        em.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
+        em.add_field(name = "Channel:", value = f"{channel.mention}")
+        em.add_field(name = "Reason:", value = f"`{reason}`", inline = False)
+        em.set_footer(text = "Invite me with imp invite")
+        await ctx.send(embed = em)
+
+    @setticketlogs.error
+    async def setticketlogs_error(self,ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = '<:fail:761292267360485378> Setticketlogs Failed', color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Manage Server permission is missing!`")
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_footer(text="Smh, imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = '<:fail:761292267360485378> Setticketlogs Failed', color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Mention a channel properly, like {}".format(ctx.channel.mention))
+            em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_footer(text="Smh, imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        
 
 def setup(client):
     client.add_cog(Tickets(client))
