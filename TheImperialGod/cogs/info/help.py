@@ -18,11 +18,6 @@ class Help(commands.Cog):
             "hypesquad",
             "support"
             ]
-        self.owner_commands = [
-                'enableautomod',
-                "disableautomod",
-                "checkautomod",
-        ]
         self.economy_commands = [
             "Withdraw",
             "Balance",
@@ -59,31 +54,30 @@ class Help(commands.Cog):
         page1 = discord.Embed(title = "Help", color = ctx.author.color, description = f"""
         **Type `imp help` and then a __category__ for more information for even more information!**\n
         """)
-        page1.add_field(name = f":dollar: Economy Commands: [11]", value = "`Balance`, `Beg`, `Serve`, `Withdraw`, `Deposit`, `Slots`, `Rob`, `Dice`, `Leaderboard`, `Daily`, `Weekly` ")
+        page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
         page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`")
         page1.add_field(name = f":tools: Utilities: [12]", value = "`coinflip`, `random_number`, `code`, `thank`, `reverse`, `8ball`, `poll`, `show_toprole`, `passwordgenerator`, `avatar`, `respect`, `beer`, `guess`")
         page1.add_field(name = f"<:pepethink:791969112771395625> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
         page1.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
-        page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`")
+        page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
-        page1.add_field(name =f"<:settings:761301883792654386> Admin Commands: [{len(self.owner_commands)}]", value = f"`enableautomod`, `disableautomod`, `checkautomod`, `setstarboardchannel`")
         page1.set_footer(text = f"My prefix is `imp`")
         msg = await ctx.send(embed = page1)
 
         links = discord.Embed(title = "Help Center", color = ctx.author.color,
-        description = """:bell: [Invite](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)\n
+        description = """<:invite:761292264857141288> [Invite](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)\n
         :radioactive: [Top.gg](https://top.gg/bot/768695035092271124)\n
         :scorpius: [Vote](https://top.gg/bot/768695035092271124/vote)\n
         <:info:761298826907746386> [Support Server](https://discord.gg/KuPzxqHe)\n
-        <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://theimperialgodwebsite.herokuapp.com)
+        <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://nightzan.ml/projects/theimperialgod/index.html)
         """
         )
         links.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
         links.add_field(name = 'Embed Info', value = "This message deletes after 30 seconds due to congestion! So does the other one!")
         links.add_field(name = "Tip :coin::", value =f"**{random.choice(self.tips)}**")
-        links.set_footer(text='Bot Made by NightZan999#0194')
+        links.set_footer(text='© TheImperialGod™ v1.5.1')
         try:
             mesg = await ctx.author.send(embed = links)
         except:
@@ -101,8 +95,9 @@ class Help(commands.Cog):
         em.add_field(name = "Serve", value = "Serve your server and make some coins")
         em.add_field(name = "Withdraw", value = "Withdraw some coins from your bank!")
         em.add_field(name=  "Deposit", value = "Deposit some coins into your bank!")
-        em.add_field(name= "Slots", value = "Bet some money and lose or win!")
-        em.add_field(name = "Rob", value = "Robs a user!")
+        em.add_field(name= "Daily", value = "Get daily rewards")
+        em.add_field(name = "Weekly", value = "Get weekly rewards")
+        em.add_field(name = "Bet", value = "Bet some money!")
         em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction('💰')
@@ -188,6 +183,7 @@ class Help(commands.Cog):
         em.add_field(name = "New", value = "Creates a new ticket")
         em.add_field(name = "Close", value = 'Deletes a ticket')
         em.add_field(name = "Addticketrole", value = "Add a role which can access tickets")
+        em.add_field(name = "Setticketlogs")
         em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed  = em)
 
