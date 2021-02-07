@@ -12,7 +12,7 @@ class Tickets(commands.Cog):
     async def on_ready(self):
         print("Tickets are ready!")
 
-    @commands.command()
+    @commands.command(aliases = ['createticket', 'ticketnew'])
     @cooldown(1, 10, BucketType.user)
     async def new(self, ctx, *, reason = None):
         em = discord.Embed(title = "Confirm New Ticket", color =  ctx.author.color)
@@ -97,7 +97,7 @@ class Tickets(commands.Cog):
                             em.add_field(name ="Reason:", value = f"`{reason}`")
                             em.add_field(name= "Channel / Access Point", value = f'{channel.mention}')
                             em.set_thumbnail(url = ctx.author.avatar_url)
-                            await channel.send(embed = em)
+                            await channel_.send(embed = em)
                             break
                 except:
                     pass
@@ -111,7 +111,7 @@ class Tickets(commands.Cog):
             em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
 
-    @commands.command()
+    @commands.command(aliases = ['setticketrole', 'ticketrole'])
     @commands.has_permissions(manage_guild = True)
     async def addticketrole(self, ctx, role : discord.Role = None, *,reason = None):
         if role == None:
@@ -145,7 +145,7 @@ class Tickets(commands.Cog):
                     em.add_field(name ="Reason:", value = f"`{reason}`")
                     em.add_field(name= "Ticket Role", value = f'{role.mention}')
                     em.set_thumbnail(url = ctx.author.avatar_url)
-                    await channel.send(embed = em)
+                    await channel_.send(embed = em)
                     break
         except:
             pass
@@ -163,8 +163,13 @@ class Tickets(commands.Cog):
             em.add_field(name = "Perms:", value = "`Manage Server permission missing!`")
             em.set_footer(text="Bot Made By NightZan999#0194")
             await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Ticket Error", color = ctx.author.color)
+            em.add_field(name ="Reason:", value = f"{ctx.author.mention}, you need to provide a valid role!")
+            em.set_footer(text = "Read the docs, heheboi!")
+            await ctx.send(embed = em)
 
-    @commands.command()
+    @commands.command(aliases = ['addticketlogs', 'atl', 'stl'])
     @commands.has_permissions(manage_guild = True)
     async def setticketlogs(self, ctx, channel : discord.TextChannel = None, *, reason = None):
         if channel is None:
@@ -204,7 +209,7 @@ class Tickets(commands.Cog):
             em.set_footer(text="Smh, imagine being bad!")
             await ctx.send(embed = em)
 
-    @commands.command()
+    @commands.command(aliases = ['closeticket', "ticketclose"])
     @commands.has_permissions(manage_channels = True)
     async def close(self, ctx, *, reason = None):
         channel = ctx.channel
@@ -217,31 +222,27 @@ class Tickets(commands.Cog):
             messageEmbed.add_field(name= "Time remaining:", value = f"`{seconds}`")
             messageEmbed.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
             messageEmbed.add_field(name = "Reason:", value = f"`{reason}`")
+            messageEmbed.add_field(name = "Mod Logs:", value = "Sending logs in 5 seconds!")
             messageEmbed.set_footer(text = "Wanna invite me eh? `imp invite`)")
             await ctx.send(embed = messageEmbed)
+            # sleep and delete channel
             await asyncio.sleep(10)
             # now delete the channel
             await channel.delete()
-            # now we will try to send the log message
-            tickets = await self.get_tickets()
-
-            if str(ctx.guild.id) not in tickets:
-                return
-            
+            # send mod log
             try:
                 channelId = int(tickets[str(ctx.guild.id)]["ticketchannel"])
-                for channel in ctx.guild.channels:
-                    if channel.id == channelId:
+                for ticketChannel in ctx.guild.channels:
+                    if ticketChannel.id == channelId:
                         em = discord.Embed(title = "<:fail:761292267360485378> Ticket Closed!", color = ctx.author.color)
                         em.add_field(name = "Moderator:", value = f"{ctx.author.mention}")
                         em.add_field(name ="Reason:", value = f"`{reason}`")
+                        em.add_field(name = "Channel Closing:", value = f"{channel.mention}")
                         em.set_thumbnail(url = ctx.author.avatar_url)
-                        await channel.send(embed = em)
+                        await ticketChannel.send(embed = em)
                         break
-            
             except:
                 pass
-
         else:
             em = discord.Embed(title = "<:fail:761292267360485378> Closing Failed!", color= ctx.author.color)
             em.add_field(name = "Reason:", value = f'This channel ({ctx.channel.mention}) is not a ticket channel!')
@@ -257,11 +258,53 @@ class Tickets(commands.Cog):
             em.set_thumbnail(url = ctx.author.avatar_url)
             em.set_footer(text="Smh, imagine thinking you have the perms!")
             await ctx.send(embed = em)
-    
+
     async def get_tickets(self):
         with open("./data/tickets.json", "r") as f:
             data = json.load(f)        
         return data
+    
+    """
+    @param guild : discord.Guild object!
+    """
+    async def get_logs(self, guild):
+        guild_id = guild.id
+        tickets = await self.get_tickets()
+
+        if str(guild_id) not in tickets:
+            return False
+        return int(tickets[str(guild.id)]["ticketchannel"])
+    
+    """
+    @param guild : discord.Guild object!
+    """
+    async def get_role(self, guild):
+        guild_id = guild.id
+        tickets = await self.get_tickets()
+
+        if str(guild_id) not in tickets:
+            return False
+        return int(tickets[str(guild_id)]["ticketrole"])
+    
+    """
+    @param guild : discord.Guild object!
+    @param ticketrole : discord.Role object
+    @param ticketchannel : discord.Channel object
+    """
+    async def open_guild(self, guild, ticketrole : discord.Role, ticketchannel: discord.TextChannel):
+        tickets = await self.get_tickets()
+        if not str(guild.id) in tickets:
+            tickets[str(guild.id)] = {}
+            tickets[str(guild.id)]["ticketchannel"] = int(ticketchannel.id)
+            tickets[str(guild.id)]["ticketrole"] = int(ticketrole.id)
+        else:
+            tickets[str(guild.id)]["ticketchannel"] = int(ticketchannel.id)
+            tickets[str(guild.id)]["ticketrole"] = int(ticketrole.id)
+        
+        with open("./data/tickets.json", "w") as f:
+            json.dump(tickets, f)
+        
+        return [self.get_logs(guild), self.get_role(guild)]
 
 def setup(client):
     client.add_cog(Tickets(client))
