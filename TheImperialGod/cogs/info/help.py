@@ -56,14 +56,15 @@ class Help(commands.Cog):
         """)
         page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
-        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`")
+        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`, `credits`")
         page1.add_field(name = f":tools: Utilities: [12]", value = "`coinflip`, `random_number`, `code`, `thank`, `reverse`, `8ball`, `poll`, `show_toprole`, `passwordgenerator`, `avatar`, `respect`, `beer`, `guess`")
         page1.add_field(name = f"<:pepethink:791969112771395625> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
         page1.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
-        page1.add_field(name = f":ticket: Imperial Tickets [3]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
+        page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
-        page1.set_footer(text = f"My prefix is `imp`")
+        page1.add_field(name = f":books: Logging: [5]", value = "`setrolelog`, `setmemberlog`, `setmessageeditlog`, `setmessagedeletelog`, `setchannellog`")
+        page1.set_footer(text = f"My prefix is \"imp\"")
         msg = await ctx.send(embed = page1)
 
         links = discord.Embed(title = "Help Center", color = ctx.author.color,
@@ -86,6 +87,18 @@ class Help(commands.Cog):
         else:
             await asyncio.sleep(30)
             await mesg.delete()
+    
+    @help.command(aliases=["information"])
+    async def info(self, ctx):
+        em = discord.Embed(title = "Help Information", color = ctx.author.color)
+        em.add_field(name=  "Userinfo", value = "Shows you information about a user!")
+        em.add_field(name = "Avatar", value = "Shows someones profile picture in a zoomed format!")
+        em.add_field(name = "Serverinfo", value = "Shows you information about the server!")
+        em.add_field(name = "Whois", value = "Shows you whois a person!")
+        em.add_field(name = 'Botinfo', value = 'Shows you information about me!')
+        em.add_field(name = "Show_toprole", value = "Shows you a toprole of a user!")
+        em.add_field(name = 'Credits', value ="Shows you **everyone who contributed to TheImperialGod**")
+        await ctx.send(embed = em)
 
     @help.command(aliases= ["eco"])
     async def economy(self, ctx):
@@ -163,16 +176,6 @@ class Help(commands.Cog):
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🐬")
 
-    @help.command()
-    async def admin(self, ctx):
-        embed = discord.Embed(title = "Help Admin:", color = ctx.author.color)
-        embed.add_field(name = "enableautomod", value = "Enables automod for the server, if anyone types a bad word. It deletes")
-        embed.add_field(name = "disableautomod", value = "Disable automoderation for the entire server!")
-        embed.add_field(name = "checkautomod", value = "Tells you automod status")
-        embed.set_footer(text='Bot Made by NightZan999#0194')
-        msg = await ctx.send(embed = embed)
-        await msg.add_reaction("🐯")
-
     @help.command(aliases=["ticket"])
     async def tickets(self, ctx):
         em = discord.Embed(title = "Help Tickets", color = ctx.author.color,
@@ -183,7 +186,7 @@ class Help(commands.Cog):
         em.add_field(name = "New", value = "Creates a new ticket")
         em.add_field(name = "Close", value = 'Deletes a ticket')
         em.add_field(name = "Addticketrole", value = "Add a role which can access tickets")
-        em.add_field(name = "Setticketlogs")
+        em.add_field(name = "Setticketlogs", value = "Set a log channel, which tells you when an action related to tickets happens!")
         em.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed  = em)
 
