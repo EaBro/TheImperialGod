@@ -151,15 +151,6 @@ class Help(commands.Cog):
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🍩")
 
-    @help.command(aliases= ["gstart", "gaws", "gaw", "giveaway"])
-    async def giveaways(self, ctx):
-        em = discord.Embed(title = "Help Giveaways:", color = ctx.author.color)
-        em.add_field(name = "gstart", value = "Starts a giveaway")
-        em.add_field(name = "reroll", value = "Rerolls a giveaway")
-        em.set_footer(text='Bot Made by NightZan999#0194')
-        msg = await ctx.send(embed = em)
-        await msg.add_reaction("🎉")
-
     @help.command(aliases=['miscellaneous'])
     async def misc(self, ctx):
         em = discord.Embed(title = "Help Misc:", color = ctx.author.color)
@@ -205,12 +196,13 @@ class Help(commands.Cog):
         em.add_field(name = "sqrt", value = 'Squareroot 1 number!')
         await ctx.send(embed = em)
     
-    @help.command(aliases=["gaws", "giveaway"])
+    @help.command(aliases=["gaws", "giveaway", "gaw"])
     async def giveaway(self, ctx):
         em = discord.Embed(title = "Help Giveaways", color = ctx.author.color,description = "Giveaway Bots are quite rare, but you are lucky to have me! An all in one!")
         em.add_field(name = "gstart", value = 'Interactive setup of giveaways!')
         em.add_field(name = "reroll", value = f"Rerolls a giveaway, format: ```diff\n+ imp reroll <channel> <messageId>\n- imp reroll <messageId>```")
-        await ctx.send(embed = em)
+        msg = await ctx.send(embed = em)
+        await msg.add_reaction("🎉")
 
 def setup(client):
     client.remove_command("help")
