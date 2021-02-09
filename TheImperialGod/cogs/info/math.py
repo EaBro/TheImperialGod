@@ -18,8 +18,10 @@ class Mathematics(commands.Cog):
             num1 = float(num1)
             num2 = float(num2)
         except:
-            await ctx.send("Both your numbers have to be integers! Next time add integers!")
-            return
+            em = discord.Embed(title = "<:fail:761292267360485378> Multiply Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Your number(s) were not integers / decimals!")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp add <num1> <num2>\n- imp add <myFavoriteFruit> <myTaxi>\n```")
+            return await ctx.send(embed = em)
         else:
             em = discord.Embed(title = "<:success:761297849475399710> Add Successful", color = ctx.author.color)
             em.add_field(name = "Number 1:", value = f"`{num1}`")
@@ -47,8 +49,10 @@ class Mathematics(commands.Cog):
             num1 = float(num1)
             num2 = float(num2)
         except:
-            await ctx.send("Both your numbers have to be integers! Next time subtract integers!")
-            return
+            em = discord.Embed(title = "<:fail:761292267360485378> Subtract Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Your number(s) were not integers / decimals!")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp sub <num1> <num2>\n- imp sub <myFavoriteFruit> <myTaxi>\n```")
+            return await ctx.send(embed = em)
         else:
             em = discord.Embed(title = "<:success:761297849475399710> Subtract Successful", color = ctx.author.color)
             em.add_field(name = "Number 1:", value = f"`{num1}`")
@@ -76,8 +80,10 @@ class Mathematics(commands.Cog):
             num1 = float(num1)
             num2 = float(num2)
         except:
-            await ctx.send("Both your numbers have to be integers! Next time multiply integers!")
-            return
+            em = discord.Embed(title = "<:fail:761292267360485378> Multiply Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Your number(s) were not integers / decimals!")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp mul <num1> <num2>\n- imp mul <myFavoriteFruit> <myTaxi>\n```")
+            return await ctx.send(embed = em)
         else:
             em = discord.Embed(title = "<:success:761297849475399710> Multiply Successful", color = ctx.author.color)
             em.add_field(name = "Number 1:", value = f"`{num1}`")
@@ -105,9 +111,18 @@ class Mathematics(commands.Cog):
             num1 = float(num1)
             num2 = float(num2)
         except:
-            await ctx.send("Both your numbers have to be integers! Next time divide integers!")
-            return
+            em = discord.Embed(title = "<:fail:761292267360485378> Divide Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Your number(s) were not integers / decimals!")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp div <num1> <num2>\n- imp div <myFavoriteFruit> <myTaxi>\n```")
+            return await ctx.send(embed = em)
         else:
+            if int(num2) == 0:
+                em = discord.Embed(title = "<:fail:761292267360485378> Divide Failed", color = ctx.author.color)
+                em.add_field(name = "Reason:", value = "Your dividend was literally 0, you know that is `undefined`!")
+                em.add_field(name = "Usage:", value = f"```diff\n+ imp div <num1> <num2>\n- imp div <myFavoriteFruit> <myTaxi>\n```")
+                em.set_footer(text = "for doing this, you are literally dogwater")
+                return await ctx.send(embed = em)
+                
             em = discord.Embed(title = "<:success:761297849475399710> Divide Successful", color = ctx.author.color)
             em.add_field(name = "Number 1:", value = f"`{num1}`")
             em.add_field(name=  "Number 2:", value = f"`{num2}`")
@@ -133,7 +148,10 @@ class Mathematics(commands.Cog):
         try:
             num = float(num)
         except:
-            return await ctx.channel.send("Your number has to be an integer")
+            em = discord.Embed(title = "<:fail:761292267360485378> Square Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Your number(s) were not integers / decimals!")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp sq <num>\n- imp sq <num1> <num2>\n```")
+            return await ctx.send(embed = em)
         else:
             em = discord.Embed(title = "<:success:761297849475399710> Square Successful", color = ctx.author.color)
             em.add_field(name = "Number", value = f"`{num}`")
@@ -159,7 +177,10 @@ class Mathematics(commands.Cog):
         try:
             num = float(num)
         except:
-            return await ctx.channel.send("Your number has to be an integer")
+            em = discord.Embed(title = "<:fail:761292267360485378> Squareroot Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Your number(s) were not integers / decimals!")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp sqrt <num>\n- imp sqrt <myFavoriteFruit> <myTaxi>\n```")
+            return await ctx.send(embed = em)
         else:
             em = discord.Embed(title = "<:success:761297849475399710> Squareroot Successful", color = ctx.author.color)
             em.add_field(name = "Number", value = f"`{num}`")

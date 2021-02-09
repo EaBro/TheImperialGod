@@ -63,7 +63,6 @@ class Help(commands.Cog):
         page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
-        page1.add_field(name = f":books: Logging: [5]", value = "`setrolelog`, `setmemberlog`, `setmessageeditlog`, `setmessagedeletelog`, `setchannellog`")
         page1.set_footer(text = f"My prefix is \"imp\"")
         msg = await ctx.send(embed = page1)
 
@@ -204,6 +203,13 @@ class Help(commands.Cog):
         em.add_field(name = "divide", value = 'Divide two numbers!')
         em.add_field(name = "square", value = 'Square 1 number!')
         em.add_field(name = "sqrt", value = 'Squareroot 1 number!')
+        await ctx.send(embed = em)
+    
+    @help.command(aliases=["gaws", "giveaway"])
+    async def giveaway(self, ctx):
+        em = discord.Embed(title = "Help Giveaways", color = ctx.author.color,description = "Giveaway Bots are quite rare, but you are lucky to have me! An all in one!")
+        em.add_field(name = "gstart", value = 'Interactive setup of giveaways!')
+        em.add_field(name = "reroll", value = f"Rerolls a giveaway, format: ```diff\n+ imp reroll <channel> <messageId>\n- imp reroll <messageId>```")
         await ctx.send(embed = em)
 
 def setup(client):
