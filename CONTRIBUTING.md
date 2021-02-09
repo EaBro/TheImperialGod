@@ -1,4 +1,4 @@
-# Contributing to This Coding Journey
+# Contributing to TheImperialGod
 ## If you are not a contributor
 If your not a contributor on this repository you can email the staff team at nigamanth.srivatsan@gmail.com
 Which means all your issues about stuff will be there. 
