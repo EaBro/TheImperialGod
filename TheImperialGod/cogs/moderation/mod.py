@@ -16,13 +16,20 @@ class Moderation(commands.Cog):
                 embed.add_field(name = "Reason:", value = "Ping a user to kick them!")
                 await ctx.send(embed = embed)
                 return
+            if member == ctx.author:
+                em = discord.Embed(title = '<:fail:761292267360485378> Kick Failed', color = ctx.author.color)
+                em.add_field(name = 'Reason:', value = f"You can't kick yourself ;-;")
+                em.add_field(name = "Next Steps:", value = "Try to kick someone else idunno")
+                em.set_footer(text = "imagine kicking urself, couldn't be me!")
+                await ctx.send(embed=  em)
+                return
             try:
                 await member.send(f"You were kicked in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
             except:
                 pass
             await member.kick(reason = reason)
             em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color)
-            em.add_field(name = f"Victim:", value = f"`{member.name}`")
+            em.add_field(name = f"Member:", value = f"`{member.name}`")
             em.add_field(name = "Reason: ", value = f"`{reason}`")
             em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
             em.set_footer(text = f"{member.name} said bye!")
@@ -46,6 +53,123 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Kick properly already!")
             await ctx.send(embed = em)
 
+    @commands.command(aliases=["giverole", "addr"])
+    @has_permissions(manage_roles = True)
+    async def addrole(self, ctx, member : discord.Member = None, role : discord.Role = None,*,reason = None):
+        if member is None:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Addrole Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "Ping a user to give them a role them!")
+            embed.set_footer(text = "-_-")
+            await ctx.send(embed = embed)
+            return
+        if role is None:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Addrole Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "Ping a role to give {} that role!".format(member.mention))
+            embed.set_footer(text = "-_-")
+            await ctx.send(embed = embed)
+            return
+        try:
+            addRole = True
+            for role_ in member.roles:
+                if role_ == role:
+                    addRole = False
+                    break
+            if not addRole:
+                embed = discord.Embed(title = "<:fail:761292267360485378> Add Role Failed!", color= ctx.author.color)
+                embed.add_field(name = "Reason:", value = "I was unable to add that role to {}!".format(member.mention))
+                embed.add_field(name = "Why?",value = f"{member.mention} already has {role.mention}, so...")
+                embed.set_footer(text = "-_-")
+                await ctx.send(embed = embed)
+                return
+            else:
+                em = discord.Embed(title=  "<:success:761297849475399710> Add Role Successful!", color = ctx.author.color)
+                em.add_field(name = "Reason:", value = f"`{reason}`")
+                em.add_field(name = "User:", value = f"{member.mention}")
+                em.add_field(name = "Role:", value = f"{role.mention}", inline = True)
+                em.add_field(name ="Moderator:", value = f"{ctx.author.mention}", inline = False)
+                await ctx.send(embed = em)
+                return
+        except:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Addrole Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "I was unable to give {} that role!".format(member.mention))
+            embed.add_field(name = "Why?",value = "This is usually because of role hierarchy or because I don't have manage roles permissions!")
+            embed.set_footer(text = "-_-, gimme the perms m8")
+            await ctx.send(embed = embed)
+    
+    @commands.command(aliases=["takerole", "remover"])
+    @has_permissions(manage_roles = True)
+    async def removerole(self, ctx, member : discord.Member = None, role : discord.Role = None,*,reason = None):
+        if member is None:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Removerole Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "Ping a user to take away a role from them!")
+            embed.set_footer(text = "-_-")
+            await ctx.send(embed = embed)
+            return
+        if role is None:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Removerole Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "Ping a role to remove that role from {}!".format(member.mention))
+            embed.set_footer(text = "-_-")
+            await ctx.send(embed = embed)
+            return
+        try:
+            roleRemoved = False
+            for role_ in member.roles:
+                if role_ == role:
+                    await member.remove_roles(role)
+                    roleRemoved = True
+                    return
+            if not roleRemoved:
+                embed = discord.Embed(title = "<:fail:761292267360485378> Remove Role Failed!", color= ctx.author.color)
+                embed.add_field(name = "Reason:", value = "I was unable to remove that role from {}!".format(member.mention))
+                embed.add_field(name = "Why?",value = f"{member.mention} doesn't even have {role.mention}, so...")
+                embed.set_footer(text = "-_-")
+                await ctx.send(embed = embed)
+                return
+            else:
+                em = discord.Embed(title=  "<:success:761297849475399710> Remove Role Successful!", color = ctx.author.color)
+                em.add_field(name = "Reason:", value = f"`{reason}`")
+                em.add_field(name = "User:", value = f"{member.mention}")
+                em.add_field(name = "Role:", value = f"{role.mention}", inline = True)
+                em.add_field(name ="Moderator:", value = f"{ctx.author.mention}", inline = False)
+                await ctx.send(embed = em)
+                return
+        except:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Remove Role Failed!", color= ctx.author.color)
+            embed.add_field(name = "Reason:", value = "I was unable to remove that role from {}!".format(member.mention))
+            embed.add_field(name = "Why?",value = "This is usually because of role hierarchy or because I don't have manage roles permissions!")
+            embed.set_footer(text = "-_-, gimme the perms m8")
+            await ctx.send(embed = embed)
+            return
+
+    @addrole.error
+    async def addrole_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Add Role Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Manage Role Permission Missing!`")
+            em.set_footer(text = "Imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = "<:fail:761292267360485378> Add Role Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ping a user and a role to give the role to the user!`")
+            em.add_field(name = "Format:", value = f'```diff\n+ imp addr <@member> <@role> [reason]\n- imp addrole <@role> [reason] <@member>\n```')
+            em.set_footer(text = "Ban properly already!")
+            await ctx.send(embed = em)
+
+
+    @removerole.error
+    async def removerole_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            em = discord.Embed(title = "<:fail:761292267360485378> Remove Role Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Manage Role Permission Missing!`")
+            em.set_footer(text = "Imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BadArgument):
+            em = discord.Embed(title = "<:fail:761292267360485378> Remove Role Failed!", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "`Ping a user and a role to remove the role from the user!`")
+            em.add_field(name = "Format:", value = f'```diff\n+ imp removerole <@member> <@role> [reason]\n- imp removerole <@role> [reason] <@member>\n```')
+            em.set_footer(text = "Ban properly already!")
+            await ctx.send(embed = em)
+    
     @commands.command()
     @has_permissions(ban_members = True)
     async def ban(self, ctx, member : discord.Member = None, *,reason = None):
@@ -54,6 +178,13 @@ class Moderation(commands.Cog):
                 embed = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color= ctx.author.color)
                 embed.add_field(name = "Reason:", value = "Ping a user to ban them!")
                 await ctx.send(embed = embed)
+                return
+            if member == ctx.author:
+                em = discord.Embed(title = '<:fail:761292267360485378> Ban Failed', color = ctx.author.color)
+                em.add_field(name = 'Reason:', value = f"You can't ban yourself ;-;")
+                em.add_field(name = "Next Steps:", value = "Try to ban someone else idunno")
+                em.set_footer(text = "imagine banning urself, couldn't be me!")
+                await ctx.send(embed=  em)
                 return
             try:
                 await member.send(f"You were banned in {ctx.guild.name}\nReason: `{reason}`\nModerator: `{ctx.author.name}`")
@@ -132,6 +263,11 @@ class Moderation(commands.Cog):
     @commands.command(aliases = ["purge", "massdelete", "bulkdel"])
     @has_permissions(manage_messages = True)
     async def clear(self, ctx, amount = 1):
+        try:
+            amount = int(amount)
+        except:
+            await ctx.send("Provide an integer amount of messages!")
+            return 
         await ctx.channel.purge(limit = amount)
 
     @clear.error
@@ -145,7 +281,7 @@ class Moderation(commands.Cog):
     @commands.command()
     @has_permissions(manage_channels = True)
     async def lock(self, ctx, *, reason = None):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False, read_messages = True)
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
         em = discord.Embed(title = f"<:success:761297849475399710> Channel has been locked!", color = discord.Color.green())
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
@@ -163,7 +299,7 @@ class Moderation(commands.Cog):
     @commands.command()
     @has_permissions(manage_channels = True)
     async def unlock(self, ctx, *, reason = None):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True, read_messages = True)
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
         em = discord.Embed(title = f"<:success:761297849475399710> Channel has been unlocked!", color = discord.Color.green())
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
@@ -184,7 +320,11 @@ class Moderation(commands.Cog):
         if amount > 6000:
             await ctx.channel.send("Amount needs to be less than 6000!")
             return
-
+        try:
+            amount = int(amount)
+        except:
+            await ctx.send("Provide an integer value of the amount of seconds of slowmode!")
+            return
         await ctx.channel.edit(slowmode_delay=amount)
         em = discord.Embed(title = "<:success:761297849475399710> Change in channel settings", color = ctx.author.color)
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
@@ -246,7 +386,6 @@ class Moderation(commands.Cog):
         count = len(messages)
         em = discord.Embed(title = f"Count of {channel.mention}", color = ctx.author.color, description = "There are {} messages in {}".format(count, channel.mention))
         await ctx.send(embed=em)
-
 
 def setup(client):
     client.add_cog(Moderation(client))
