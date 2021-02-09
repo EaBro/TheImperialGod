@@ -32,7 +32,7 @@ class Mathematics(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Add Failed", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You didn't provide 2 numbers to add!")
-            em.add_field(name = "Usage:", value = f"```\nimp add <num1> <num2>\n```")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp add <num1> <num2>\n- imp add <helloWorld>\n```")
             await ctx.send(embed = em)
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
@@ -61,7 +61,7 @@ class Mathematics(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Subtract Failed", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You didn't provide 2 numbers to subtract!")
-            em.add_field(name = "Usage:", value = f"```\nimp sub <num1> <num2>\n```")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp sub <num1> <num2>\n- imp sub <timeRightNow>\n```")
             await ctx.send(embed = em)
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
@@ -90,7 +90,7 @@ class Mathematics(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Multiply Failed", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You didn't provide 2 numbers to multiply!")
-            em.add_field(name = "Usage:", value = f"```\nimp mul <num1> <num2>\n```")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp mul <num1> <num2>\n- imp mul <myName> <myHeight>\n```")
             await ctx.send(embed = em)
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
@@ -119,7 +119,7 @@ class Mathematics(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Divide Failed", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You didn't provide 2 numbers to divide!")
-            em.add_field(name = "Usage:", value = f"```\nimp div <num1> <num2>\n```")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp div <num1> <num2>\n- imp div <randomText>\n```")
             await ctx.send(embed = em)
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
@@ -145,7 +145,7 @@ class Mathematics(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Square Failed", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You didn't provide 1 number to square!")
-            em.add_field(name = "Usage:", value = f"```\nimp sq <num>\n```")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp sq <num>\n- imp sq <num1> <num2>\n```")
             await ctx.send(embed = em)
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
@@ -171,7 +171,7 @@ class Mathematics(commands.Cog):
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Squareroot Failed", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "You didn't provide 1 number to squareroot!")
-            em.add_field(name = "Usage:", value = f"```\nimp sqrt <num>\n```")
+            em.add_field(name = "Usage:", value = f"```diff\n+ imp sqrt <num>\n- imp sqrt <myFavoriteFruit> <myTaxi>\n```")
             await ctx.send(embed = em)
         if isinstance(error, commands.CommandOnCooldown):
             em = discord.Embed(title = "<:fail:761292267360485378> Slow it down C'mon", color = ctx.author.color)
