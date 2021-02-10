@@ -86,11 +86,19 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def guilds(self, ctx):
-        msg = f"```\nTheImperialGod is in {len(self.client.guilds)} servers and has {len(self.client.users)} users!\n\n"
-        for guild in self.client.guilds:
-            msg += f"{guild.name} ({guild.id}) - {guild.member_count}\n"
-        msg += "\n```"
-        await ctx.send(msg)
+        firstMsg = f"```diff\n- TheImperialGod is in {len(self.client.guilds)} servers and has {len(self.client.users)} users!\n\n"
+        secondMsg = f"```diff\n- TheImperialGod is in {len(self.client.guilds)} servers and has {len(self.client.users)} users!\n\n"
+        for i in range(0, len(self.client.guilds)): 
+            guild = self.client.guilds[i]
+            if i < 25:
+                firstMsg += f"+ {guild.name} ({guild.id}) - {guild.member_count}\n"
+            else:
+                secondMsg += f"+ {guild.name} ({guild.id}) - {guild.member_count}\n"
+                
+        firstMsg += "\n```"
+        secondMsg += "\n```"
+        await ctx.send(f"{firstMsg}")
+        await ctx.send(secondMsg)
 
 def setup(client):
     client.add_cog(Owner(client))

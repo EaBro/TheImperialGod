@@ -53,7 +53,7 @@ class Tickets(commands.Cog):
                 if str(ctx.guild.id) not in tickets:
                     em = discord.Embed(title = "<:fail:761292267360485378> New Failed",color = ctx.author.color)
                     em.add_field(name = "Reason:", value = "Tickets are not setup!")
-                    em.add_field(name = "Next Steps:", value = "Ask a admin to set this up, `imp addticketrole @role`")
+                    em.add_field(name ="Usage:", value = "Usage for an admin:\n```diff\n+ imp addticketrole <@role> [reason]\n- imp new [reason]\n```")
                     await ctx.send(embed = em)
                     return
                 # Getting the role made!
@@ -166,6 +166,7 @@ class Tickets(commands.Cog):
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title=  "<:fail:761292267360485378> Ticket Error", color = ctx.author.color)
             em.add_field(name ="Reason:", value = f"{ctx.author.mention}, you need to provide a valid role!")
+            em.add_field(name = "Usage:", value = '```diff\n+ imp addticketrole <@role> [reason]\n- imp addticketrole bruh\n```')
             em.set_footer(text = "Read the docs, heheboi!")
             await ctx.send(embed = em)
 
@@ -205,6 +206,7 @@ class Tickets(commands.Cog):
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> Setticketlogs Failed', color = ctx.author.color)
             em.add_field(name = "Reason:", value = "Mention a channel properly, like {}".format(ctx.channel.mention))
+            em.add_field(name= "Usage:", value = "```diff\n+ imp setticketlogs #ticket-logs better ticket logs\n- imp setticketlogs @NightZan999 setting a member as logs\n```")
             em.set_thumbnail(url = ctx.author.avatar_url)
             em.set_footer(text="Smh, imagine being bad!")
             await ctx.send(embed = em)

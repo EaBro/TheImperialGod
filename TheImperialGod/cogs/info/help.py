@@ -29,20 +29,13 @@ class Help(commands.Cog):
             'Daily',
             'Weekly'
             ]
-        self.info_commands = [
-            "channelinfo",
-            "botinfo",
-            "serverinfo",
-            "userinfo"
-        ]
         self.tips = [
             "Did you know that TheImperialGod has an economy system!",
             "Did you know that TheImperialGod was made by NightZan999?",
             "Did you know that TheImperialGod was coded in a language called Python!",
             f"Did you know that TheImperialGod is in {len(self.client.guilds)} servers!",
-            "Did you know that TheImperialGod has over 20,000 lines of code if put in one file!",
-            "Did you know that TheImperialGod has a starboard system. Its in BETA but still there!",
-            "Did you know that TheImperialGod has tickets and an automoderation system!"
+            "Did you know that TheImperialGod has over 45,000 lines of code if put in one file!",
+            "Did you know that TheImperialGod has tickets!"
         ]
 
     @commands.Cog.listener()
@@ -56,11 +49,11 @@ class Help(commands.Cog):
         """)
         page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
-        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [{len(self.info_commands)}]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`, `credits`")
+        page1.add_field(name = f"<:info:761298826907746386> Information Commands: [8]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`, `credits`")
         page1.add_field(name = f":tools: Utilities: [12]", value = "`coinflip`, `random_number`, `code`, `thank`, `reverse`, `8ball`, `poll`, `show_toprole`, `passwordgenerator`, `avatar`, `respect`, `beer`, `guess`")
         page1.add_field(name = f"<:pepethink:791969112771395625> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
         page1.add_field(name = f':video_game: Fun: [12]', value = f"`dog`, `cat`, `duck`, `fox`, `panda`, `koala`, `tiger`, `lion`, `snake`, `redpanda`, `owl`, `meme`, `joke`")
-        page1.add_field(name = f":gift: Giveaways: [{len(self.gaws_commands)}]", value = "`gstart`, `reroll`")
+        page1.add_field(name = f":gift: Giveaways: [2]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
         page1.set_footer(text = f"My prefix is \"imp\"")
@@ -150,7 +143,7 @@ class Help(commands.Cog):
         em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🍩")
-
+        
     @help.command(aliases=['miscellaneous'])
     async def misc(self, ctx):
         em = discord.Embed(title = "Help Misc:", color = ctx.author.color)
@@ -197,7 +190,7 @@ class Help(commands.Cog):
         await ctx.send(embed = em)
     
     @help.command(aliases=["gaws", "giveaway", "gaw"])
-    async def giveaway(self, ctx):
+    async def giveaways(self, ctx):
         em = discord.Embed(title = "Help Giveaways", color = ctx.author.color,description = "Giveaway Bots are quite rare, but you are lucky to have me! An all in one!")
         em.add_field(name = "gstart", value = 'Interactive setup of giveaways!')
         em.add_field(name = "reroll", value = f"Rerolls a giveaway, format: ```diff\n+ imp reroll <channel> <messageId>\n- imp reroll <messageId>```")

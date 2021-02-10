@@ -50,8 +50,17 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Ping a user to kick them!`")
+            em.add_field(name=  "Usage:", value = "```diff\n+ imp kick @NightZan999 swear words\n- imp kick someonesName swearing\n```")
             em.set_footer(text = "Kick properly already!")
             await ctx.send(embed = em)
+        
+    async def createDiff(self, plusField, minusField):
+        return f"""
+        ```diff\n
+        + {plusField}\n
+        - {minusField}\n 
+        ```
+        """
 
     @commands.command(aliases=["giverole", "addr"])
     @has_permissions(manage_roles = True)
@@ -152,7 +161,7 @@ class Moderation(commands.Cog):
             em = discord.Embed(title = "<:fail:761292267360485378> Add Role Failed!", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Ping a user and a role to give the role to the user!`")
             em.add_field(name = "Format:", value = f'```diff\n+ imp addr <@member> <@role> [reason]\n- imp addrole <@role> [reason] <@member>\n```')
-            em.set_footer(text = "Ban properly already!")
+            em.set_footer(text = "Addrole properly already!")
             await ctx.send(embed = em)
 
 
@@ -167,7 +176,7 @@ class Moderation(commands.Cog):
             em = discord.Embed(title = "<:fail:761292267360485378> Remove Role Failed!", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Ping a user and a role to remove the role from the user!`")
             em.add_field(name = "Format:", value = f'```diff\n+ imp removerole <@member> <@role> [reason]\n- imp removerole <@role> [reason] <@member>\n```')
-            em.set_footer(text = "Ban properly already!")
+            em.set_footer(text = "Remove Role properly already!")
             await ctx.send(embed = em)
     
     @commands.command()
@@ -214,12 +223,13 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "`Ping a user to Ban them!`")
+            em.add_field(name = "Usage:", value = await self.createDiff("imp ban @NightZan999 DM adverts", "imp ban someonesName DM adverts"))
             em.set_footer(text = "Ban properly already!")
             await ctx.send(embed = em)
 
     @commands.command()
     @commands.has_permissions(manage_channels = True)
-    async def announce(ctx, channel : discord.TextChannel, *, msg):
+    async def announce(ctx, channel : discord.TextChannel, *, msg = None):
         embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
         embed.add_field(name = "Announcement:", value = f"`{msg}`")
         embed.add_field(name = "Moderator:", value = f"`{ctx.autor.name}`")
@@ -235,14 +245,15 @@ class Moderation(commands.Cog):
         if isinstance(error, commands.BadArgument):
             embed = discord.Embed(title = "<:fail:761292267360485378> Announcement failed!", color = ctx.author.color)
             embed.add_field(name = 'Reason:', value = f"Mention a channel properly! And write a message after it!")
+            embed.add_field(name = "Usage", value = await self.createDiff('imp announce #announcements Today we are getting react roles', 'imp announce someChannelName Today we are getting react roles'))
             embed.set_footer(text = 'Do stuff properly!')
             await ctx.send(embed = embed)
 
     @commands.command()
     @commands.has_permissions(manage_roles = True)
-    async def createrole(self, ctx, *, name):
+    async def createrole(self, ctx, *, name = "UnknownRole"):
         role=  await ctx.guild.create_role(name = name)
-        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color)
+        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color, description = f"{role.mention} was successfully created!")
         em.add_field(name = "Role:", value = f"{role.mention}")
         em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
         em.set_footer(text = "Good job creating roles!")
@@ -323,7 +334,10 @@ class Moderation(commands.Cog):
         try:
             amount = int(amount)
         except:
-            await ctx.send("Provide an integer value of the amount of seconds of slowmode!")
+            em = discord.Embed(title = "<:fail:761292267360485378> Set Delay Failed", color = ctx.author.color)
+            em.add_field(name = "Reason:", value = "Amount is not an integer")
+            em.add_field(name = "Usage:", value = await self.createDiff('imp setdelay 3 chat is active', 'imp setdelay myFood chat is active'))
+            await ctx.send(embed = em)
             return
         await ctx.channel.edit(slowmode_delay=amount)
         em = discord.Embed(title = "<:success:761297849475399710> Change in channel settings", color = ctx.author.color)

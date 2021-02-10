@@ -125,7 +125,7 @@ class Information(commands.Cog):
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "https://theimperialgod.herokuapp.com\nNOTE: not hosted yet!")
         embed.add_field(name = "Number of Commands:", value = f"`85` (including special owner commands)")
-        embed.add_field(name = "**Tech:**", value = "```+ Library : discord.py\n+ Database : AIOSQLite\n+ Hosting Services : Chaotic Destiny Hosting!\n```", inline = False)
+        embed.add_field(name = "**Tech:**", value = "```diff\n+ Library : discord.py\n+ Database : AIOSQLite\n+ Hosting Services : Chaotic Destiny Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
@@ -137,7 +137,14 @@ class Information(commands.Cog):
         embed.add_field(name=  "Client Latency", value = f"`{round(self.client.latency * 1000)}ms`")
         embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed = embed)
-
-
-def setup(client):
+    
+    @commands.command()
+    async def credits(self, ctx):
+        em = discord.Embed(title = ":scroll: Credits of TheImperialGod", color = ctx.author.color, description = "Github link is [here](https://github.com/NightZan999/TheImperialGod)")
+        em.add_field(name = "#1 NightZan999", value = f"""I have done everything on TheImperialGod, coded the entire bot, taken feedback, grown it to {len(self.client.guilds)} servers.\n I 
+        am even writing this right now!\nMy hopes are to you, if you like this bot type: `imp support`. That shows you ways to support TheImperialGod""")
+        em.add_field(name = '#2 Github', value = "I did do all the coding, but I made TheImperialGod open source, this is why many people respond to my issues. Some people have corrected some glitches, and a full credits list is avalible on github")
+        em.set_footer(text = "invite me now!")
+        await ctx.send(embed = em)
+    
     client.add_cog(Information(client))

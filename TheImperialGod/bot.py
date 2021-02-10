@@ -9,7 +9,7 @@ Be sure to have this in your project at the beginning!
 """
 import discord #discord object
 import discord.ext #external
-from discord.ext import commands #commands from external
+from discord.ext import commands, tasks #commands from external
 import random #random
 import json
 import os
@@ -21,13 +21,12 @@ def load_cogs(): #loading all our cogs
         "cogs.fun.animals", # searching reddit
         "cogs.economy.bankcommands", # bank commands in economy
         "cogs.economy.moneymaking", # moneymaking commands in economy
-        "cogs.economy.gambling", # gambling commands
         "cogs.economy.shop", # making a shop with database in economy!
+        "cogs.economy.gambling", # gambling commands
         "cogs.fun.misc", # misc commands
         "cogs.fun.utils", # utilities
         "cogs.info.info", # information
         "cogs.info.math", # math commands
-        "cogs.moderation.admin", # admin commands with JSON
         "cogs.moderation.giveaways", # giveaway commands!
         "cogs.moderation.mod", # moderation commands
         "cogs.moderation.owner", # owner commands
@@ -46,8 +45,8 @@ def load_cogs(): #loading all our cogs
     for event in events:
         client.load_extension(event)
     print("===============================")
-    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")
-    
+    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")  
+
 with open("config.json", "r") as f:
     config = json.load(f)
 
@@ -71,9 +70,9 @@ async def on_ready():
     print("User ID: ", client.user.id)
     print("----------------------------")
 
+@tasks.loop(seconds = 15)
 async def ch_pr(): #changing the bots status every 5 secs!!!
     await client.wait_until_ready()
-
     while not client.is_closed():
         statuses = [
             f"The Protection of {len(client.guilds)} servers",
@@ -84,43 +83,25 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
             "Using utils!",
             f"Serving {len(client.users)} users",
             "Calculating inflation!",
-            "Changing statuses!"
+            "Changing statuses!",
+            'Doing Mafs',
+            f'Managing tickets for {len(client.guilds)} servers'
         ]
         status = random.choice(statuses)
-
         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
-        await asyncio.sleep(15)
 
-    if client.is_closed():
-        print("Offline again, f in the chat for the discord devs!")
-        
-# create filtered_words and racial_slurs
 @client.event
 async def on_message(msg):
-    with open("data/automod.json", "r") as f:
-        guilds = json.load(f)
-
     try:
-        if guilds[str(msg.guild.id)]["automod"] == "true":
-            if not msg.channel.is_nsfw:
-                for word in filtered_words:
-                    if word in msg.content.lower():
-                        await msg.delete()
-                        await msg.author.send("Watch your language!")
-                for slur in racial_slurs:
-                    if slur in msg.content.lower():
-                        await msg.delete()
-                        await msg.author.ban(reason = "Used a racial slur!")
-                        await msg.author.send("You were banned because you used a racial slur!")
-                        return
-        
-        if msg.mentions[0] == self.client.user:
+        if msg.mentions[0] == client.user:
             em = discord.Embed(title = "Help for TheImperialGod", color = ctx.author.color,
             description = "Check some information about me!")
             em.add_field(name = "What can I do?", value = "I can make your server so charming! Whether you are a moderator or not!")
             em.add_field(name = "Commands:", value = "Check out `imp help` for a list of my commands")
             em.add_field(name = "Prefix:", value = "My prefix is `imp`")
-            em.add_field(name = "Command Types", value = "Economy, Moderation, Information, Utilities, Math, Fun, Giveaways, Tickets, Miscellanous, Admin. ")
+            em.add_field(name = "Command Types", value = "Economy, Moderation, Information, Utilities, Math, Fun, Giveaways, Tickets, Miscellanous")
+            em.add_field(name = "Website:", value = "[Click Here](https://nightzan.ml/projects/theimperialgod/index.html)")
+            em.set_footer(text = "© TheImperialGod™ v1.5.1")
             await message.channel.send(embed = em)
     except:
         pass
@@ -139,5 +120,4 @@ Some fun data about this code:
 5000 Lines of Code = 31/01/2020
 '''
 load_cogs()
-client.loop.create_task(ch_pr())
 client.run(BOT_TOKEN)

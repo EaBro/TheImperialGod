@@ -32,23 +32,48 @@ class Giveaways(commands.Cog):
     @commands.has_permissions(administrator = True)
     async def gstart(self, ctx):
         await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
+        question1 = discord.Embed(title=  "<a:giveaway:797783000820875274> Giveaway Question #1", color = ctx.author.color)
+        question1.add_field(name = "Question:", value = f"Which channel would you like this giveaway in? Mention it properly!")
+        question1.add_field(name = "Channel Mention Example:", value =f"Mention a channel like {ctx.channel.mention}")
+        question1.set_footer(text = "Don't fail the questions!")
+        question1.set_thumbnail(url = ctx.author.avatar_url)
+        
+        question2 = discord.Embed(title=  "<a:giveaway:797783000820875274> Giveaway Question #2", color = ctx.author.color)
+        question2.add_field(name = "Question:", value = f"How long would you like this giveaway to last? ")
+        question2.add_field(name = "Time Example:", value =f"Mention your number first and then type a unit.\nUnits: (s|m|h|d)")
+        question2.set_footer(text = "Don't fail the questions!")
+        question2.set_thumbnail(url = ctx.author.avatar_url)
 
-        questions = ["Which channel should it be hosted in?",
-                    "What should be the duration of the giveaway? (s|m|h|d)",
-                    "What is the prize of the giveaway?"]
+        question3 = discord.Embed(title=  "<a:giveaway:797783000820875274> Giveaway Question #3", color = ctx.author.color)
+        question3.add_field(name = "Last Question:", value = f"What is the prize of this giveaway?")
+        question3.set_footer(text = "Don't fail the questions!")
+        question3.set_thumbnail(url = ctx.author.avatar_url)
 
+        errorEmbed1 = discord.Embed(title = '<:fail:761292267360485378> Giveaway Failed', color = ctx.author.color)
+        errorEmbed1.add_field(name = "Reason:", value = "You did not mention a channel properly")
+        errorEmbed1.add_field(name = "Channel:", value = f"{ctx.channel.mention}")
+
+        errorEmbed2 = discord.Embed(title = '<:fail:761292267360485378> Giveaway Failed', color = ctx.author.color)
+        errorEmbed2.add_field(name = "Reason:", value = "You did not mention the time properly!")
+        errorEmbed2.add_field(name = "Channel:", value = f"Write a number and then units (s|m|h|d)")
+
+        timeDelay = discord.Embed(title = '<:fail:761292267360485378> Giveaway Failed', color = ctx.author.color)
+        timeDelay.add_field(name = "Reason:", value = "You did not answer in time!")
+        timeDelay.add_field(name = "Next Steps:", value = "Make sure you answer in 45 seconds")
+
+        questions = [question1, question2, question3]
         answers = []
 
         def check(m):
             return m.author == ctx.author and m.channel == ctx.channel
 
         for i in questions:
-            await ctx.send(i)
+            await ctx.send(embed = i)
 
             try:
-                msg = await self.client.wait_for('message', timeout=15.0, check=check)
+                msg = await self.client.wait_for('message', timeout=45.0, check=check)
             except asyncio.TimeoutError:
-                await ctx.send('You didn\'t answer in time, please be quicker next time!')
+                await ctx.send(embed = timeDelay)
                 return
             else:
                 answers.append(msg.content)
@@ -56,14 +81,14 @@ class Giveaways(commands.Cog):
         try:
             c_id = int(answers[0][2:-1])
         except:
-            await ctx.send(f"You didn't mention a channel properly. Do it like this {ctx.channel.mention} next time.")
+            await ctx.send(embed = errorEmbed1)
             return
 
         channel = self.client.get_channel(c_id)
 
         time = self.convert(answers[1])
         if time == -1:
-            await ctx.send(f"You didn't answer the time with a proper unit. Use (s|m|h|d) next time!")
+            await ctx.send(embed = errorEmbed2)
             return
         elif time == -2:
             await ctx.send(f"The time must be an integer. Please enter an integer next time")
@@ -104,6 +129,10 @@ class Giveaways(commands.Cog):
         newembed.set_footer(text = f"Ends {answers[1]} from now!")
         await my_msg.edit(embed = newembed)
         await channel.send(f"Congratulations! {winner.mention} won {prize}!")
+        try:
+            await channel.send(f"URL: {my_msg.jump_url}")
+        except:
+            pass
 
     @gstart.error
     async def gstart_error(self,ctx, error):
@@ -128,7 +157,10 @@ class Giveaways(commands.Cog):
 
         winner = random.choice(users)
         await channel.send(f"Congratulations! The new winner is {winner.mention}!")
-
+        try:
+            await channel.send(f"URL: {new_msg.jump_url}")
+        except:
+            pass
 
     @reroll.error
     async def reroll_error(self,ctx, error):
@@ -136,6 +168,12 @@ class Giveaways(commands.Cog):
             embed = discord.Embed(title = "<:fail:761292267360485378> Reroll failed!", color = ctx.author.color)
             embed.add_field(name = "Reason:", value = "`Manage Server is missing!`")
             embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
+            embed.set_footer(text='Bot Made by NightZan999#0194')
+            await ctx.send(embed = embed)
+        if isinstance(error, commands.BadArgument):
+            embed = discord.Embed(title = "<:fail:761292267360485378> Reroll failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = "`You entered the ID or Channel wrongly!`")
+            embed.add_field(name = "Usage:", value = '```diff\n+ imp reroll #giveaways <messageId> moderator won giveaway\n- imp reroll <messageID>\n```')
             embed.set_footer(text='Bot Made by NightZan999#0194')
             await ctx.send(embed = embed)
 

@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from random import choice
 import traceback
+import random
 
 class Utils(commands.Cog):
     def __init__(self, client):
@@ -96,8 +97,8 @@ class Utils(commands.Cog):
         embed.add_field(name = f"{message}", value = "Share your thoughts about this topic")
 
         my_msg = await ctx.send(embed = embed)
-        await my_msg.add_reaction("✅")
-        await my_msg.add_reaction("❌")
+        await my_msg.add_reaction("<:success:761297849475399710>")
+        await my_msg.add_reaction("<:fail:761292267360485378>")
 
     @commands.command(aliases = ['str', 'show_tp', 's_toprole'])
     @commands.cooldown(1, 30, commands.BucketType.user)
@@ -112,8 +113,8 @@ class Utils(commands.Cog):
         if amt <= 0:
             return await ctx.send("Amount of characters must be positive!")
         try:
-            nwpss = []
-            lst = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
+            password
+            all_char = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
             'n','o','p','q','r','s','t','u','v','w','x','y','z','!','@',
             '#','$','%','^','&','*','(',')','-','_','+','=','{',",",'}',']',
             '[',';',':','<','>','?','/','1','2','3','4','5','6','7','8','9','0'
@@ -121,9 +122,9 @@ class Utils(commands.Cog):
             ,'Q','R','S','T','U','V','W','X','Y','Z'] #all char
             for x in range(amt):
                 newpass = random.choice(lst)
-                nwpss.append(newpass)
+                password += newpass
 
-            fnpss = ''.join(nwpss)
+            fnpss = ''.join(password)
             await ctx.send(f'{ctx.author} attempting to send you the genereated password in dms.')
             await ctx.author.send(f'Password Generated: {fnpss}')
         except Exception as e:

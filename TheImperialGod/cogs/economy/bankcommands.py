@@ -153,8 +153,7 @@ class BankCommands(commands.Cog):
             await ctx.send(embed = em)
             return
 
-        if amount != "all":
-            amount = int(amount)
+        amount = int(amount)
         
         async with aiosqlite.connect("./data/economy.db") as connection:
             async with connection.cursor() as cursor:
@@ -163,9 +162,6 @@ class BankCommands(commands.Cog):
 
                 if not bal:
                     return await ctx.send("bruh, you've never even played-")
-
-                if amount == "all":
-                    amount = bal[1]
 
                 if bal[1] < amount:
                     return await ctx.send("You don't even have that much money!")
