@@ -1,4 +1,5 @@
 import discord
+
 async def createEmbed(title, desc = None, footer = None, thumbnail = None):
     if desc is not None:
         em = discord.Embed(title = title, description = desc)
