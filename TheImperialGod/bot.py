@@ -70,7 +70,6 @@ async def on_ready():
     print("User ID: ", client.user.id)
     print("----------------------------")
 
-@tasks.loop(seconds = 15)
 async def ch_pr(): #changing the bots status every 5 secs!!!
     await client.wait_until_ready()
     while not client.is_closed():
@@ -120,4 +119,5 @@ Some fun data about this code:
 5000 Lines of Code = 31/01/2020
 '''
 load_cogs()
+client.loop.create_task(ch_pr())
 client.run(BOT_TOKEN)

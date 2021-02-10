@@ -31,7 +31,6 @@ class Giveaways(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator = True)
     async def gstart(self, ctx):
-        await ctx.send("Let's start with this giveaway! Answer these questions within 15 seconds!")
         question1 = discord.Embed(title=  "<a:giveaway:797783000820875274> Giveaway Question #1", color = ctx.author.color)
         question1.add_field(name = "Question:", value = f"Which channel would you like this giveaway in? Mention it properly!")
         question1.add_field(name = "Channel Mention Example:", value =f"Mention a channel like {ctx.channel.mention}")
@@ -85,8 +84,8 @@ class Giveaways(commands.Cog):
             return
 
         channel = self.client.get_channel(c_id)
-
         time = self.convert(answers[1])
+
         if time == -1:
             await ctx.send(embed = errorEmbed2)
             return
