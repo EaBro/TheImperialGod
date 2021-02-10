@@ -164,6 +164,9 @@ nightzan999/theimperialgod/
 |   |   ├── warns.json
 ```
 
+## Hosting
+You would obviously need to find a good hosting manager, which is probably why you need this file: HOSTING.md. 
+In this file we mention about **almost all hosts.**
 
 # Credits:
 **1. NightZan999:**
