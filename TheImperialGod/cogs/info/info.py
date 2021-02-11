@@ -146,5 +146,6 @@ class Information(commands.Cog):
         em.add_field(name = '#2 Github', value = "I did do all the coding, but I made TheImperialGod open source, this is why many people respond to my issues. Some people have corrected some glitches, and a full credits list is avalible on github")
         em.set_footer(text = "invite me now!")
         await ctx.send(embed = em)
-    
+
+def setup(client):
     client.add_cog(Information(client))
