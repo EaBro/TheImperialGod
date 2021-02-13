@@ -56,11 +56,6 @@ Issues with the public bot will probably be outages and we cannot help those, ra
 
 You have the code in front of you, please download it and host it. 
 
-## Contribution
-Contribute by first reading Contributing.md and then later on, fork and send hack to `nightzan999@gmail.com`.
-
-If your stuff gets approved it gets into the source and to the public bot. Don't worry we WILL give you credits. 
-
 # Self Hosting
 Yes this is the most important place here. <br>**Note:** Self hosting is suggested as the public bot goes offline sometimes and that may disrupt your giveaways.
 
@@ -81,7 +76,6 @@ Yeah and then its simple throw your data into config.json and done it should wor
 **Note:** TheImperialGod uses an old version of discord.py as listed in requirements.txt, which means if you just `pip install` all the modules listed it WON'T work!
 
 ## **Self Hosting Guildlines and Agreement.**
-
 You **must** give credits to Nightzan999.
 You **cannot** say you made the bot yourself. You must give credits in your source code.
 You **cannot** brag or say that you made it when you did not.
@@ -91,6 +85,7 @@ If you're using the source code to add just a few commands (1-5), credits is not
 **Please respect the [LICENSE](https://github.com/NightZan999/TheImperialGod/blob/main/LICENSE).**
 
 Due to this having a LICENSE, you breaking any of the following rules could **cause legal issues.**
+
 
 ### Public Bot
 I guess, well you read that and your a new programmer. <br>**Note:** This code may be hard for inexperienced programmers, so if you don't understand stuff, just add the public bot!
@@ -103,6 +98,13 @@ He will be up most of the time, but when he is down please cope with it!
 But anyways, if you are interested in the public bot. Then you are in the currency system, and if you want coins join my server where there are giveaways happening.
 
 Join [here](https://discord.gg/ZyD8xJRHMS)
+
+# Contributions
+As I realize that the bot is not perfect, and has some improvements which can be made. I agree I am not the best in discord.py.
+Read CONTRIBUTING.md to know a bit more about contributing to this repository. 
+
+Hope you contribute :D
+**Note: There are many ways to contribute in this repository. I would prefer if you read CONTRIBUTING.md**
 
 ## Suggestions and More:
 If you tested the bot and loved it, but thought you would want to give in some suggestions, please first don't make an issue. 
