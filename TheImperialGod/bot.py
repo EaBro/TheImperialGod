@@ -14,6 +14,7 @@ import random #random
 import json
 import os
 import asyncio
+from .client import TheImperialGod
 
 def load_cogs(): #loading all our cogs
     cogs = [
@@ -31,7 +32,8 @@ def load_cogs(): #loading all our cogs
         "cogs.moderation.mod", # moderation commands
         "cogs.moderation.owner", # owner commands
         "cogs.tickets.tickets", # ticket commands
-        "cogs.info.topgg" # has top.gg stuff bois!
+        "cogs.info.topgg", # has top.gg stuff bois!
+        "cogs.exclusive.exclusive" # has exclusive commands
     ]
     for cog in cogs:
         client.load_extension(cog)
@@ -60,15 +62,7 @@ new_link ="https://discordapp.com/oauth2/authorize?&client_id=".join(str(CLIENT_
 new_link.join("&scope=bot&permissions=21474836398")
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix = BOT_PREFIX, case_insensitive = True, intents = intents) #making a client object
-
-#when the bot gets ready
-@client.event
-async def on_ready():
-    print("Ready!")
-    print("Username: ", client.user.name)
-    print("User ID: ", client.user.id)
-    print("----------------------------")
+client = TheImperialGod(command_prefix = BOT_PREFIX, case_insensitive = True, intents = intents) #making a client object
 
 async def ch_pr(): #changing the bots status every 5 secs!!!
     await client.wait_until_ready()

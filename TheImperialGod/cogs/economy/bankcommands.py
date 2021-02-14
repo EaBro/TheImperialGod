@@ -170,6 +170,12 @@ class BankCommands(commands.Cog):
                     await ctx.send("Amount must be positive!")
                     return
                 
+                em = discord.Embed(title = "<:success:761297849475399710> Give successful!", color = ctx.author.color)
+                em.add_field(name = ":dollar: Amount Given:", value = f"{amount} :coin:")
+                em.add_field(name ="Member:", value = f"{member.mention}")
+                em.add_field(name = ":tada: Money:", value = "Give your money! :tada:")
+                await ctx.send(embed = em)
+
                 await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?", (bal[1] - amount, bal[0], ctx.author.id))
                 await connection.commit()
 
@@ -180,12 +186,6 @@ class BankCommands(commands.Cog):
 
                 await cursor.execute("UPDATE users SET wallet = ?, bank = ?, WHERE userid = ?", (rows[1] + amount, rows[0], member.id))
                 await connection.commit()
-
-        em = discord.Embed(title = "<:success:761297849475399710> Give successful!", color = ctx.author.color)
-        em.add_field(name = ":dollar: Amount Given:", value = f"{amount} :coin:")
-        em.add_field(name ="Member:", value = f"{member.mention}")
-        em.add_field(name = ":tada: Money:", value = "Give your money! :tada:")
-        await ctx.send(embed = em)
 
     # error handling
     @give.error

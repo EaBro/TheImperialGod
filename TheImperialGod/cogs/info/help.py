@@ -47,7 +47,7 @@ class Help(commands.Cog):
         page1 = discord.Embed(title = "Help", color = ctx.author.color, description = f"""
         **Type `imp help` and then a __category__ for more information for even more information!**\n
         """)
-        page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`")
+        page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`, `claimrewards vote`")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
         page1.add_field(name = f"<:info:761298826907746386> Information Commands: [8]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`, `credits`")
         page1.add_field(name = f":tools: Utilities: [12]", value = "`coinflip`, `random_number`, `code`, `thank`, `reverse`, `8ball`, `poll`, `show_toprole`, `passwordgenerator`, `avatar`, `respect`, `beer`, `guess`")
@@ -56,6 +56,7 @@ class Help(commands.Cog):
         page1.add_field(name = f":gift: Giveaways: [2]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
+        page1.add_field(name = "<:zancool:809268843138646066> Exclusive Commands [1]", value = '`claimrewards`')
         page1.set_footer(text = f"My prefix is \"imp\"")
         msg = await ctx.send(embed = page1)
 
@@ -103,6 +104,7 @@ class Help(commands.Cog):
         em.add_field(name= "Daily", value = "Get daily rewards")
         em.add_field(name = "Weekly", value = "Get weekly rewards")
         em.add_field(name = "Bet", value = "Bet some money!")
+        em.add_field(name = "claimrewards vote", value = "Claim some rewards for voting for me!")
         em.set_footer(text='Bot Made by NightZan999#0194')
         msg = await ctx.send(embed = em)
         await msg.add_reaction('💰')
@@ -196,6 +198,15 @@ class Help(commands.Cog):
         em.add_field(name = "reroll", value = f"Rerolls a giveaway, format: ```diff\n+ imp reroll <channel> <messageId>\n- imp reroll <messageId>```")
         msg = await ctx.send(embed = em)
         await msg.add_reaction("🎉")
+
+    @help.command()
+    async def exclusive(self, ctx):
+        des ="""Exclusive commands are commands in which you have to vote for me or support me in any way to get access to some commands!\n
+        This is because we want people to get a ton of stuff but we also need credit for the work. Hope you understand!
+        """
+        em = discord.Embed(title = "<:zancool:809268843138646066> Exclusive Commands", color = ctx.author.color, description = des)
+        em.add_field(name = "claimrewards", value = "This is a command group, if invoked with no subcommand it will give you a list of rewards to claim!")
+        await ctx.send(embed = em)
 
 def setup(client):
     client.remove_command("help")

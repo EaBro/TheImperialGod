@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import json
+import DiscordUtils
 
 class Owner(commands.Cog):
     def __init__(self, client):
@@ -86,19 +87,19 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def guilds(self, ctx):
-        firstMsg = f"```diff\n- TheImperialGod is in {len(self.client.guilds)} servers and has {len(self.client.users)} users!\n\n"
-        secondMsg = f"```diff\n- TheImperialGod is in {len(self.client.guilds)} servers and has {len(self.client.users)} users!\n\n"
-        for i in range(0, len(self.client.guilds)): 
+        msg = "```diff\n"
+        msg2 = "```diff\n"
+        for i in range(0, len(self.client.guilds)):
             guild = self.client.guilds[i]
-            if i < 25:
-                firstMsg += f"+ {guild.name} ({guild.id}) - {guild.member_count}\n"
-            else:
-                secondMsg += f"+ {guild.name} ({guild.id}) - {guild.member_count}\n"
-                
-        firstMsg += "\n```"
-        secondMsg += "\n```"
-        await ctx.send(f"{firstMsg}")
-        await ctx.send(secondMsg)
+            if i == 26 or i > 26:
+                msg2 += f"+ {guild.name} ({guild.member_count}) - {guild.owner.name}"
+            msg += f"+ {guild.name} ({guild.member_count}) - {guild.owner.name}"
+
+        em1 = discord.Embed(title = ":books: Imperial Guilds [1 - 25]", color = ctx.author.color, description = msg)
+        em2 = discord.Embed(title = ":books: Imperial Guilds [1 - 25]", color = ctx.author.color, description = msg2)
+
+        await ctx.send(embed = em1)
+        await ctx.send(embed = em2)
 
 def setup(client):
     client.add_cog(Owner(client))

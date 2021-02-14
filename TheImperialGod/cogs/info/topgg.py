@@ -1,6 +1,8 @@
 import dbl
+import discord
 from discord.ext import commands, tasks
 import json
+import aiosqlite
 
 class TopGG(commands.Cog):
     """Handles interactions with the top.gg API"""
@@ -27,7 +29,7 @@ class TopGG(commands.Cog):
 
     @commands.Cog.listener()
     async def on_dbl_vote(self, data):
-        print("We got a vote bois!")
-
+        print(data)
+        
 def setup(client):
     client.add_cog(TopGG(client))
