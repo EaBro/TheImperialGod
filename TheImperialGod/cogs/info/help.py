@@ -6,6 +6,7 @@ import random
 class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
+        self.help_pages = []
         self.gaws_commands = [
             'gstart',
             'reroll'
@@ -38,14 +39,19 @@ class Help(commands.Cog):
             "Did you know that TheImperialGod has tickets!"
         ]
 
+    def addPage(self, embed : discord.Embed):
+        self.help_pages.append(embed)
+
     @commands.Cog.listener()
     async def on_ready(self):
         print("Help command ready!")
 
     @commands.group(invoke_without_command = True)
     async def help(self, ctx, category = None):
+        # create pages and add them to the help_pages
         page1 = discord.Embed(title = "Help", color = ctx.author.color, description = f"""
         **Type `imp help` and then a __category__ for more information for even more information!**\n
+        My prefix is `imp`
         """)
         page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`, `claimrewards vote`")
         page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
@@ -56,11 +62,18 @@ class Help(commands.Cog):
         page1.add_field(name = f":gift: Giveaways: [2]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
-        page1.add_field(name = "<:zancool:809268843138646066> Exclusive Commands [1]", value = '`claimrewards`')
-        page1.set_footer(text = f"My prefix is \"imp\"")
-        msg = await ctx.send(embed = page1)
+        page1.set_footer(text = f"Page (1 / 3)", icon_url = ctx.author.avatar_url)
+        self.addPage(page1)
 
-        links = discord.Embed(title = "Help Center", color = ctx.author.color,
+        page2 = discord.Embed(title = "Help",color = ctx.author.color, description = f"""
+        **Type `imp help` and then a __category__ for more information for even more information!**\n
+        My prefix is `imp`
+        """)
+        page2.add_field(name = "<:zancool:809268843138646066> Exclusive Commands [1]", value = '`claimrewards`')
+        page2.set_footer(text = f"Page (2 / 3)", icon_url = ctx.author.avatar_url)
+        self.addPage(page2)
+        # add our last page
+        page3 = discord.Embed(title = "Help Center and Links", color = ctx.author.color,
         description = """<:invite:761292264857141288> [Invite](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)\n
         :radioactive: [Top.gg](https://top.gg/bot/768695035092271124)\n
         :scorpius: [Vote](https://top.gg/bot/768695035092271124/vote)\n
@@ -68,18 +81,57 @@ class Help(commands.Cog):
         <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://nightzan.ml/projects/theimperialgod/index.html)
         """
         )
-        links.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
-        links.add_field(name = 'Embed Info', value = "This message deletes after 30 seconds due to congestion! So does the other one!")
-        links.add_field(name = "Tip :coin::", value =f"**{random.choice(self.tips)}**")
-        links.set_footer(text='© TheImperialGod™ v1.5.1')
-        try:
-            mesg = await ctx.author.send(embed = links)
-        except:
-            await ctx.send(f"{ctx.author.mention}, please open direct messages. Since I need to send you a DM!")
-            return
-        else:
-            await asyncio.sleep(30)
-            await mesg.delete()
+        page3.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
+        page3.add_field(name = 'Embed Info', value = "If no response is detected we will clear all reactions!")
+        page3.add_field(name = "Tip :coin::", value =f"**{random.choice(self.tips)}**")
+        page3.set_footer(text = f"Page (3 / 3)", icon_url = ctx.author.avatar_url)
+        self.addPage(page3)
+        # create emojis
+        buttons = [
+            "⏮️",
+            "⬅️",
+            "➡️",
+            "⏭️"    
+        ]
+        current = 0
+        msg = await ctx.send(embed = self.help_pages[current])
+
+        for button in buttons:
+            await msg.add_reaction(button)
+
+        def check(reaction, user):
+            return user == ctx.author and str(reaction.emoji) in buttons
+
+        # no blocking
+        # async works for a reason :D
+        while True: 
+            try:
+                reaction, user = await self.client.wait_for("reaction_add", check = check, timeout = 300)
+            
+            except asyncio.TimeoutError:
+                await ctx.channel.send(f"{ctx.author.mention}, help command timed out! To use the help command and navigate to other pages type the command again!")
+                await msg.clear_reactions()
+
+            else:
+                previous_page = current
+
+                if str(reaction.emoji) == "⏮️":
+                    current = 0
+                
+                elif str(reaction.emoji) == "⬅️" and current > 0:
+                    current -= 1
+                
+                elif str(reaction.emoji) == "➡️" and current < len(self.help_pages)-1:
+                    current += 1
+                
+                elif str(reaction.emoji) == "⏭️":
+                    current = len(self.help_pages) - 1
+            
+                for button in buttons:
+                    await msg.remove_reaction(button, ctx.author)
+                
+                if current != previous_page:
+                    await msg.edit(embed = self.help_pages[current])
     
     @help.command(aliases=["information"])
     async def info(self, ctx):
