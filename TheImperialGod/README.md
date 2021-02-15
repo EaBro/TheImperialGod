@@ -18,4 +18,5 @@ discord.py:
 - Praw for Reddit
 - Top.gg API
 - Webhook conversions
+- Pagination help command
 ```
