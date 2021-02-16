@@ -111,7 +111,7 @@ class Help(commands.Cog):
             except asyncio.TimeoutError:
                 await ctx.channel.send(f"{ctx.author.mention}, help command timed out! To use the help command and navigate to other pages type the command again!")
                 await msg.clear_reactions()
-
+                return
             else:
                 previous_page = current
 
