@@ -113,7 +113,7 @@ class Utils(commands.Cog):
         if amt <= 0:
             return await ctx.send("Amount of characters must be positive!")
         try:
-            password
+            password = ""
             all_char = ['a','b','c','d','e','f','g','h','i','j','k','l','m',
             'n','o','p','q','r','s','t','u','v','w','x','y','z','!','@',
             '#','$','%','^','&','*','(',')','-','_','+','=','{',",",'}',']',
@@ -121,7 +121,7 @@ class Utils(commands.Cog):
             ,'`','~','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'
             ,'Q','R','S','T','U','V','W','X','Y','Z'] #all char
             for x in range(amt):
-                newpass = random.choice(lst)
+                newpass = random.choice(all_char)
                 password += newpass
 
             fnpss = ''.join(password)
@@ -208,7 +208,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = em)
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp random_number <range1> <range2>\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp random_number <range1> <range2>\n- imp random_number 29\n```")
             em.add_field(name = "Description:", value = "Put all the required arguments next time!")
             await ctx.send(embed = em)
 
@@ -221,7 +221,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp thank <member> [reason]\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp thank @NightZan999 made TheImperialGod\n- imp thank NoobLance made my coffee\n```")
             em.add_field(name = "Description:", value = "Mention a member to thank them!")
             await ctx.send(embed = em)
     
@@ -243,7 +243,7 @@ class Utils(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp eightball <question>\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp eightball will I invite this bot to my server?\n- imp eightball\n```")
             em.add_field(name = "Description:", value = "Put all the required arguments next time!")
             await ctx.send(embed = em)
     
@@ -257,7 +257,7 @@ class Utils(commands.Cog):
         
         if isinstance(error, commands.MissingRequiredArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp poll <message>\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp poll <message>\n- imp poll\n```")
             em.add_field(name = "Description:", value = "Put all the required arguments next time!")
             await ctx.send(embed = em)
     
@@ -270,7 +270,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp show_toprole <member>\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp show_toprole @NightZan999\n- imp show_toprole Nooblance\n```")
             em.add_field(name = "Description:", value = "Mention a member to see their toprole them!")
             await ctx.send(embed = em)
 
@@ -283,7 +283,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp _pass <amountOfCharacters>\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp _pass <amountOfCharacters>\n- imp _pass NightZan999\n```")
             em.add_field(name = "Description:", value = "Type the amount of characters in your password as an integer!")
             await ctx.send(embed = em)
 
@@ -297,7 +297,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp avatar <member>\n```")
+            em.add_field(name = "Usage:", value = "```diff\nimp avatar @NightZan999 such a beatiful avatar\n- imp avatar dog cringe\n```")
             em.add_field(name = "Description:", value = "Mention a member to see their avatar!")
             await ctx.send(embed = em)
 
@@ -318,7 +318,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = '<:fail:761292267360485378> You missed Arguments!', color = ctx.author.color)
-            em.add_field(name = "Usage:", value = "```\nimp beer <member> [reason]\n```")
+            em.add_field(name = "Usage:", value = "```diff\n+ imp beer @NightZan999 epic\n- imp beer myFriendName haha\n```")
             em.add_field(name = "Description:", value = "Mention a member to have beer with them!")
             await ctx.send(embed = em)
 
