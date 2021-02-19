@@ -175,7 +175,7 @@ In this file we mention about **almost all hosts.**
 The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. <br>
 **2. Dragonizedpizza:**
 The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation and gave me very useful suggestions <br>
-He also helped me with Github stuff. 
+He also helped me with Github stuff. <br> 
 **3. Makiyu-py:**
 he helped me out in grammar errors 😎 and in some commands! <br>
 **4. JakeLion:**
