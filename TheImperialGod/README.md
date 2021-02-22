@@ -19,4 +19,5 @@ discord.py:
 - Top.gg API
 - Webhook conversions
 - Pagination help command
+- Uses JSK Eval
 ```
