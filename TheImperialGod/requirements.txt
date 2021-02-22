@@ -4,3 +4,4 @@ praw
 aiosqlite
 dblpy
 DiscordUtils
+jishaku
