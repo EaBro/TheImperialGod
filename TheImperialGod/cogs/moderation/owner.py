@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import json
-import DiscordUtils
+from jishaku.codeblocks import codeblock_converter
 
 class Owner(commands.Cog):
     def __init__(self, client):
@@ -57,19 +57,21 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
+    async def load(self, ctx, *, extension):
+        self.client.load_extension(extension)
+        await ctx.send("Loaded the extension my lord!")
+    
+    @commands.command()
+    @commands.is_owner()
     async def unload(self, ctx, *, extension):
-        if extension not in ["cogs.moderation.owner", "cogs.moderation.admin"]:
-            await self.client.unload_extension(extension)
-            await ctx.send(f"Unloaded {extension}!")
-        else:
-            await ctx.send("Admin or owner commands cannot be disabled!")
-            return
-
+        self.client.unload_extension(extension)
+        await ctx.send("Unloaded the extension my lord!")
+    
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx, *, extension):
-        await self.client.reload_extension(extension)
-        await ctx.send(f"Reloaded {extension}!")
+        self.client.reload_extension(extension)
+        await ctx.send("Reloaded the extension my lord!")
 
     @commands.command()
     @commands.is_owner()
@@ -80,6 +82,7 @@ class Owner(commands.Cog):
             await ctx.send("Type an embed in this format: `imp embed {title} | {description}`")
             return
         else:
+            await ctx.message.delete()
             em = discord.Embed(title = title, color = ctx.author.color, description= desc)
             em.set_footer(text='Bot Made by NightZan999#0194')
             await ctx.send(embed = em)
@@ -87,19 +90,14 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def guilds(self, ctx):
-        msg = "```diff\n"
-        msg2 = "```diff\n"
-        for i in range(0, len(self.client.guilds)):
-            guild = self.client.guilds[i]
-            if i == 26 or i > 26:
-                msg2 += f"+ {guild.name} ({guild.member_count}) - {guild.owner.name}"
-            msg += f"+ {guild.name} ({guild.member_count}) - {guild.owner.name}"
-
-        em1 = discord.Embed(title = ":books: Imperial Guilds [1 - 25]", color = ctx.author.color, description = msg)
-        em2 = discord.Embed(title = ":books: Imperial Guilds [1 - 25]", color = ctx.author.color, description = msg2)
-
-        await ctx.send(embed = em1)
-        await ctx.send(embed = em2)
+        pass
+    
+    @commands.command()
+    @commands.is_owner()
+    async def eval(self, ctx, *, code : codeblock_converter):
+        cog = self.client.get_cog("Jishaku")
+        await cog.jsk_python(ctx, argument=code)
+    
 
 def setup(client):
     client.add_cog(Owner(client))
