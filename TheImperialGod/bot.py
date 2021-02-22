@@ -46,7 +46,10 @@ def load_cogs(): #loading all our cogs
     for event in events:
         client.load_extension(event)
     print("===============================")
-    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded\n===============================")  
+    print(f"{len(cogs)} cogs are loaded\n{len(events)} events are loaded")  
+    # now load jishaku
+    client.load_extension("jishaku")
+    print("Jishaku has been loaded!\n===============================")
 
 with open("config.json", "r") as f:
     config = json.load(f)
@@ -62,32 +65,33 @@ new_link.join("&scope=bot&permissions=21474836398")
 
 # custom client
 class TheImperialGod(commands.Bot):
+    cogs = [
+        "cogs.info.help", # help command
+        "cogs.fun.animals", # searching reddit
+        "cogs.economy.bankcommands", # bank commands in economy
+        "cogs.economy.moneymaking", # moneymaking commands in economy
+        "cogs.economy.shop", # making a shop with database in economy!
+        "cogs.economy.gambling", # gambling commands
+        "cogs.fun.misc", # misc commands
+        "cogs.fun.utils", # utilities
+        "cogs.info.info", # information
+        "cogs.info.math", # math commands
+        "cogs.moderation.giveaways", # giveaway commands!
+        "cogs.moderation.mod", # moderation commands
+        "cogs.moderation.owner", # owner commands
+        "cogs.tickets.tickets", # ticket commands
+        "cogs.info.topgg", # has top.gg stuff bois!
+        "cogs.exclusive.exclusive" # has exclusive commands
+    ]
+
+    events = [
+        "events.GuildEvents", # when the bot leaves or joins a guild!
+        "events.ReactionAdd",
+        "events.ReactionRemove"
+    ]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.cogs = [
-            "cogs.info.help", # help command
-            "cogs.fun.animals", # searching reddit
-            "cogs.economy.bankcommands", # bank commands in economy
-            "cogs.economy.moneymaking", # moneymaking commands in economy
-            "cogs.economy.shop", # making a shop with database in economy!
-            "cogs.economy.gambling", # gambling commands
-            "cogs.fun.misc", # misc commands
-            "cogs.fun.utils", # utilities
-            "cogs.info.info", # information
-            "cogs.info.math", # math commands
-            "cogs.moderation.giveaways", # giveaway commands!
-            "cogs.moderation.mod", # moderation commands
-            "cogs.moderation.owner", # owner commands
-            "cogs.tickets.tickets", # ticket commands
-            "cogs.info.topgg", # has top.gg stuff bois!
-            "cogs.exclusive.exclusive" # has exclusive commands
-        ]
-
-        self.events = [
-            "events.GuildEvents", # when the bot leaves or joins a guild!
-            "events.ReactionAdd",
-            "events.ReactionRemove"
-        ]
 
     async def on_ready(self):
         print("Ready!")
@@ -96,10 +100,10 @@ class TheImperialGod(commands.Bot):
         print("----------------------------")
 
     async def get_cogs(self):
-        return self.cogs
+        return cogs
     
     async def get_events(self):
-        return self.events
+        return events
     
     async def get_all_emojis(self):
         return Emojis
@@ -134,6 +138,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
         ]
         status = random.choice(statuses)
         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
+        await asyncio.sleep(10)
 
 @client.event
 async def on_message(msg):
@@ -152,18 +157,6 @@ async def on_message(msg):
         pass
     await client.process_commands(msg)
 
-'''
-Some fun data about this code:
-1 Line of Code = 26/09/2020
-50 Lines of Code = 27/09/2020
-100 Lines of Code = 29/09/2020
-250 Lines of Code = 30/09/2020
-500 Lines of Code = 07/10/2020
-1000 Lines of Code = 19/10/2020
-1500 Lines of Code = 05/11/2020
-2000 Lines of Code = 11/11/2020
-5000 Lines of Code = 31/01/2020
-'''
 load_cogs()
 client.loop.create_task(ch_pr())
 client.run(BOT_TOKEN)
