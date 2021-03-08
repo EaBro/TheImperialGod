@@ -5,3 +5,5 @@ aiosqlite
 dblpy
 DiscordUtils
 jishaku
+aiomojang
+youtube_dl

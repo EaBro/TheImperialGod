@@ -110,8 +110,8 @@ class Giveaways(commands.Cog):
         new_msg = await channel.fetch_message(my_msg.id)
         # get a list of users
         users = await new_msg.reactions[0].users().flatten()
+        # make sure the bot doesn't win
         users.pop(users.index(self.client.user))
-        winner = random.choice(users)
         # now have some checks
         if len(users) == 0:
             em = discord.Embed(title = '<:fail:761292267360485378> Giveaway Failed', color = ctx.author.color)
@@ -119,7 +119,8 @@ class Giveaways(commands.Cog):
             em.add_field(name = "Next steps:", value = "Dont make a giveaway which you don't enter!")
             await channel.send(embed = em)
             return
-        
+        # simply picka random user
+        winner = random.choice(users)
         # edit embed to show winner
         newembed = discord.Embed(title = "Giveaway!", description = f"{prize}", color = ctx.author.color)
         newembed.add_field(name = "Hosted by:", value = ctx.author.mention)
@@ -127,11 +128,7 @@ class Giveaways(commands.Cog):
         newembed.add_field(name = "Winner", value = f"{winner.mention}")
         newembed.set_footer(text = f"Ends {answers[1]} from now!")
         await my_msg.edit(embed = newembed)
-        await channel.send(f"Congratulations! {winner.mention} won {prize}!")
-        try:
-            await channel.send(f"URL: {my_msg.jump_url}")
-        except:
-            pass
+        await channel.send(f"Congratulations! {winner.mention} won {prize}!\nURL: {my_msg.jump_url}")
 
     @gstart.error
     async def gstart_error(self,ctx, error):
@@ -140,6 +137,7 @@ class Giveaways(commands.Cog):
             embed.add_field(name = "Reason:", value = "`Administrator Permission is missing!`")
             embed.add_field(name = "Ideal Solution:", value = "Get the perms, lmao!")
             embed.set_footer(text = 'Bot Made by NightZan999#0194')
+            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
 
     @commands.command()

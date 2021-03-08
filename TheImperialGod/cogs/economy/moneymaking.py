@@ -37,6 +37,7 @@ class MoneyMaking(commands.Cog):
                 em = discord.Embed(title = f"<:success:761297849475399710> {ctx.author.name} begs hard!", color = ctx.author.color)
                 em.add_field(name = ":coin: Earnings", value = f"{earnings} :coin:", inline = False)
                 em.set_thumbnail(url = ctx.author.avatar_url)
+                em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
                 await ctx.send(embed=em)
 
     @commands.command()
@@ -76,6 +77,7 @@ class MoneyMaking(commands.Cog):
                 em = discord.Embed(title = f"<:success:761297849475399710> {ctx.author.name} begs hard!", color = ctx.author.color)
                 em.add_field(name = ":dollar: Earnings", value = f"{earnings} :coin:", inline = False)
                 em.add_field(name = ":tada: Free prize:", value = "Once a day you can claim a free price!")
+                em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
                 em.set_thumbnail(url = ctx.author.avatar_url)
                 await ctx.send(embed=em)
 
@@ -98,6 +100,7 @@ class MoneyMaking(commands.Cog):
                 em.add_field(name = ":coin: Earnings", value = f"{earnings} :coin:", inline = False)
                 em.add_field(name = "Server:", value = f"{ctx.guild.name}")
                 em.set_thumbnail(url = ctx.author.avatar_url)
+                em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
                 await ctx.send(embed=em)
 
 
@@ -117,6 +120,7 @@ class MoneyMaking(commands.Cog):
                 em = discord.Embed(title = f"<:success:761297849475399710> {ctx.author.name} begs hard!", color = ctx.author.color)
                 em.add_field(name = ":dollar: Earnings", value = f"{earnings} :coin:", inline = False)
                 em.add_field(name = ":tada: Free prize:", value = "Once a day you can claim a free price!")
+                em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
                 em.set_thumbnail(url = ctx.author.avatar_url)
                 await ctx.send(embed=em)
 
@@ -128,6 +132,7 @@ class MoneyMaking(commands.Cog):
             em.add_field(name = f"Reason:", value = f"Stop serving the server your in!")
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     @daily.error
@@ -140,6 +145,7 @@ class MoneyMaking(commands.Cog):
             hours = round(minutes / 60)
             em.add_field(name = "Try again in:", value = f"{hours} hours, {minutes} minutes and {seconds} seconds!")
             em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     @weekly.error
@@ -149,6 +155,7 @@ class MoneyMaking(commands.Cog):
             em.add_field(name = f"Reason:", value = f"Get back to studying! Weekly prizes are called weekly for a reason!")
             em.add_field(name = "Try again in:", value = "{:.2f}s".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     @devwith.error
@@ -158,6 +165,7 @@ class MoneyMaking(commands.Cog):
             em.add_field(name = f"Reason:", value = f"Your already too rich, Lord {ctx.author.mention}!")
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     @beg.error
@@ -167,6 +175,7 @@ class MoneyMaking(commands.Cog):
             em.add_field(name = f"Reason:", value = f"Begging makes you look poor which you are {ctx.author.mention}!")
             em.add_field(name = "Try again in:", value = "{:.2f} seconds".format(error.retry_after))
             em.set_thumbnail(url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
 def setup(client):

@@ -32,7 +32,8 @@ def load_cogs(): #loading all our cogs
         "cogs.moderation.owner", # owner commands
         "cogs.tickets.tickets", # ticket commands
         "cogs.info.topgg", # has top.gg stuff bois!
-        "cogs.exclusive.exclusive" # has exclusive commands
+        "cogs.exclusive.exclusive", # has exclusive commands
+        "cogs.moderation.autorole" # autoroles
     ]
     for cog in cogs:
         client.load_extension(cog)
@@ -81,7 +82,10 @@ class TheImperialGod(commands.Bot):
         "cogs.moderation.owner", # owner commands
         "cogs.tickets.tickets", # ticket commands
         "cogs.info.topgg", # has top.gg stuff bois!
-        "cogs.exclusive.exclusive" # has exclusive commands
+        "cogs.exclusive.exclusive", # has exclusive commands
+        "cogs.moderation.autorole", # autoroles
+        "cogs.info.minecraft", # minecraft commands
+        "cogs.music.music" # music
     ]
 
     events = [

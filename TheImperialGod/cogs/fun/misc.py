@@ -4,7 +4,6 @@ from discord.ext import commands
 class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
-        self.filtered_words = ['idiot', 'Idiots', "DIE", "ass", "butt", "Fool", "shit", "bitch"]
         self.INVITE_LINK = "https://discordapp.com/oauth2/authorize?&client_id=768695035092271124&scope=bot&permissions=21474836398"
 
 
@@ -16,6 +15,7 @@ class Misc(commands.Cog):
     async def invite(self, ctx):
         embed = discord.Embed(title = "Invite Link:", color = ctx.author.color)
         embed.add_field(name = "Here:", value = f"[Click me]({self.INVITE_LINK})")
+        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
 
     @commands.command(aliases = ["sc"])
@@ -26,24 +26,13 @@ class Misc(commands.Cog):
         embed = discord.Embed(title = "Server Count", color = ctx.author.color)
         embed.add_field(name = "Server Count:", value = f"`{sc}`")
         embed.add_field(name = "User Count:", value = f'`{len(self.client.users)}`')
+        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
 
     @commands.command()
     async def candy(self, ctx):
         await ctx.send("You want candy, take it!")
         await ctx.send(file = discord.File("./assets/candy.jpg"))
-
-    @commands.command()
-    async def say(self, ctx, *, msg = None):
-        if msg == None:
-            await ctx.send("No message provided!")
-            return
-
-        for word in self.filtered_words:
-            if word in msg.content:
-                return
-
-        await ctx.send(msg)
 
     @commands.command()
     @commands.cooldown(1, 100, commands.BucketType.user)
@@ -53,6 +42,7 @@ class Misc(commands.Cog):
         embed.add_field(name = "Author:", value = f"`{ctx.author.name}`")
         embed.add_field(name = "Server:", value = f"`{ctx.guild.name}`")
         embed.add_field(name = "Suggestion: ", value = f"`{suggestion}`")
+        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         # sending it to the support server
         guild = self.client.get_guild(781057246092197898)
         # sending it in the channel
@@ -65,6 +55,7 @@ class Misc(commands.Cog):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(title = "Slow it down C'mon", color = ctx.author.color)
             embed.add_field(name = 'Reason:', value = "If you have these many suggestions contact NightZan999!")
+            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
 
     @commands.command()
@@ -82,6 +73,7 @@ class Misc(commands.Cog):
         But if you like how I roll and think that I help your servers, just by doing these small tasks you can take me to other people who
         are in need like you.\n\nPlus I have 85 commands and am in just {len(self.client.guilds)} servers.
         """)
+        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
 
 def setup(client):

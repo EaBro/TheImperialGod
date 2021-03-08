@@ -18,165 +18,212 @@ class Animals(commands.Cog):
             password = config["reddit"]["password"],
             user_agent = config["reddit"]["userAgent"]
         )
+    
+    async def get_random_post(self, member, subreddit_ = None, limit= 100):
+        try:
+            if subreddit_ is not None:
+                subreddit = self.reddit.subreddit(subreddit_)
+
+            top = subreddit.top(limit = limit)
+            all_subs = []
+
+            for sub in top:
+                all_subs.append(sub)
+            
+            sub = random.choice(all_subs)
+            embed = discord.Embed(title = f"{sub.title}", color = member.color)
+            embed.set_image(url = sub.url)
+            embed.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            return embed
+        except:
+            em = discord.Embed(title = "<:fail:761292267360485378> API Error", color = member.color, description = "My API was unable to send you an image! We are sorry for the inconvinience. If this becomes a serious issue contact NightZan999!")
+            em.add_field(name = "Reason:", value = "idunno man but praw sucks")
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            return em
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("Animal module loaded!")
 
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def dog(self, ctx):
-        subreddit = self.reddit.subreddit("dog")
-        top = subreddit.top(limit = 100)
-
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
+        em = await self.get_random_post(ctx.author, "dog")
+        await ctx.send(embed = em)
+    
+    @dog.error
+    async def dog_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def cat(self, ctx):
-        subreddit = self.reddit.subreddit("cat")
-        top = subreddit.top(limit = 100)
-
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
+        em = await self.get_random_post(ctx.author, "cat")
+        await ctx.send(embed = em)
+    
+    @cat.error
+    async def cat_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def duck(self, ctx):
-        subreddit = self.reddit.subreddit("duck")
-        top = subreddit.top(limit = 100)
-
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
-
+        em = await self.get_random_post(ctx.author, "duck")
+        await ctx.send(embed = em)
+    
+    @duck.error
+    async def duck_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+        
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def fox(self, ctx):
-        subreddit = self.reddit.subreddit("fox")
-        top = subreddit.top(limit = 100)
+        em = await self.get_random_post(ctx.author, "fox")
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
-
+    @fox.error
+    async def fox_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+    
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def panda(self, ctx):
-        subreddit = self.reddit.subreddit("panda")
-        top = subreddit.top(limit = 10)
+        em = await self.get_random_post(ctx.author, "panda", 10)
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
+    @panda.error
+    async def panda_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def koala(self, ctx):
-        subreddit = self.reddit.subreddit("koala")
-        top = subreddit.top(limit = 10)
+        em = await self.get_random_post(ctx.author, "koala", 10)
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
+    @koala.error
+    async def koala_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
 
     @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def tiger(self, ctx):
-        subreddit = self.reddit.subreddit("tiger")
-        top = subreddit.top(limit = 10)
+        em = await self.get_random_post(ctx.author, "fox")
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
+    @tiger.error
+    async def tiger_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
-
-    @commands.command()
+    @commands.command(aliases=["lian"])
+    @cooldown(1, 5, BucketType.user)
     async def lion(self, ctx):
-        subreddit = self.reddit.subreddit("lion")
-        top = subreddit.top(limit = 10)
+        em = await self.get_random_post(ctx.author, "lion", 10)
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
-
-    @commands.command(aliases = ["snek"])
+    @lion.error
+    async def lion_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+    
+    @commands.command()
+    @cooldown(1, 5, BucketType.user)
     async def snake(self, ctx):
-        subreddit = self.reddit.subreddit("snake")
-        top = subreddit.top(limit = 10)
+        em = await self.get_random_post(ctx.author, "snake", 10)
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
+    @snake.error
+    async def snake_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+    
+    @commands.command()
+    @cooldown(1, 5, BucketType.user)
+    async def owl(self, ctx):
+        em = await self.get_random_post(ctx.author, "owl", 20)
+        await ctx.send(embed = em)
 
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
+    @owl.error
+    async def owl_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
-    async def owl(self, ctx):
-        subreddit = self.reddit.subreddit("owl")
-        top = subreddit.top(limit = 10)
-
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
-
-    @commands.command(aliases = ["pandared", "rpanda", "pandr"])
+    @cooldown(1, 5, BucketType.user)
     async def redpanda(self, ctx):
-        subreddit = self.reddit.subreddit("redpanda")
-        top = subreddit.top(limit = 10)
+        em = await self.get_random_post(ctx.author, "snake", 10)
+        await ctx.send(embed = em)
 
-        all_subs = []
-        for submission in top:
-            all_subs.append(submission)
-
-        sub = random.choice(all_subs)
-        embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
-        embed.set_image(url = sub.url)
-        await ctx.send(embed = embed)
-
+    @redpanda.error
+    async def redpanda_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=  "<:fail:761292267360485378> Command On Cooldown", color = member.color)
+            em.add_field(name = "Reason:", value = "Command On Cooldown!")
+            em.add_field(name = "Try Again in:", value = "{.:2f}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+    
     @commands.command(aliases = ["mem", "goodmem", "meme"])
     @cooldown(1, 10, BucketType.user)
     async def _meme(self, ctx):
@@ -190,6 +237,8 @@ class Animals(commands.Cog):
         sub = random.choice(all_subs)
         embed = discord.Embed(title = f"{sub.title}", color = ctx.author.color)
         embed.set_image(url = sub.url)
+        embed.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
 
     @_meme.error
@@ -198,7 +247,9 @@ class Animals(commands.Cog):
             em = discord.Embed(title = "<:fail:761292267360485378> Meme Error", color = ctx.author.color)
             em.add_field(name = "Reason:", value = "Stop seeing memes too much, or you will become a meme!")
             em.add_field(name = "Try Again In:", value = "{:.2}s".format(error.retry_after))
+            em.set_footer(text = "To support me invite me!", icon_url = ctx.author.avatar_url)
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
-
+    
 def setup(client):
     client.add_cog(Animals(client))

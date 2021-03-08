@@ -13,7 +13,7 @@ class Exclusive(commands.Cog):
         self.token = config["topToken"]
         self.dblpy = dbl.DBLClient(self.client, self.token)
     
-    @commands.group(invoke_without_command = True)
+    @commands.group(invoke_without_command = True, aliases=["cr", "rewards", "claimreward", "reward"])
     async def claimrewards(self, ctx):
         em = discord.Embed(title=  "<:zancool:809268843138646066> Be Cool and claim rewards!", color = ctx.author.color)
         em.add_field(name = "Possible Subcommands:", value = '`vote`, `friends`')

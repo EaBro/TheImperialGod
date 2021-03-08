@@ -34,7 +34,6 @@ class Help(commands.Cog):
             "Did you know that TheImperialGod has an economy system!",
             "Did you know that TheImperialGod was made by NightZan999?",
             "Did you know that TheImperialGod was coded in a language called Python!",
-            f"Did you know that TheImperialGod is in {len(self.client.guilds)} servers!",
             "Did you know that TheImperialGod has over 45,000 lines of code if put in one file!",
             "Did you know that TheImperialGod has tickets!"
         ]
@@ -54,7 +53,7 @@ class Help(commands.Cog):
         My prefix is `imp`
         """)
         page1.add_field(name = f":dollar: Economy Commands: [9]", value = "`Balance`, `Beg`, `Withdraw`, `Deposit`, `Give`, `Serve`, `Daily`, `Weekly`, `Bet`, `claimrewards vote`")
-        page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`")
+        page1.add_field(name = f"<:moderation:761292265049686057> Moderation Commands: [15]", value = "`Kick`, `Ban`, `Softban`, `Purge`, `Lock`, `Unlock`, `Mute`, `Unmute`, `Unban`, `createrole`, `Announce`, `nick`, `setmuterole`, `setautorole`")
         page1.add_field(name = f"<:info:761298826907746386> Information Commands: [8]", value = f"`userinfo`, `avatar`, `serverinfo`, `whois`, `channelinfo`, `botinfo`,`show_toprole`, `credits`")
         page1.add_field(name = f":tools: Utilities: [12]", value = "`coinflip`, `random_number`, `code`, `thank`, `reverse`, `8ball`, `poll`, `show_toprole`, `passwordgenerator`, `avatar`, `respect`, `beer`, `guess`")
         page1.add_field(name = f"<:pepethink:791969112771395625> Math Commands [7]:", value = f"`add`, `subtract`, `multiply`, `divide`, `square`, `sqrt`, `pow`")
@@ -62,7 +61,7 @@ class Help(commands.Cog):
         page1.add_field(name = f":gift: Giveaways: [2]", value = "`gstart`, `reroll`")
         page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
-        page1.set_footer(text = f"Page (1 / 3)", icon_url = ctx.author.avatar_url)
+        page1.set_footer(text = f"Page (1 / 3)")
         self.addPage(page1)
 
         page2 = discord.Embed(title = "Help",color = ctx.author.color, description = f"""
@@ -70,7 +69,9 @@ class Help(commands.Cog):
         My prefix is `imp`
         """)
         page2.add_field(name = "<:zancool:809268843138646066> Exclusive Commands [1]", value = '`claimrewards`')
-        page2.set_footer(text = f"Page (2 / 3)", icon_url = ctx.author.avatar_url)
+        page2.add_field(name = "<:goldingot:818413753581699102> Minecraft Commands [2]", value = "`mcstats`, `mchistory`")
+        page2.add_field(name = ":notes: Music Commands [5]", value = "`join`, `leave`, `play`, `resume`, `pause`")
+        page2.set_footer(text = f"Page (2 / 3)")
         self.addPage(page2)
         # add our last page
         page3 = discord.Embed(title = "Help Center and Links", color = ctx.author.color,
@@ -78,18 +79,19 @@ class Help(commands.Cog):
         :radioactive: [Top.gg](https://top.gg/bot/768695035092271124)\n
         :scorpius: [Vote](https://top.gg/bot/768695035092271124/vote)\n
         <:info:761298826907746386> [Support Server](https://discord.gg/KuPzxqHe)\n
-        <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://nightzan.ml/projects/theimperialgod/index.html)
+        <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://theimperialgod.ml)
         """
         )
         page3.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
         page3.add_field(name = 'Embed Info', value = "If no response is detected we will clear all reactions!")
         page3.add_field(name = "Tip :coin::", value =f"**{random.choice(self.tips)}**")
-        page3.set_footer(text = f"Page (3 / 3)", icon_url = ctx.author.avatar_url)
+        page3.set_footer(text = f"Page (3 / 3)")
         self.addPage(page3)
         # create emojis
         buttons = [
             "⏮️",
             "⬅️",
+            "🔐",
             "➡️",
             "⏭️"    
         ]
@@ -109,7 +111,6 @@ class Help(commands.Cog):
                 reaction, user = await self.client.wait_for("reaction_add", check = check, timeout = 300)
             
             except asyncio.TimeoutError:
-                await ctx.channel.send(f"{ctx.author.mention}, help command timed out! To use the help command and navigate to other pages type the command again!")
                 await msg.clear_reactions()
                 return
             else:
@@ -126,7 +127,11 @@ class Help(commands.Cog):
                 
                 elif str(reaction.emoji) == "⏭️":
                     current = len(self.help_pages) - 1
-            
+
+                elif str(reaction.emoji) == "🔐":
+                    await msg.clear_reactions()
+                    return
+
                 for button in buttons:
                     await msg.remove_reaction(button, ctx.author)
                 

@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
+from discord import Embed
 import json
+import DiscordUtils
 from jishaku.codeblocks import codeblock_converter
 
 class Owner(commands.Cog):
@@ -29,48 +31,41 @@ class Owner(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def joinguild(self, ctx, guild_id : int):
-        # logic
-        guild = self.client.get_guild(guild_id)
-        for channel in guild.text_channels:
-            invite = await channel.create_invite()
-            await ctx.send(invite)
-            return
-
-    @commands.command()
-    @commands.is_owner()
     async def osay(self, ctx, *, arg):
         """Says what you tell it to
         Uses: `imp osay <message>`"""
         await ctx.message.delete()
         await ctx.send(arg)
 
-    @commands.command(aliases=["enable"])
-    @commands.is_owner()
-    async def load(self, ctx, *, extension):
-        if extension not in ["cogs.moderation.owner", "cogs.moderation.admin"]:
-            await self.client.load_extension(extension)
-            await ctx.send(f"Loaded {extension}!")
-        else:
-            await ctx.send("Admin or owner commands cannot be enabled or disabled!")
-            return
-
     @commands.command()
     @commands.is_owner()
     async def load(self, ctx, *, extension):
-        self.client.load_extension(extension)
+        try:
+            self.client.load_extension(extension)
+        except:
+            await ctx.send("That cog is alreay loaded, my lord!")
+            return
         await ctx.send("Loaded the extension my lord!")
     
     @commands.command()
     @commands.is_owner()
     async def unload(self, ctx, *, extension):
-        self.client.unload_extension(extension)
+        if extension.lower() == "cogs.moderation.owner":
+            # if the owner disables owner commands, then they can't load back the extension ;-;
+            await ctx.send("You can't unload owner cog!")
+            return
+        try:
+            self.client.unload_extension(extension)
+        except:
+            await ctx.send("That cog is already unloaded, my lord")
+            return
         await ctx.send("Unloaded the extension my lord!")
     
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx, *, extension):
-        self.client.reload_extension(extension)
+        self.client.unload_extension(extension)
+        self.client.load_extension(extension)
         await ctx.send("Reloaded the extension my lord!")
 
     @commands.command()
@@ -84,14 +79,28 @@ class Owner(commands.Cog):
         else:
             await ctx.message.delete()
             em = discord.Embed(title = title, color = ctx.author.color, description= desc)
-            em.set_footer(text='Bot Made by NightZan999#0194')
+            em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            em.set_footer(text = f"Requested by {ctx.author.name}", icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     @commands.command()
     @commands.is_owner()
     async def guilds(self, ctx):
-        pass
-    
+        em1 = discord.Embed(title=  "Imperial Guilds [1 - 20]", color = ctx.author.color, description = "The first 20 guilds of TheImperialGod")
+        em2 = discord.Embed(title=  "Imperial Guilds [20 - 40]", color = ctx.author.color, description = "The next 20 guilds of TheImperialGod")
+        em3 = discord.Embed(title=  "Imperial Guilds [40 - 60]", color = ctx.author.color, description = "The last 20 guilds of TheImperialGod")
+        for i in range(0, len(self.client.guilds)):
+            guild = self.client.guilds[i]
+            if i < 20:
+                em1.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")
+            elif i > 20 and i < 40:
+                em2.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")
+            else:
+                em3.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")
+        paginator = DiscordUtils.Pagination.AutoEmbedPaginator(ctx)
+        embeds = [em1, em2, em3]
+        await paginator.run(embeds)
+            
     @commands.command()
     @commands.is_owner()
     async def eval(self, ctx, *, code : codeblock_converter):
