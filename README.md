@@ -49,6 +49,25 @@ So till now good going and before you touch the code.
 ## Giveaways
 So we have some Giveaway features which simply reroll and start a giveaway, kinda basic but that's all we have for the bot. The rest of the commands are just customizable.
 
+## Tickets
+Ever wanted your members to contact you without DMing you. Well this is it. So now users can type `imp new [optionalReason]` and it will first ask for confirmation and then create a ticket. 
+
+Once the ticket has been created, it will **only be visible to:**
+1. The Author of the message
+2. The role which is setup with `imp addticketrole @role`. 
+3. The owner of the server
+
+No-one else can see the conversation inside the ticket. So feel free to enjoy. After this the bot may not get more updates. 
+
+# Ticket logging? 
+
+Okay, tickets but wait. TheImperialGod presents you ticket logs!
+Yes not just tickets, but ticket logs!
+You can check who is closing the ticket, who is opening 
+and the time of when this has happened. All with a command!
+
+This command is very useful:
+`imp setticketlogs <channel> [reason]`
 ###### (We also have *error handling* for all commands!)
 
 ## Issues
