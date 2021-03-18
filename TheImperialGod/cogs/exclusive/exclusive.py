@@ -15,7 +15,7 @@ class Exclusive(commands.Cog):
     
     @commands.group(invoke_without_command = True, aliases=["cr", "rewards", "claimreward", "reward"])
     async def claimrewards(self, ctx):
-        em = discord.Embed(title=  "<:zancool:809268843138646066> Be Cool and claim rewards!", color = ctx.author.color)
+        em = discord.Embed(title=  "<:zancool:819065864153595945> Be Cool and claim rewards!", color = ctx.author.color)
         em.add_field(name = "Possible Subcommands:", value = '`vote`, `friends`')
         em.add_field(name = "Explanation:", value = "Vote can be used to collect voting rewards, and friends gives you rewards if you are a friend of the owner and you have voted!")
         await ctx.send(embed = em)
@@ -40,7 +40,7 @@ class Exclusive(commands.Cog):
                 await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + earnings, rows[0], ctx.author.id))
                 rows = await cursor.fetchone()
                 await connection.commit()
-                em = discord.Embed(title = f"<:zancool:809268843138646066> {ctx.author.name} claims their reward!", color = ctx.author.color)
+                em = discord.Embed(title = f"<:zancool:819065864153595945> {ctx.author.name} claims their reward!", color = ctx.author.color)
                 em.add_field(name = ":coin: Amount", value = f"{earnings} :coin:", inline = False)
                 em.add_field(name = "Rewards", value = "Claim this in 1 hour, till then keep voting and giving me reviews :DD")
                 em.set_thumbnail(url = ctx.author.avatar_url)
@@ -72,7 +72,7 @@ class Exclusive(commands.Cog):
                 await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + earnings, rows[0], ctx.author.id))
                 rows = await cursor.fetchone()
                 await connection.commit()
-                em = discord.Embed(title = f"<:zancool:809268843138646066> Well, you are a friend of mine!", color = ctx.author.color)
+                em = discord.Embed(title = f"<:zancool:819065864153595945> Well, you are a friend of mine!", color = ctx.author.color)
                 em.add_field(name = ":coin: Amount", value = f"{earnings} :coin:", inline = False)
                 em.add_field(name = "Rewards", value = "Claim this in 1 hour, till then keep voting and giving me reviews :DD")
                 em.set_thumbnail(url = ctx.author.avatar_url)

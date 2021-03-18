@@ -55,6 +55,14 @@ class Music(commands.Cog):
     
     @commands.command()
     async def join(self, ctx, *, reason = None):
+        failEmbed = discord.Embed(title = "<:fail:761292267360485378> Join Failed!", color = ctx.author.color)
+        failEmbed.description = "You are not connected to a voice channel!"
+        failEmbed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        failEmbed.set_footer(text = "get gud, bot", icon_url = ctx.author.avatar_url)
+
+        if not ctx.author.voice:
+            return await ctx.send(embed = failEmbed)
+
         channel = ctx.message.author.voice.channel
         await channel.connect()
 
@@ -65,7 +73,7 @@ class Music(commands.Cog):
         em.set_footer(text = "invite me ;)", icon_url = ctx.author.avatar_url)
         await ctx.send(embed = em)
 
-    @commands.command(aliases=["leab", "leav", "getoff", "disconnect"])
+    @commands.command(aliases=["leab", "leav", "getoff", "disconnect", "stahp", "stop"])
     async def leave(self, ctx, *, reason= None):
         em = discord.Embed(title = "<:success:761297849475399710> Leave Successful", color = ctx.author.color)
         em.description = "I have successfully left all voice channels!"
@@ -78,7 +86,7 @@ class Music(commands.Cog):
         await voice_client.disconnect()
 
     @commands.command()
-    async def play(self, ctx, url):
+    async def play(self, ctx, url = None):
         failEmbed = discord.Embed(title = "<:fail:761292267360485378> Join Failed!", color = ctx.author.color)
         failEmbed.description = "You are not connected to a voice channel!"
         failEmbed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
@@ -91,6 +99,9 @@ class Music(commands.Cog):
 
         if not ctx.author.voice:
             return await ctx.send(embed = failEmbed)
+        
+        if url is None:
+            return await ctx.send(embed = exceptionEmbed)
 
         server = ctx.message.guild
         voice_channel = server.voice_client
@@ -105,19 +116,31 @@ class Music(commands.Cog):
         await ctx.send('**Now playing:** {}'.format(player.title))
     
     @commands.command()
-    async def pause(self, ctx):
+    async def pause(self, ctx, *, reason = None):
         server = ctx.message.guild
         voice_channel = server.voice_client
 
         voice_channel.pause()
+        em = discord.Embed(title = "<:success:761297849475399710> Pause Successful", color = ctx.author.color)
+        em.description = "I have successfully paused the song!"
+        em.add_field(name = "Reason:", value = f"`{reason}`")
+        em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        em.set_footer(text = "invite me ;)", icon_url = ctx.author.avatar_url)
+        await ctx.send(embed = em)
 
-    @client.command()
-    async def resume(self, ctx):
+
+    @commands.command()
+    async def resume(self, ctx, *, reason = None):
         server = ctx.message.guild
         voice_channel = server.voice_client
 
         voice_channel.resume()
-
+        em = discord.Embed(title = "<:success:761297849475399710> Pause Successful", color = ctx.author.color)
+        em.description = "I have successfully resumed the song!"
+        em.add_field(name = "Reason:", value = f"`{reason}`")
+        em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        em.set_footer(text = "invite me ;)", icon_url = ctx.author.avatar_url)
+        await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(Music(client))

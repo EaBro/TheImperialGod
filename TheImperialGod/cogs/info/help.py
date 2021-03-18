@@ -68,7 +68,7 @@ class Help(commands.Cog):
         **Type `imp help` and then a __category__ for more information for even more information!**\n
         My prefix is `imp`
         """)
-        page2.add_field(name = "<:zancool:809268843138646066> Exclusive Commands [1]", value = '`claimrewards`')
+        page2.add_field(name = "<:zancool:819065864153595945> Exclusive Commands [1]", value = '`claimrewards`')
         page2.add_field(name = "<:goldingot:818413753581699102> Minecraft Commands [2]", value = "`mcstats`, `mchistory`")
         page2.add_field(name = ":notes: Music Commands [5]", value = "`join`, `leave`, `play`, `resume`, `pause`")
         page2.set_footer(text = f"Page (2 / 3)")
@@ -118,23 +118,30 @@ class Help(commands.Cog):
 
                 if str(reaction.emoji) == "⏮️":
                     current = 0
+                    button = buttons[0]
+                    await msg.remove_reaction(button, ctx.author)
                 
                 elif str(reaction.emoji) == "⬅️" and current > 0:
                     current -= 1
+                    button = buttons[1]
+                    await msg.remove_reaction(button, ctx.author)
                 
                 elif str(reaction.emoji) == "➡️" and current < len(self.help_pages)-1:
                     current += 1
+                    button = buttons[3]
+                    await msg.remove_reaction(button, ctx.author)
                 
                 elif str(reaction.emoji) == "⏭️":
                     current = len(self.help_pages) - 1
+                    button = buttons[4]
+                    await msg.remove_reaction(button, ctx.author)
 
                 elif str(reaction.emoji) == "🔐":
                     await msg.clear_reactions()
                     return
-
-                for button in buttons:
+                    button = buttons[2]
                     await msg.remove_reaction(button, ctx.author)
-                
+
                 if current != previous_page:
                     await msg.edit(embed = self.help_pages[current])
     
@@ -261,7 +268,7 @@ class Help(commands.Cog):
         des ="""Exclusive commands are commands in which you have to vote for me or support me in any way to get access to some commands!\n
         This is because we want people to get a ton of stuff but we also need credit for the work. Hope you understand!
         """
-        em = discord.Embed(title = "<:zancool:809268843138646066> Exclusive Commands", color = ctx.author.color, description = des)
+        em = discord.Embed(title = "<:zancool:819065864153595945> Exclusive Commands", color = ctx.author.color, description = des)
         em.add_field(name = "claimrewards", value = "This is a command group, if invoked with no subcommand it will give you a list of rewards to claim!")
         await ctx.send(embed = em)
 

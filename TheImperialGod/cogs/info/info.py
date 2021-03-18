@@ -156,7 +156,7 @@ class Information(commands.Cog):
     async def uptime(self, ctx):
         current_time = datetime.datetime.utcnow()
         uptime = (current_time - self.launched_at)
-        em = discord.Embed(title = "<:zancool:809268843138646066> My Uptime", color = ctx.author.color)
+        em = discord.Embed(title = "<:zancool:819065864153595945> My Uptime", color = ctx.author.color)
         em.add_field(name = "Uptime", value = "I have been online for {}!".format(uptime))
         em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         em.set_footer(text = "Requested by {}".format(ctx.author.name), icon_url = ctx.author.avatar_url)

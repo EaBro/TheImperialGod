@@ -42,6 +42,9 @@ class Owner(commands.Cog):
     async def load(self, ctx, *, extension):
         try:
             self.client.load_extension(extension)
+        except commands.CommandError as e:
+            await ctx.send("The Error was a command error, should come up in console!")
+            raise e
         except:
             await ctx.send("That cog is alreay loaded, my lord!")
             return
@@ -56,6 +59,9 @@ class Owner(commands.Cog):
             return
         try:
             self.client.unload_extension(extension)
+        except commands.CommandError as e:
+            await ctx.send("The Error was a command error, should come up in console!")
+            raise e
         except:
             await ctx.send("That cog is already unloaded, my lord")
             return
@@ -64,8 +70,16 @@ class Owner(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx, *, extension):
-        self.client.unload_extension(extension)
-        self.client.load_extension(extension)
+        try:
+            self.client.unload_extension(extension)
+            self.client.load_extension(extension)
+        
+        except commands.CommandError as e:
+            await ctx.send("The Error was a command error, should come up in console!")
+            raise e
+        
+        except:
+            await ctx.send("error raised...")
         await ctx.send("Reloaded the extension my lord!")
 
     @commands.command()
