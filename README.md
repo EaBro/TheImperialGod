@@ -2,6 +2,7 @@
 TheImperialGod is an awesome discord.py bot which has plenty of features!
 **If you like TheImperialGod as a discord bot, starring the repo is the best that you can do and is very much appreciated. 
 This is because starring the repo, brings it higher in search results and makes the repo more popular.**
+Plus if you star the repo your message of starring will be pinned in the support server!
 
 It has many features, so you dont have to have many bots in your server just to get the commands that you want. It is always being improved, so if you see a bug or have a suggestion, dont hesitate to use the report bug or suggest commands to contact the devloper. It is always online, so no need to worry about it going offline randomly
 # Features
