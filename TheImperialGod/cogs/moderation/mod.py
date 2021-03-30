@@ -30,7 +30,7 @@ class Moderation(commands.Cog):
             except:
                 pass
             await member.kick(reason = reason)
-            em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color)
+            em = discord.Embed(title = f"<:success:761297849475399710> Kick was successful!", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen, we got ||{member.mention}|| out of the server!")
             em.add_field(name = f"Member:", value = f"`{member.name}`")
             em.add_field(name = "Reason: ", value = f"`{reason}`")
             em.add_field(name = "Moderator:", value = f"`{ctx.author.name}`")
@@ -47,13 +47,13 @@ class Moderation(commands.Cog):
     @kick.error
     async def kick_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color, description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
             em.add_field(name = "Reason:", value = "`Kick members Permission Missing!`")
             em.set_footer(text = "Imagine thinking you have the perms!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
-            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color)
+            em = discord.Embed(title = "<:fail:761292267360485378> Kick Failed!", color = ctx.author.color, description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
             em.add_field(name = "Reason:", value = "`Ping a user to kick them!`")
             em.add_field(name=  "Usage:", value = "```diff\n+ imp kick @NightZan999 swear words\n- imp kick someonesName swearing\n```")
             em.set_footer(text = "Kick properly already!")
@@ -92,7 +92,7 @@ class Moderation(commands.Cog):
                 await ctx.send(embed = embed)
                 return
             else:
-                em = discord.Embed(title=  "<:success:761297849475399710> Add Role Successful!", color = ctx.author.color)
+                em = discord.Embed(title=  "<:success:761297849475399710> Add Role Successful!", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we gave {member.mention} the role {role.mention}")
                 em.add_field(name = "Reason:", value = f"`{reason}`")
                 em.add_field(name = "User:", value = f"{member.mention}")
                 em.add_field(name = "Role:", value = f"{role.mention}", inline = True)
@@ -142,7 +142,7 @@ class Moderation(commands.Cog):
                 await ctx.send(embed = embed)
                 return
             else:
-                em = discord.Embed(title=  "<:success:761297849475399710> Remove Role Successful!", color = ctx.author.color)
+                em = discord.Embed(title=  "<:success:761297849475399710> Remove Role Successful!", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we removed the role {role.mention} from {member.mention}")
                 em.add_field(name = "Reason:", value = f"`{reason}`")
                 em.add_field(name = "User:", value = f"{member.mention}")
                 em.add_field(name = "Role:", value = f"{role.mention}", inline = True)
@@ -197,13 +197,13 @@ class Moderation(commands.Cog):
     async def ban(self, ctx, member : discord.Member = None, *,reason = None):
         try:
             if member == None:
-                embed = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color= ctx.author.color)
+                embed = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color= ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we, uhh wait there was no member specified")
                 embed.add_field(name = "Reason:", value = "Ping a user to ban them!")
                 embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
                 await ctx.send(embed = embed)
                 return
             if member == ctx.author:
-                em = discord.Embed(title = '<:fail:761292267360485378> Ban Failed', color = ctx.author.color)
+                em = discord.Embed(title = '<:fail:761292267360485378> Ban Failed', color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we ||wait this is you, you buffoon||")
                 em.add_field(name = 'Reason:', value = f"You can't ban yourself ;-;")
                 em.add_field(name = "Next Steps:", value = "Try to ban someone else idunno")
                 em.set_footer(text = "imagine banning urself, couldn't be me!")
@@ -215,7 +215,7 @@ class Moderation(commands.Cog):
             except:
                 pass
             await member.ban(reason = reason)
-            em = discord.Embed(title = f"<:success:761297849475399710> Ban was successful!", color = ctx.author.color)
+            em = discord.Embed(title = f"<:success:761297849475399710> Ban was successful!", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we gottem")
             em.add_field(name = f"Victim:", value = f"`{member.name}`")
             em.add_field(name = "Reason: ", value = f"`{reason}`")
             em.add_field(name = "**Moderator**:", value = f"`{ctx.author.name}`")
@@ -224,7 +224,7 @@ class Moderation(commands.Cog):
             await ctx.send(embed = em)
 
         except:
-            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = discor.Color.red())
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = discor.Color.red(), description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we uhhhhhhh damn-")
             em.add_field(name = 'Reason', value =f"{member.mention} is a moderator or an admin!")
             em.add_field(name = "Contact support!", value = "This could also be due to the hierarchy!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
@@ -233,13 +233,13 @@ class Moderation(commands.Cog):
     @ban.error
     async def ban_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we-")
             em.add_field(name = "Reason:", value = "`Ban members Permission Missing!`")
             em.set_footer(text = "Imagine thinking you have the perms!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
         if isinstance(error, commands.BadArgument):
-            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color)
+            em = discord.Embed(title = "<:fail:761292267360485378> Ban Failed!", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> Ladies and gentlemen we go-")
             em.add_field(name = "Reason:", value = "`Ping a user to Ban them!`")
             em.add_field(name = "Usage:", value = "```diff\n+ imp ban @NightZan999 DM adverts\n- imp ban someonesName DM adverts\n```")
             em.set_footer(text = "Ban properly already!")
@@ -275,7 +275,7 @@ class Moderation(commands.Cog):
     @commands.has_permissions(manage_roles = True)
     async def createrole(self, ctx, *, name = "UnknownRole"):
         role=  await ctx.guild.create_role(name = name)
-        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color, description = f"{role.mention} was successfully created!")
+        em = discord.Embed(title = "<:success:761297849475399710> Role Created", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> {role.mention} was successfully created!")
         em.add_field(name = "Role:", value = f"{role.mention}")
         em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
         em.set_footer(text = "Good job creating roles!")
@@ -294,7 +294,7 @@ class Moderation(commands.Cog):
     @commands.command(aliases=["delrole"])
     @commands.has_permissions(manage_roles = True)
     async def deleterole(self, ctx, *, role: discord.Role):
-        em = discord.Embed(title = "<:success:761297849475399710> Role Deleted", color = ctx.author.color, description = f"{role.mention} was successfully deleted!")
+        em = discord.Embed(title = "<:success:761297849475399710> Role Deleted", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> {role.mention} was successfully deleted!")
         em.add_field(name = "Role:", value = f"{role.mention}")
         em.add_field(name ="Moderator:", value = f"{ctx.author.mention}")
         em.set_footer(text = "o wow")
@@ -338,8 +338,17 @@ class Moderation(commands.Cog):
     @commands.command()
     @has_permissions(manage_channels = True)
     async def lock(self, ctx, *, reason = None):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
-        em = discord.Embed(title = f"<:success:761297849475399710> Channel has been locked!", color = discord.Color.green())
+        channel = ctx.channel
+        if ctx.guild.default_role.permissions_in(channel).send_messages:
+            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
+        else:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Lock Failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = f"This specific channel ({channel.mention}) is already locked!")
+            embed.set_footer(text = "Imagine trying to lock a locked channel!")
+            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = embed)
+            return
+        em = discord.Embed(title = f"<:success:761297849475399710> Channel has been locked!", color = discord.Color.green(), description = f"<:Coder_Hammer:826315685142462474> {channel.mention} was successfully locked!")
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
         em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
@@ -357,8 +366,17 @@ class Moderation(commands.Cog):
     @commands.command()
     @has_permissions(manage_channels = True)
     async def unlock(self, ctx, *, reason = None):
-        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
-        em = discord.Embed(title = f"<:success:761297849475399710> Channel has been unlocked!", color = discord.Color.green())
+        channel = ctx.channel
+        if not ctx.guild.default_role.permissions_in(channel).send_messages:
+            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
+        else:
+            embed = discord.Embed(title = "<:fail:761292267360485378> Lock Failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = f"This specific channel ({channel.mention}) is already unlocked!")
+            embed.set_footer(text = "Imagine trying to unlock an unlocked channel!")
+            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = embed)
+            return
+        em = discord.Embed(title = f"<:success:761297849475399710> Channel has been unlocked!", color = discord.Color.green(), description = f"<:Coder_Hammer:826315685142462474> {channel.mention} was successfully unlocked!")
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
         em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
@@ -388,7 +406,16 @@ class Moderation(commands.Cog):
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
             return
-        await ctx.channel.edit(slowmode_delay=amount)
+        
+        if ctx.channel.slowmode_delay != amount:
+            await ctx.channel.edit(slowmode_delay=amount)
+        else:
+            embed = discord.Embed(title = "Setdelay Failed!", color = ctx.author.color)
+            embed.add_field(name = "Reason:", value = f"The channels slowmode is already `{amount}`!")
+            embed.set_footer(text = "Imagine wasting time!")
+            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = embed)
+            return
         em = discord.Embed(title = "<:success:761297849475399710> Change in channel settings", color = ctx.author.color)
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")

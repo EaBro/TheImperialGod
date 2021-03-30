@@ -69,18 +69,22 @@ class Information(commands.Cog):
             member = ctx.author
         pos = sum(m.joined_at < member.joined_at for m in ctx.guild.members if m.joined_at is not None)
         roles = [role for role in member.roles]
-        embed = discord.Embed(color=member.color, timestamp=datetime.datetime.utcnow())
-        embed.set_author(name=f"{member}", icon_url=member.avatar_url)
-        embed.set_thumbnail(url=member.avatar_url)
-        embed.add_field(name="Joined at:", value=member.joined_at.strftime("%a, %#d %B %Y, %I:%M %p"))
-        embed.add_field(name='Registered at:', value=member.created_at.strftime('%a, %#d %B %Y, %I:%M %p'))
-        embed.add_field(name='Bot?', value=f'{member.bot}')
-        embed.add_field(name='Status?', value=f'{member.status}')
-        embed.add_field(name='Top Role?', value=f'{member.top_role}')
-        embed.add_field(name=f"Roles ({len(roles)})", value=" ".join([role.mention for role in roles[:1]]))
-        embed.add_field(name='Join position', value=pos)
+        embed = discord.Embed(title = "👨 Info", color = discord.Color.random(), description = f"Information about: {member.name}")
+        embed.add_field(name = "Nickname", value = member.nick or None)
+        embed.add_field(name = "Verification Pending", value = member.pending)
+        embed.add_field(name = "Status:", value = member.raw_status)
+        if member.mobile_status:
+            device = "Mobile"
+        elif member.desktop_status:
+            device = "Desktop"
+        elif member.web_status:
+            device=  "Web"
+        embed.add_field(name = "Discord Device:", value = device)
+        embed.add_field(name = "Color", value = member.color)
+        embed.add_field(name = "Mention:", value = member.mention)
+        embed.add_field(name = "Top Role:", value = member.top_role.mention)
+        embed.add_field(name = "Voice State:", member.voice or None)
         embed.set_footer(icon_url=member.avatar_url, text=f'Requested By: {ctx.author.name}')
-        embed.set_footer(text='Bot Made by NightZan999#0194')
         await ctx.send(embed=embed)
     
     @userinfo.error
@@ -88,7 +92,7 @@ class Information(commands.Cog):
         if isinstance(error, commands.BadArgument):
             em = discord.Embed(title = f"<:fail:761292267360485378> Userinfo Error", color = ctx.author.color)
             em.add_field(name = f"Reason:", value = f"Arguments were of the wrong data type!")
-            em.add_field(name = "Args", value = "```\nimp userinfo [@user]\n```")
+            em.add_field(name = "Args", value = "```diff\n+ imp userinfo <user>\n- imp userinfo e\n```")
             em.set_thumbnail(url = ctx.author.avatar_url)
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
