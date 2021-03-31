@@ -33,8 +33,11 @@ def load_cogs(): #loading all our cogs
         "cogs.tickets.tickets", # ticket commands
         "cogs.info.topgg", # has top.gg stuff bois!
         "cogs.exclusive.exclusive", # has exclusive commands
-        "cogs.moderation.autorole" # autoroles
+        "cogs.moderation.autorole", # autoroles
+        "cogs.music.music", # music :D
+        "cogs.info.minecraft", # minecraft commands
     ]
+    
     for cog in cogs:
         client.load_extension(cog)
 
@@ -63,37 +66,10 @@ PUBLIC_KEY = config["publicKey"]
 BOT_PREFIX = config["prefix"]
 new_link ="https://discordapp.com/oauth2/authorize?&client_id=".join(str(CLIENT_ID))
 new_link.join("&scope=bot&permissions=21474836398")
+rs = RandomStuff(async_mode = True)
 
 # custom client
 class TheImperialGod(commands.Bot):
-    cogs = [
-        "cogs.info.help", # help command
-        "cogs.fun.animals", # searching reddit
-        "cogs.economy.bankcommands", # bank commands in economy
-        "cogs.economy.moneymaking", # moneymaking commands in economy
-        "cogs.economy.shop", # making a shop with database in economy!
-        "cogs.economy.gambling", # gambling commands
-        "cogs.fun.misc", # misc commands
-        "cogs.fun.utils", # utilities
-        "cogs.info.info", # information
-        "cogs.info.math", # math commands
-        "cogs.moderation.giveaways", # giveaway commands!
-        "cogs.moderation.mod", # moderation commands
-        "cogs.moderation.owner", # owner commands
-        "cogs.tickets.tickets", # ticket commands
-        "cogs.info.topgg", # has top.gg stuff bois!
-        "cogs.exclusive.exclusive", # has exclusive commands
-        "cogs.moderation.autorole", # autoroles
-        "cogs.info.minecraft", # minecraft commands
-        "cogs.music.music" # music
-    ]
-
-    events = [
-        "events.GuildEvents", # when the bot leaves or joins a guild!
-        "events.ReactionAdd",
-        "events.ReactionRemove"
-    ]
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -122,44 +98,52 @@ class TheImperialGod(commands.Bot):
             return json.dump(output, f)
 
 intents = discord.Intents.all()
-client = TheImperialGod(command_prefix = BOT_PREFIX, case_insensitive = True, intents = intents) #making a client object
+client = TheImperialGod(command_prefix = ['imp ', 'Imp ', 'iMp ', 'IMp ', 'imP ', 'ImP ', 'iMP ', 'IMP '], case_insensitive = True, intents = intents, allowed_mentions = discord.AllowedMentions(everyone = False, users = True, roles = True, replied_user = True)) #making a client object
 
 async def ch_pr(): #changing the bots status every 5 secs!!!
     await client.wait_until_ready()
     while not client.is_closed():
         statuses = [
             f"The Protection of {len(client.guilds)} servers",
-            "Making money!",
-            "Hosting Giveaways",
-            "imp gstart",
-            "Kicking people!",
-            "Using utils!",
-            f"Serving {len(client.users)} users",
-            "Calculating inflation!",
-            "Changing statuses!",
-            'Doing Mafs',
-            f'Managing tickets for {len(client.guilds)} servers'
+            "imp setup | imp support 😋"
         ]
         status = random.choice(statuses)
         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
         await asyncio.sleep(10)
 
 @client.event
-async def on_message(msg):
+async def on_message(message):
     try:
-        if msg.mentions[0] == client.user:
-            em = discord.Embed(title = "Help for TheImperialGod", color = ctx.author.color,
+        if message.content == "<@768695035092271124>":
+            em = discord.Embed(title = "Help for TheImperialGod", color = message.author.color,
             description = "Check some information about me!")
+            em.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
             em.add_field(name = "What can I do?", value = "I can make your server so charming! Whether you are a moderator or not!")
             em.add_field(name = "Commands:", value = "Check out `imp help` for a list of my commands")
             em.add_field(name = "Prefix:", value = "My prefix is `imp`")
             em.add_field(name = "Command Types", value = "Economy, Moderation, Information, Utilities, Math, Fun, Giveaways, Tickets, Miscellanous")
             em.add_field(name = "Website:", value = "[Click Here](https://nightzan.ml/projects/theimperialgod/index.html)")
-            em.set_footer(text = "© TheImperialGod™ v1.5.1")
+            em.set_footer(text = "© TheImperialGod™ v1.5.1",icon_url = self.client.user.avatar_url)
+            em.set_thumbnail(url = message.author.avatar_url)
             await message.channel.send(embed = em)
     except:
         pass
-    await client.process_commands(msg)
+
+    await client.process_commands(message)
+
+@client.event
+async def on_command(ctx):
+    res = random.randint(1, 100)
+    tips = [
+        '**Tip:** You can vote for 15,000 :coin: in the economy system!\n**Vote:** https://top.gg/bot/768695035092271124/vote/\n\nOnce you vote you should type `imp rewards vote`.',
+        '**Tip:** You can join our support for any issues: https://discord.gg/dxF3EjVz',
+        '**Tip:** You can try out our economy system by `imp help economy`',
+        '**Tip:** Did you know I have a music system, try doing this with: `imp join`.\nAnd then play your favorite song: `imp play <songURL>`',
+        '**Tip:** Did you know I am **100% open source: https://github.com/NightZan999/TheImperialGod**',
+        '**Tip:** Did you know about my wesbite: **https://www.theimperialgod.ml/**'
+    ]
+    if res > 70:
+        await ctx.send(random.choice(tips))
 
 load_cogs()
 client.loop.create_task(ch_pr())
