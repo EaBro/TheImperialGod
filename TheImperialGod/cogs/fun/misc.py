@@ -15,7 +15,7 @@ class Misc(commands.Cog):
     async def invite(self, ctx):
         embed = discord.Embed(title = "Invite Link:", color = ctx.author.color)
         embed.add_field(name = "Here:", value = f"[Click me]({self.INVITE_LINK})")
-        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        embed.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
         await ctx.send(embed = embed)
 
     @commands.command(aliases = ["sc"])
@@ -26,7 +26,7 @@ class Misc(commands.Cog):
         embed = discord.Embed(title = "Server Count", color = ctx.author.color)
         embed.add_field(name = "Server Count:", value = f"`{sc}`")
         embed.add_field(name = "User Count:", value = f'`{len(self.client.users)}`')
-        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        embed.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)        
         await ctx.send(embed = embed)
 
     @commands.command()
@@ -71,10 +71,10 @@ class Misc(commands.Cog):
         embed.add_field(name = "Website:", value = f":link: [Website](https://theimperialgodwebsite.nightzan.repl.co/)")
         embed.add_field(name = "Why Support me?", inline = False, value = f"""Look, its your choice whether or not you would like to help me out.\n
         But if you like how I roll and think that I help your servers, just by doing these small tasks you can take me to other people who
-        are in need like you.\n\nPlus I have 85 commands and am in just {len(self.client.guilds)} servers.
+        are in need like you.\n\nPlus I have {len(self.client.commands)} commands and am in just {len(self.client.guilds)} servers.
         """)
-        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-        await ctx.send(embed = embed)
+        embed.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
+        await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(Misc(client))
