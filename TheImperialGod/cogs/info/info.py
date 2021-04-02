@@ -83,7 +83,7 @@ class Information(commands.Cog):
         embed.add_field(name = "Color", value = member.color)
         embed.add_field(name = "Mention:", value = member.mention)
         embed.add_field(name = "Top Role:", value = member.top_role.mention)
-        embed.add_field(name = "Voice State:", member.voice or None)
+        embed.add_field(name = "Voice State:", value = member.voice or None)
         embed.set_footer(icon_url=member.avatar_url, text=f'Requested By: {ctx.author.name}')
         await ctx.send(embed=embed)
     
@@ -132,7 +132,7 @@ class Information(commands.Cog):
         embed.add_field(name = 'Customizable Settings:', value = f"Automoderation and utilities! ")
         embed.add_field(name = "Database:", value = "SQLite3")
         embed.add_field(name = "Website:", value = "<:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://theimperialgod.ml)")
-        embed.add_field(name = "Number of Commands:", value = f"`85` (including special owner commands)")
+        embed.add_field(name = "Number of Commands:", value = f"`{len(self.client.commands)}` (including special owner commands)")
         embed.add_field(name = "**Tech:**", value = "```diff\n+ Library : discord.py\n+ Database : AIOSQLite\n+ Hosting Services : Chaotic Destiny Hosting!\n```", inline = False)
         embed.add_field(name = "Users:", value = f'`{len(self.client.users)}`')
         embed.set_footer(text='Bot Made by NightZan999#0194', icon_url = ctx.author.avatar_url)
@@ -293,5 +293,14 @@ class Information(commands.Cog):
         em.set_image(url = "https://ibb.co/MhythwM")
         await ctx.send(embed = em)
 
+    @commands.command()
+    async def stats(self, ctx):
+        em = discord.Embed(title=  "Stats about me", color = self.client.user.color, description = "My stats :partying_face:")
+        em.add_field(name = "Users:", value = f"{len(self.client.users)}")
+        em.add_field(name = "Servers:", value = f"{len(self.client.guilds)}")
+        em.add_field(name = "Total Commands:", value = f"{len(self.client.commands)}")
+        em.add_field(name = "Channels:", value = f"{len(self.client.channels)}")
+        await ctx.send(embed = em)
+    
 def setup(client):
     client.add_cog(Information(client))
