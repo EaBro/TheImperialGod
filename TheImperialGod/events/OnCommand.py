@@ -23,16 +23,18 @@ class OnCommand(commands.Cog):
         ]
         if res > 70:
             async with aiosqlite.connect("./data/economy.db") as connection:
-            async with connection.cursor() as cursor:
-                await cursor.execute("SELECT bank, wallet FROM users WHERE userid = ?",(ctx.author.id,))
-                rows = await cursor.fetchone()
-                if not rows:
-                    await cursor.execute("INSERT INTO users (userid, bank, wallet) VALUES (?,?,?)",(ctx.author.id,0,0))
-                    await connection.commit()
+                async with connection.cursor() as cursor:
+                    await cursor.execute("SELECT bank, wallet FROM users WHERE userid = ?",(ctx.author.id,))
+                    rows = await cursor.fetchone()
+                    if not rows:
+                        await cursor.execute("INSERT INTO users (userid, bank, wallet) VALUES (?,?,?)",(ctx.author.id,0,0))
+                        await connection.commit()
 
-                if earnings > 700:
-                    await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + earnings, rows[0], ctx.author.id))
+                    if earnings > 700:
+                        await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?",(rows[1] + earnings, rows[0], ctx.author.id))
+
             await ctx.send(random.choice(tips))
+            
             if earnings > 700:
                 em = discord.Embed(title = "holy palpatine...", color = discord.Color.random(), description = f"You got **damn lucky from using the `{ctx.command.name} command!`\nYou found ||**{earnings}**|| coins! Contact the developer if you'd like to say a big fat thanks to him (<@575706831192719370>)")
                 em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
