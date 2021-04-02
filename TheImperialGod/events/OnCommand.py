@@ -38,7 +38,7 @@ class OnCommand(commands.Cog):
             await ctx.send(random.choice(tips))
             
             if earnings > 700:
-                em = discord.Embed(title = "holy palpatine...", color = discord.Color.random(), description = f"You got **damn lucky from using the `{ctx.command.name}` command!\nYou found **{earnings}** coins! Contact the developer if you'd like to say a big fat thanks to him (<@575706831192719370>)")
+                em = discord.Embed(title = "holy palpatine...", color = discord.Color.random(), description = f"You got **damn lucky from using the `{ctx.command.name}` command**!\nYou found **{earnings}** coins! Contact the developer if you'd like to say a big fat thanks to him (<@575706831192719370>)")
                 em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
                 em.set_thumbnail(url = ctx.guild.icon_url)
                 await ctx.send(embed = em)
