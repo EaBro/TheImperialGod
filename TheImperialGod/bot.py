@@ -44,7 +44,8 @@ def load_cogs(): #loading all our cogs
     events = [
         "events.GuildEvents", # when the bot leaves or joins a guild!
         "events.ReactionAdd",
-        "events.ReactionRemove"
+        "events.ReactionRemove",
+        "events.OnCommand"
     ]
 
     for event in events:
@@ -66,7 +67,6 @@ PUBLIC_KEY = config["publicKey"]
 BOT_PREFIX = config["prefix"]
 new_link ="https://discordapp.com/oauth2/authorize?&client_id=".join(str(CLIENT_ID))
 new_link.join("&scope=bot&permissions=21474836398")
-rs = RandomStuff(async_mode = True)
 
 # custom client
 class TheImperialGod(commands.Bot):
@@ -131,19 +131,6 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-@client.event
-async def on_command(ctx):
-    res = random.randint(1, 100)
-    tips = [
-        '**Tip:** You can vote for 15,000 :coin: in the economy system!\n**Vote:** https://top.gg/bot/768695035092271124/vote/\n\nOnce you vote you should type `imp rewards vote`.',
-        '**Tip:** You can join our support for any issues: https://discord.gg/dxF3EjVz',
-        '**Tip:** You can try out our economy system by `imp help economy`',
-        '**Tip:** Did you know I have a music system, try doing this with: `imp join`.\nAnd then play your favorite song: `imp play <songURL>`',
-        '**Tip:** Did you know I am **100% open source: https://github.com/NightZan999/TheImperialGod**',
-        '**Tip:** Did you know about my wesbite: **https://www.theimperialgod.ml/**'
-    ]
-    if res > 70:
-        await ctx.send(random.choice(tips))
 
 load_cogs()
 client.loop.create_task(ch_pr())
