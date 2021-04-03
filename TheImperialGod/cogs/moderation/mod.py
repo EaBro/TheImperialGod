@@ -339,15 +339,7 @@ class Moderation(commands.Cog):
     @has_permissions(manage_channels = True)
     async def lock(self, ctx, *, reason = None):
         channel = ctx.channel
-        if ctx.guild.default_role.permissions_in(channel).send_messages:
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
-        else:
-            embed = discord.Embed(title = "<:fail:761292267360485378> Lock Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"This specific channel ({channel.mention}) is already locked!")
-            embed.set_footer(text = "Imagine trying to lock a locked channel!")
-            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-            await ctx.send(embed = embed)
-            return
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = False)
         em = discord.Embed(title = f"<:success:761297849475399710> Channel has been locked!", color = discord.Color.green(), description = f"<:Coder_Hammer:826315685142462474> {channel.mention} was successfully locked!")
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
@@ -367,15 +359,7 @@ class Moderation(commands.Cog):
     @has_permissions(manage_channels = True)
     async def unlock(self, ctx, *, reason = None):
         channel = ctx.channel
-        if not ctx.guild.default_role.permissions_in(channel).send_messages:
-            await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
-        else:
-            embed = discord.Embed(title = "<:fail:761292267360485378> Lock Failed!", color = ctx.author.color)
-            embed.add_field(name = "Reason:", value = f"This specific channel ({channel.mention}) is already unlocked!")
-            embed.set_footer(text = "Imagine trying to unlock an unlocked channel!")
-            embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-            await ctx.send(embed = embed)
-            return
+        await ctx.channel.set_permissions(ctx.guild.default_role, send_messages = True)
         em = discord.Embed(title = f"<:success:761297849475399710> Channel has been unlocked!", color = discord.Color.green(), description = f"<:Coder_Hammer:826315685142462474> {channel.mention} was successfully unlocked!")
         em.add_field(name = "**Responsible Moderator:**", value = f"`{ctx.author.name}`")
         em.add_field(name = "**Reason:**", value = f"`{reason}`")
