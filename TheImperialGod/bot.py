@@ -105,7 +105,8 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
     while not client.is_closed():
         statuses = [
             f"The Protection of {len(client.guilds)} servers",
-            "imp setup | imp support 😋"
+            "imp help 😋",
+            "Road to 100 servers"
         ]
         status = random.choice(statuses)
         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
