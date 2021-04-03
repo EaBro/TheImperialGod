@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import json
 
 class Misc(commands.Cog):
     def __init__(self, client):
@@ -37,6 +38,9 @@ class Misc(commands.Cog):
     @commands.command()
     @commands.cooldown(1, 100, commands.BucketType.user)
     async def suggest(self, ctx, *, suggestion):
+        with open('./config.json', 'r') as f:
+            config = json.load(f)
+        
         await ctx.send("Your suggestion has been sent to the devs!")
         embed = discord.Embed(title = "New Suggestions", color = discord.Color.red())
         embed.add_field(name = "Author:", value = f"`{ctx.author.name}`")
@@ -44,10 +48,10 @@ class Misc(commands.Cog):
         embed.add_field(name = "Suggestion: ", value = f"`{suggestion}`")
         embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         # sending it to the support server
-        guild = self.client.get_guild(781057246092197898)
+        guild = self.client.get_guild(config['IDs']['serverLogId'])
         # sending it in the channel
         for channel in guild.channels:
-            if channel.id == 781363343780741140:
+            if channel.id == config['IDs']['suggestionLogId']:
                 await channel.send(embed = embed)
 
     @suggest.error
