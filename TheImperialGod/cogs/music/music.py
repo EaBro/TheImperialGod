@@ -1,8 +1,11 @@
 import discord
 from discord.ext import commands
 import youtube_dl
+import asyncio
 
+# Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
+# Create our format options so that we can actually play the audio
 ytdl_format_options = {
     'format': 'bestaudio/best',
     'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -16,13 +19,22 @@ ytdl_format_options = {
     'default_search': 'auto',
     'source_address': '0.0.0.0' # bind to ipv4 since ipv6 addresses cause issues sometimes
 }
-
+# ffmpeg options
 ffmpeg_options = {
     'options': '-vn'
 }
-
+# create YTDL class
 ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
+# get out useless VoiceErrors
+class VoiceError(Exception):
+    pass
+
+# YTDL errors or basically not being able to search for a vid
+class YTDLError(Exception):
+    pass
+
+# create useless stuff that we need lmao
 class YTDLSource(discord.PCMVolumeTransformer):
     def __init__(self, source, *, data, volume=0.5):
         super().__init__(source, volume)
@@ -44,6 +56,28 @@ class YTDLSource(discord.PCMVolumeTransformer):
         filename = data['url'] if stream else ytdl.prepare_filename(data)
         return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
 
+# create a song queue
+class SongQueue(asyncio.Queue):
+    def __getitem__(self, item):
+        if isinstance(item, slice):
+            return list(itertools.islice(self._queue, item.start, item.stop, item.step))
+        else:
+            return self._queue[item]
+
+    def __iter__(self):
+        return self._queue.__iter__()
+
+    def __len__(self):
+        return self.qsize()
+
+    def clear(self):
+        self._queue.clear()
+
+    def shuffle(self):
+        random.shuffle(self._queue)
+
+    def remove(self, index: int):
+        del self._queue[index]
 
 class Music(commands.Cog):
     def __init__(self, client):
@@ -87,13 +121,13 @@ class Music(commands.Cog):
 
     @commands.command()
     async def play(self, ctx, url = None):
-        failEmbed = discord.Embed(title = "<:fail:761292267360485378> Join Failed!", color = ctx.author.color)
+        failEmbed = discord.Embed(title = "<:fail:761292267360485378> Play Failed!", color = ctx.author.color)
         failEmbed.description = "You are not connected to a voice channel!"
         failEmbed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         failEmbed.set_footer(text = "get gud, bot", icon_url = ctx.author.avatar_url)
 
-        exceptionEmbed = discord.Embed(title = "<:fail:761292267360485378> Join Failed!", color = ctx.author.color)
-        exceptionEmbed.description = "You must provide a valid URL for this to work! We don't support plain search until now!"
+        exceptionEmbed = discord.Embed(title = "<:fail:761292267360485378> Play Failed!", color = ctx.author.color)
+        exceptionEmbed.description = "An error occured, either the video doesn't have a valid FFMPEG format, or you didn't enter a URL."
         exceptionEmbed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         exceptionEmbed.set_footer(text = "get gud, bot", icon_url = ctx.author.avatar_url)
 
