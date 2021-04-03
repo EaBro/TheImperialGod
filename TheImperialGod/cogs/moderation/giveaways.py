@@ -140,7 +140,7 @@ class Giveaways(commands.Cog):
             embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
 
-    @commands.command()
+    @commands.command(aliases=['greroll'])
     @has_permissions(manage_guild = True)
     async def reroll(self,ctx, channel : discord.TextChannel, id_ : int):
         try:
@@ -148,6 +148,12 @@ class Giveaways(commands.Cog):
         except:
             await ctx.send("The id was entered incorrectly.\nNext time mention a channel and then the id!")
             return
+
+        if new_msg.author != self.client.user:
+            em = discord.Embed(title=  '<:fail:761292267360485378> Reroll Failed', color = ctx.author.color, description = f"<:fail:761292267360485378> This message ([Jump URL]({new_msg.jump_url})) is not a giveaway hosted by the empire!")
+            em.add_field(name = "Reason:", value = "The message you tried to reroll isn't a giveaway hosted by me")
+            em.add_field(name ="How to reroll then?", value = "Take the ID of a message that is hosted by me, not some other bots!")
+            return await ctx.send(embed = em)
 
         users = await new_msg.reactions[0].users().flatten()
         users.pop(users.index(self.client.user))
