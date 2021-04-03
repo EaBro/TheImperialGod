@@ -17,7 +17,7 @@ class OnCommand(commands.Cog):
         earnings = random.randint(2, 1000)
         tips = [
             '**Tip:** You can vote for 15,000 :coin: in the economy system!\n**Vote:** https://top.gg/bot/768695035092271124/vote/\n\nOnce you vote you should type `imp rewards vote`.',
-            '**Tip:** You can join our support for any issues: https://discord.gg/dxF3EjVz',
+            '**Tip:** You can join our support for any issues: https://discord.gg/QyntcSk7tm',
             '**Tip:** You can try out our economy system by `imp help economy`',
             '**Tip:** Did you know I have a music system, try doing this with: `imp join`.\nAnd then play your favorite song: `imp play <songURL>`',
             '**Tip:** Did you know I am **100% open source: https://github.com/NightZan999/TheImperialGod**',
