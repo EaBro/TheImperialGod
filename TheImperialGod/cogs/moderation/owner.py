@@ -102,17 +102,20 @@ class Owner(commands.Cog):
     async def guilds(self, ctx):
         em1 = discord.Embed(title=  "Imperial Guilds [1 - 20]", color = ctx.author.color, description = "The first 20 guilds of TheImperialGod")
         em2 = discord.Embed(title=  "Imperial Guilds [20 - 40]", color = ctx.author.color, description = "The next 20 guilds of TheImperialGod")
-        em3 = discord.Embed(title=  "Imperial Guilds [40 - 60]", color = ctx.author.color, description = "The last 20 guilds of TheImperialGod")
+        em3 = discord.Embed(title=  "Imperial Guilds [40 - 60]", color = ctx.author.color, description = "The next 20 guilds of TheImperialGod")
+        em4 = discord.Embed(title = "Imperial Guilds [60 - 80]", color = ctx.author.color, description = "The last 20 guilds of TheImperialGod")
         for i in range(0, len(self.client.guilds)):
             guild = self.client.guilds[i]
             if i < 20:
                 em1.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")
             elif i > 20 and i < 40:
                 em2.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")
-            else:
+            elif i > 40 and i < 60:
                 em3.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")
+            else:
+                em4.add_field(name = f"{guild.name}", value = f"```diff\n+ ID: {guild.id}\n+ Owner: {guild.owner.name}\n- Members: {guild.member_count}```")                
         paginator = DiscordUtils.Pagination.AutoEmbedPaginator(ctx)
-        embeds = [em1, em2, em3]
+        embeds = [em1, em2, em3, em4]
         await paginator.run(embeds)
             
     @commands.command()
