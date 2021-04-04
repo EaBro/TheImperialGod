@@ -192,11 +192,13 @@ In this file we mention about **almost all hosts.**
 
 # Credits:
 **1. NightZan999:**
-The main developer of TheImperialGod, not only coded all the cogs and the code himself, but also hosted the bot and did more. <br>
-**2. Dragonizedpizza:**
+The main developer of TheImperialGod, not only coded most of the cogs and the code himself, but also hosted the bot and did more. <br>
+**2. CaCO3:**
+My special thanks goes to CaCO3, he now will continue this bot and is the owner of the support server. He's working very hard on this bot.
+**3. Dragonizedpizza:**
 The second most important developer, not only helped TheImperialGod's earlier version in advanced moderation and gave me very useful suggestions <br>
 He also helped me with Github stuff. <br> 
-**3. Makiyu-py:**
+**4. Makiyu-py:**
 he helped me out in grammar errors 😎 and in some commands! <br>
-**4. JakeLion:**
+**5. JakeLion:**
 Jake has helped in tickets and fixing code to the modern style (im old school RIP). 
