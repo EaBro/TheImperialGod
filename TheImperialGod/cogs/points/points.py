@@ -21,9 +21,9 @@ class Points(commands.Cog):
         if str(ctx.guild.id) not in points:
             points[str(ctx.guild.id)] = {}
         
-        if str(member.id) not in points[str(ctx.guild.id)]:
-            points[str(ctx.guild.id)][str(member.id)] = 0  
-            member_points = points[str(ctx.guild.id)][str(member.id)]        
+            if str(member.id) not in points[str(ctx.guild.id)]:
+                points[str(ctx.guild.id)][str(member.id)] = 0  
+                member_points = points[str(ctx.guild.id)][str(member.id)]        
         else:
             member_points = points[str(ctx.guild.id)][str(member.id)]
 
@@ -39,52 +39,64 @@ class Points(commands.Cog):
             json.dump(points, f)
     
     @commands.command()
-    async def givepoints(self, ctx, member: discord.Member = None, points: int = None, *, reason: str = None):
+    async def pointsper(self, ctx):
+        em = discord.Embed(title = "Pointsper", color = ctx.author.color, description = "Every time you take an action I will hand you out points!\n```diff\n+ 1 Message = 5 points\n- 1 Command = 5 points\n```")
+        em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        em.set_footer(text = "Grind for points and get a role 😋", icon_url = ctx.author.avatar_url)
+        await ctx.send(embed = em)
+
+    @commands.command()
+    async def givepoints(self, ctx, member: discord.Member = None, points_ = None, *, reason: str = None):
         if member is None:
             await ctx.send("Give me a member to give points to!")
             return
-        elif points is None:
+        elif points_ is None:
             await ctx.send("Give some valid points!")
             return 
+        
+        try:
+            points = int(points_)
+        except:
+            await ctx.send('Please provide an integer as the points!')
         
         with open("./data/points.json", "r") as f:
             points = json.load(f)
         
+        # define the author's points
         if str(ctx.guild.id) not in points:
-            points[str(ctx.guild.id)] = {} 
+            points[str(ctx.guild.id)] = {}
         
-        if str(ctx.author.id) not in points[str(ctx.guild.id)]:
-            points[str(ctx.guild.id)][str(ctx.author.id)] = 0
-            member_points = points[str(ctx.guild.id)][str(ctx.author.id)]
+            if str(ctx.author.id) not in points[str(message.guild.id)]:
+                points[str(message.guild.id)][str(ctx.author.id)] = 0
+                total_points = points[str(message.guild.id)][str(ctx.author.id)]
+            else:
+                total_points = points[str(message.guild.id)][str(ctx.author.id)]
+
         else:
-            member_points = int(points[str(ctx.guild.id)][str(ctx.author.id)])
-        if member_points < points:
-            await ctx.send("You don't even have {} points".format(points))
+            if str(message.author.id) not in points[str(message.guild.id)]:
+                points[str(message.guild.id)][str(message.author.id)] = 0
+            else:
+                total_points = points[str(message.guild.id)][str(ctx.author.id)]
+
+        if points > total_points:
+            await ctx.send('You don\'t have those many points! Nub')
             return
-        
-        if points <= 0:
-            await ctx.send("Points have to be greater than 0!")
-            return 
 
-        em = discord.Embed(title = f"{member.name}'s Points", color = ctx.author.color)
-        em.add_field(name = "From:", value = f"{ctx.author.mention}")
-        em.add_field(name = "To:", value = f"{member.mention}")
-        em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-        em.description = f"Successfully transferred `**{points}**` points to {member.mention}"
-        
-        points[str(ctx.guild.id)][str(ctx.author.id)] -= points
-        if str(member.id) not in points[str(ctx.guild.id)]:
-            points[str(ctx.guild.id)][str(member.id)] = points
-            em.add_field(name = "Points:", value = f"`0` => `{points}`", inline = True)
+        points[str(message.guild.id)][str(ctx.author.id)] -= points
+        if str(member.id) not in points[str(message.guild.id)]:
+            points[str(message.guild.id)][str(member.id)] = points
         else:
-            old_points = points[str(ctx.guild.id)][str(member.id)]
-            em.add_field(name = "Points:", value = f"`{old_points}` => `{old_points + points}`", inline = True)
-            points[str(ctx.guild.id)][str(member.id)] += points
-        
-        with open("./data/points.json", "w") as f:
-            json.dump(points, f)    
+            points[str(message.guild.id)][str(member.id)] += points
 
-        await ctx.send(embed = em)
+        embed = discord.Embed(title=  "<:success:761297849475399710> Points Given", color = ctx.author.color, description = f"<:success:761297849475399710> We gave {member.mention} {points} points, graciously given by: {ctx.author.mention}")
+        embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+        embed.add_field(name = 'From:', value = ctx.author.mention)
+        embed.add_field(name = 'To:', member.mention)
+        embed.add_field(name = "Amount:", value = f'`{points}`')
+        embed.add_field(name = 'Reason', value = f'`{reason}`')
+        embed.set_footer(text = "Contact the empire at https://theimperialgod.ml", icon_url = ctx.author.avatar_url)
+        await ctx.send(embed = embed)
+
 
 def setup(client):
     client.add_cog(Points(client))
