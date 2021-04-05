@@ -97,6 +97,15 @@ class Points(commands.Cog):
         embed.set_footer(text = "Contact the empire at https://theimperialgod.ml", icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
 
-
+    @commands.command(aliases=["pointsinfo","helppoints","infopoints"])
+    async def pointshelp(self,ctx):
+        em=discord.Embed(title="Points system",description="Help about points system",color=ctx.author.color,url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        em.add_field(name="Points",value="Points are imaginary points that are accumulated whenever you chat or use my commands.")
+        em.add_field(name="Leaderboards",value="The leaderboards is the list of members with the highest points in the server.")
+        em.add_field(name="Crown role",value="The CROWN is a special role given to the person who is top in the leaderboards, the role member will be visible seperatley from other members.")
+        em.set_author(name=ctx.author.name,icon_url=ctx.author.avatar_url)
+        em.set_thumbnail(url=ctx.guild.icon_url)
+        await ctx.send(embed=em)
+    
 def setup(client):
     client.add_cog(Points(client))
