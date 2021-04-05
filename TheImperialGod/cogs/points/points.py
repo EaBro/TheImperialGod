@@ -91,7 +91,7 @@ class Points(commands.Cog):
         embed = discord.Embed(title=  "<:success:761297849475399710> Points Given", color = ctx.author.color, description = f"<:success:761297849475399710> We gave {member.mention} {points} points, graciously given by: {ctx.author.mention}")
         embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         embed.add_field(name = 'From:', value = ctx.author.mention)
-        embed.add_field(name = f'To: {member.mention}')
+        embed.add_field(name = f'To:' , value = member.mention)
         embed.add_field(name = "Amount:", value = f'`{points}`')
         embed.add_field(name = 'Reason', value = f'`{reason}`')
         embed.set_footer(text = "Contact the empire at https://theimperialgod.ml", icon_url = ctx.author.avatar_url)
