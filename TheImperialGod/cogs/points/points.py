@@ -55,57 +55,59 @@ class Points(commands.Cog):
             return 
         
         try:
-            points = int(points_)
+            real_points = int(points_)
         except:
             await ctx.send('Please provide an integer as the points!')
-        
+
+        if real_points < 0 or real_points == 0:
+            await ctx.send('The points should be a positive integer!')
+            return
+    
         with open("./data/points.json", "r") as f:
             points = json.load(f)
         
         # define the author's points
         if str(ctx.guild.id) not in points:
             points[str(ctx.guild.id)] = {}
-        
-            if str(ctx.author.id) not in points[str(message.guild.id)]:
-                points[str(message.guild.id)][str(ctx.author.id)] = 0
-                total_points = points[str(message.guild.id)][str(ctx.author.id)]
-            else:
-                total_points = points[str(message.guild.id)][str(ctx.author.id)]
-
+            points[str(ctx.guild.id)][str(ctx.author.id)] = 0
+            points[str(ctx.guild.id)][str(member.id)] = 0
+            author_points = 0
         else:
-            if str(message.author.id) not in points[str(message.guild.id)]:
-                points[str(message.guild.id)][str(message.author.id)] = 0
-            else:
-                total_points = points[str(message.guild.id)][str(ctx.author.id)]
-
-        if points > total_points:
-            await ctx.send('You don\'t have those many points! Nub')
+            if str(ctx.author.id) not in points[str(ctx.guild.id)]:
+                points[str(ctx.guild.id)][str(ctx.author.id)] = 0
+                author_points = 0
+            elif str(member.id) not in points[str(ctx.guild.id)]:
+                points[str(ctx.guild.id)][str(member.id)] = 0
+            author_points = points[str(ctx.guild.id)][str(ctx.author.id)]
+        
+        if real_points > author_points:
+            await ctx.send('You don\'t even have those many points idiot!')
             return
 
-        points[str(message.guild.id)][str(ctx.author.id)] -= points
-        if str(member.id) not in points[str(message.guild.id)]:
-            points[str(message.guild.id)][str(member.id)] = points
-        else:
-            points[str(message.guild.id)][str(member.id)] += points
+        points[str(ctx.guild.id)][str(ctx.author.id)] -= real_points
+        points[str(ctx.guild.id)][str(member.id)] += real_points
 
-        embed = discord.Embed(title=  "<:success:761297849475399710> Points Given", color = ctx.author.color, description = f"<:success:761297849475399710> We gave {member.mention} {points} points, graciously given by: {ctx.author.mention}")
+        embed = discord.Embed(title=  "<:success:761297849475399710> Points Given", color = ctx.author.color, description = f"<:success:761297849475399710> We gave {member.mention} `{real_points}` points, graciously given by: {ctx.author.mention}")
         embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         embed.add_field(name = 'From:', value = ctx.author.mention)
-        embed.add_field(name = f'To:' , value = member.mention)
-        embed.add_field(name = "Amount:", value = f'`{points}`')
+        embed.add_field(name = 'To:',value =  member.mention)
+        embed.add_field(name = "Amount:", value = f'`{real_points}`')
         embed.add_field(name = 'Reason', value = f'`{reason}`')
         embed.set_footer(text = "Contact the empire at https://theimperialgod.ml", icon_url = ctx.author.avatar_url)
         await ctx.send(embed = embed)
+
+        with open('./data/points.json', 'w') as f:
+            json.dump(points, f)
 
     @commands.command(aliases=["pointsinfo","helppoints","infopoints"])
     async def pointshelp(self,ctx):
         em=discord.Embed(title="Points system",description="Help about points system",color=ctx.author.color,url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
         em.add_field(name="Points",value="Points are imaginary points that are accumulated whenever you chat or use my commands.")
         em.add_field(name="Leaderboards",value="The leaderboards is the list of members with the highest points in the server.")
-        em.add_field(name="Crown role",value="The CROWN is a special role given to the person who is top in the leaderboards, the role member will be visible seperatley from other members.")
+        em.add_field(name="Crown role",value="The CROWN is a special role given to the person who is top in the leaderboards, the role member will be hoisted!")
         em.set_author(name=ctx.author.name,icon_url=ctx.author.avatar_url)
         em.set_thumbnail(url=ctx.guild.icon_url)
         await ctx.send(embed=em)
-    
+
 def setup(client):
     client.add_cog(Points(client))
