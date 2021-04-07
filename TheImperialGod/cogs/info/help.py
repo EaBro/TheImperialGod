@@ -71,6 +71,7 @@ class Help(commands.Cog):
         page2.add_field(name = "<:zancool:819065864153595945> Exclusive Commands [1]", value = '`claimrewards`')
         page2.add_field(name = "<:goldingot:818413753581699102> Minecraft Commands [2]", value = "`mcstats`, `mchistory`")
         page2.add_field(name = ":notes: Music Commands [5]", value = "`join`, `leave`, `play`, `resume`, `pause`")
+        page2.add_field(name = ':trophy: Levelling Commands [4]', value = '`points`, `givepoints`, `pointsper`, `pointshelp`')
         page2.set_footer(text = f"Page (2 / 3)")
         self.addPage(page2)
         # add our last page
@@ -78,7 +79,7 @@ class Help(commands.Cog):
         description = """<:invite:761292264857141288> [Invite](https://discord.com/oauth2/authorize?client_id=768695035092271124&scope=bot&permissions=21474836398)\n
         :radioactive: [Top.gg](https://top.gg/bot/768695035092271124)\n
         :scorpius: [Vote](https://top.gg/bot/768695035092271124/vote)\n
-        <:info:761298826907746386> [Support Server](https://discord.gg/XWUeq7qa4v)\n
+        <:info:761298826907746386> [Support Server](https://discord.gg/KuPzxqHe)\n
         <:VERIFIED_DEVELOPER:761297621502656512> [Web Dashboard](https://theimperialgod.ml)
         """
         )
