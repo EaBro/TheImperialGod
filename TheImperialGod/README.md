@@ -20,4 +20,9 @@ discord.py:
 - Webhook conversions
 - Pagination help command
 - Uses JSK Eval
+- Uses aiosqlite for economy
+ffmpeg:
+- Searching up an audio from video
+- Converting
+- Playing in VC
 ```
