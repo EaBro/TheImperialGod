@@ -8,7 +8,6 @@ The repository the code has been taken from is at https://github.com/NightZan999
 Be sure to have this in your project at the beginning!
 """
 import discord #discord object
-import discord.ext #external
 from discord.ext import commands, tasks #commands from external
 import random #random
 import json
@@ -29,13 +28,15 @@ def load_cogs(): #loading all our cogs
         "cogs.info.math", # math commands
         "cogs.moderation.giveaways", # giveaway commands!
         "cogs.moderation.mod", # moderation commands
-        "cogs.moderation.owner", # owner commands
+        "cogs.owner.owner", # owner commands
         "cogs.tickets.tickets", # ticket commands
         "cogs.info.topgg", # has top.gg stuff bois!
         "cogs.exclusive.exclusive", # has exclusive commands
         "cogs.moderation.autorole", # autoroles
         "cogs.music.music", # music :D
         "cogs.info.minecraft", # minecraft commands
+        "cogs.points.points", # points
+        "cogs.owner.patch" # patching stuff
     ]
     
     for cog in cogs:
@@ -45,7 +46,8 @@ def load_cogs(): #loading all our cogs
         "events.GuildEvents", # when the bot leaves or joins a guild!
         "events.ReactionAdd",
         "events.ReactionRemove",
-        "events.OnCommand"
+        "events.OnCommand",
+        "cogs.points.pointevents"
     ]
 
     for event in events:
@@ -105,8 +107,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
     while not client.is_closed():
         statuses = [
             f"The Protection of {len(client.guilds)} servers",
-            "imp help 😋",
-            "Road to 100 servers"
+            "imp help | imp support 😋"
         ]
         status = random.choice(statuses)
         await client.change_presence(activity = discord.Streaming(name = status, url = "https://twitch.tv/pewdiepie"))
@@ -115,7 +116,7 @@ async def ch_pr(): #changing the bots status every 5 secs!!!
 @client.event
 async def on_message(message):
     try:
-        if message.content == "<@768695035092271124>":
+        if message.content == "<@!768695035092271124>":
             em = discord.Embed(title = "Help for TheImperialGod", color = message.author.color,
             description = "Check some information about me!")
             em.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
