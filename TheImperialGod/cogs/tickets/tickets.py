@@ -1,3 +1,4 @@
+  
 import discord
 from discord.ext import commands
 from discord.ext.commands import cooldown, BucketType
@@ -114,6 +115,12 @@ class Tickets(commands.Cog):
             em.set_footer(text="Bot Made By NightZan999#0194")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we created uhhhhhhhhh yeahhhhhh")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command(aliases = ['setticketrole', 'ticketrole'])
     @commands.has_permissions(manage_guild = True)
@@ -177,6 +184,12 @@ class Tickets(commands.Cog):
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             em.set_footer(text = "Read the docs, heheboi!")
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command(aliases = ['addticketlogs', 'atl', 'stl'])
     @commands.has_permissions(manage_guild = True)
@@ -220,6 +233,12 @@ class Tickets(commands.Cog):
             em.set_thumbnail(url = ctx.author.avatar_url)
             em.set_footer(text="Smh, imagine being that bad!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     @commands.command(aliases = ['closeticket', "ticketclose"])
@@ -273,6 +292,12 @@ class Tickets(commands.Cog):
             em.add_field(name = "Reason:", value = "`Manage Channels permission is missing!`")
             em.set_thumbnail(url = ctx.author.avatar_url)
             em.set_footer(text="Smh, imagine thinking you have the perms!")
+            await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
 
     async def get_tickets(self):

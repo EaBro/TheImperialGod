@@ -62,6 +62,7 @@ class Help(commands.Cog):
         page1.add_field(name = f":ticket: Imperial Tickets [4]", value = f"`new`, `close`, `addticketrole`, `setticketlogs`")
         page1.add_field(name = f":question: Misc: [{len(self.misc_commands) - 1}]", value = "`invite`,  `avatar`, `candy`, `suggest`, `support`")
         page1.set_footer(text = f"Page (1 / 3)")
+        page1.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
         self.addPage(page1)
 
         page2 = discord.Embed(title = "Help",color = ctx.author.color, description = f"""
@@ -72,6 +73,7 @@ class Help(commands.Cog):
         page2.add_field(name = "<:goldingot:818413753581699102> Minecraft Commands [2]", value = "`mcstats`, `mchistory`")
         page2.add_field(name = ":notes: Music Commands [5]", value = "`join`, `leave`, `play`, `resume`, `pause`")
         page2.add_field(name = ':trophy: Levelling Commands [4]', value = '`points`, `givepoints`, `pointsper`, `pointshelp`')
+        page2.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
         page2.set_footer(text = f"Page (2 / 3)")
         self.addPage(page2)
         # add our last page
@@ -86,6 +88,7 @@ class Help(commands.Cog):
         page3.add_field(name = 'Required Arguments', value = "<> = means a required argument!\n[] = means an optional argument!")
         page3.add_field(name = 'Embed Info', value = "If no response is detected we will clear all reactions!")
         page3.add_field(name = "Tip :coin::", value =f"**{random.choice(self.tips)}**")
+        page3.set_author(name = self.client.user.name, icon_url = self.client.user.avatar_url)
         page3.set_footer(text = f"Page (3 / 3)")
         self.addPage(page3)
         # create emojis
@@ -122,13 +125,19 @@ class Help(commands.Cog):
                     button = buttons[0]
                     await msg.remove_reaction(button, ctx.author)
                 
-                elif str(reaction.emoji) == "⬅️" and current > 0:
-                    current -= 1
+                elif str(reaction.emoji) == "⬅️":
+                    if current != 0:
+                        current -= 1
+                    else:
+                        current = len(self.help_pages) - 1
                     button = buttons[1]
                     await msg.remove_reaction(button, ctx.author)
                 
-                elif str(reaction.emoji) == "➡️" and current < len(self.help_pages)-1:
-                    current += 1
+                elif str(reaction.emoji) == "➡️":
+                    if current < len(self.help_pages) - 1:
+                        current += 1
+                    else:
+                        current = 0
                     button = buttons[3]
                     await msg.remove_reaction(button, ctx.author)
                 
@@ -140,8 +149,6 @@ class Help(commands.Cog):
                 elif str(reaction.emoji) == "🔐":
                     await msg.clear_reactions()
                     return
-                    button = buttons[2]
-                    await msg.remove_reaction(button, ctx.author)
 
                 if current != previous_page:
                     await msg.edit(embed = self.help_pages[current])

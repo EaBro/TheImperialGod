@@ -16,6 +16,9 @@ class PointEvents(commands.Cog):
         with open("./data/points.json", "r") as f:
             points = json.load(f)
         
+        if message.author.bot:
+            return
+
         if str(message.guild.id) not in points:
             points[str(message.guild.id)] = {}
         
@@ -32,6 +35,9 @@ class PointEvents(commands.Cog):
     async def on_command(self, ctx):
         with open("./data/points.json", "r") as f:
             points = json.load(f)
+
+        if ctx.author.bot:
+            return
 
         if str(ctx.guild.id) not in points:
             points[str(ctx.guild.id)] = {}

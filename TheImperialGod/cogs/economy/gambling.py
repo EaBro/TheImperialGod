@@ -20,9 +20,6 @@ class Gambling(commands.Cog):
             em.set_thumbnail(url = ctx.author.avatar_url)
             await ctx.send(embed = em)
             return
-
-        if amount != 'all':
-            amount = int(amount)
     
         async with aiosqlite.connect("./data/economy.db") as connection:
             async with connection.cursor() as cursor:
@@ -49,20 +46,7 @@ class Gambling(commands.Cog):
                     await ctx.send(embed = em)
                     return
 
-                res = random.choice(["Won", "Lost"])
-                if res == "Won":
-                    em = discord.Embed(title= "<:success:761297849475399710> Bet Won!", color = ctx.author.color)
-                    em.add_field(name = "Money Earned:", value = f"{amount}")
-                elif res == "Lost":
-                    em = discord.Embed(title= "<:fail:761292267360485378> Bet Lost!", color = ctx.author.color)
-                    em.add_field(name = "Money Lost:", value = f"{amount}")
-                em.add_field(name = "Result:", value =f"{res}")
-
-                if res == "Won":
-                    await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?", (rows[1] + amount, rows[0], ctx.author.id))
-                elif res == "Lost":
-                    await cursor.execute("UPDATE users SET wallet = ?, bank = ? WHERE userid = ?", (rows[1] - amount, rows[0], ctx.author.id))
-
+                
 
 def setup(client):
     client.add_cog(Gambling(client))

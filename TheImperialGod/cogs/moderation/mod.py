@@ -8,6 +8,7 @@ class Moderation(commands.Cog):
         self.client = client
 
     @commands.command()
+    @commands.guild_only()
     @has_permissions(kick_members = True)
     async def kick(self, ctx, member : discord.Member = None, *, reason = None):
         try:
@@ -59,8 +60,16 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Kick properly already!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
+            
 
     @commands.command(aliases=["giverole", "addr"])
+    @commands.guild_only()
     @has_permissions(manage_roles = True)
     async def addrole(self, ctx, member : discord.Member = None, role : discord.Role = None,*,reason = None):
         if member is None:
@@ -110,6 +119,7 @@ class Moderation(commands.Cog):
             await ctx.send(embed = embed)
     
     @commands.command(aliases=["takerole", "remover"])
+    @commands.guild_only()
     @has_permissions(manage_roles = True)
     async def removerole(self, ctx, member : discord.Member = None, role : discord.Role = None,*,reason = None):
         if member is None:
@@ -174,6 +184,12 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Addrole properly already!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
 
     @removerole.error
@@ -191,8 +207,15 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Remove Role properly already!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
     
     @commands.command()
+    @commands.guild_only()
     @has_permissions(ban_members = True)
     async def ban(self, ctx, member : discord.Member = None, *,reason = None):
         try:
@@ -245,8 +268,15 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Ban properly already!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_channels = True)
     async def announce(self,ctx, channel : discord.TextChannel, *, msg = None):
         embed = discord.Embed(title = "Announcement!", color = ctx.author.color)
@@ -270,8 +300,15 @@ class Moderation(commands.Cog):
             embed.set_footer(text = 'Do stuff properly!')
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_roles = True)
     async def createrole(self, ctx, *, name = "UnknownRole"):
         role=  await ctx.guild.create_role(name = name)
@@ -290,8 +327,15 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Imagine thinking you have the perms!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command(aliases=["delrole"])
+    @commands.guild_only()
     @commands.has_permissions(manage_roles = True)
     async def deleterole(self, ctx, *, role: discord.Role):
         em = discord.Embed(title = "<:success:761297849475399710> Role Deleted", color = ctx.author.color, description = f"<:Coder_Hammer:826315685142462474> {role.mention} was successfully deleted!")
@@ -311,12 +355,19 @@ class Moderation(commands.Cog):
             em.set_footer(text = "Imagine thinking you have the perms!")
             em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = em)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.Cog.listener()
     async def on_ready(self):
         print("Mod commands Loaded!")
 
     @commands.command(aliases = ["purge", "massdelete", "bulkdel"])
+    @commands.guild_only()
     @has_permissions(manage_messages = True)
     async def clear(self, ctx, amount = 1):
         try:
@@ -334,8 +385,15 @@ class Moderation(commands.Cog):
             embed.set_footer(text = "Imagine thinking you have the perms!")
             embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @commands.guild_only()
     @has_permissions(manage_channels = True)
     async def lock(self, ctx, *, reason = None):
         channel = ctx.channel
@@ -354,8 +412,15 @@ class Moderation(commands.Cog):
             embed.set_footer(text = "Imagine thinking you have the perms!")
             embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @commands.guild_only()
     @has_permissions(manage_channels = True)
     async def unlock(self, ctx, *, reason = None):
         channel = ctx.channel
@@ -374,8 +439,15 @@ class Moderation(commands.Cog):
             embed.set_footer(text = "Imagine thinking you have the perms!")
             embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @commands.guild_only()
     @has_permissions(manage_channels = True)
     async def setdelay(self, ctx, amount = 5, *, reason = None):
         if amount > 6000:
@@ -416,8 +488,15 @@ class Moderation(commands.Cog):
             embed.set_footer(text = "Imagine thinking you have the perms!")
             embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
             await ctx.send(embed = embed)
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
     @commands.command()
+    @commands.guild_only()
     @has_permissions(ban_members = True)
     async def unban(ctx, member : str, *, reason = None):
         banned_users = await ctx.guild.bans()
@@ -454,6 +533,7 @@ class Moderation(commands.Cog):
         return val * time_dict[unit]
 
     @commands.command()
+    @commands.guild_only()
     @has_permissions(manage_channels = True)
     async def count(self,ctx, channel: discord.TextChannel = None):
         if channel is None:
@@ -463,6 +543,15 @@ class Moderation(commands.Cog):
         em = discord.Embed(title = f"Count of {channel.mention}", color = ctx.author.color, description = "There are {} messages in {}".format(count, channel.mention))
         em.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
         await ctx.send(embed=em)
+    
+    @count.error
+    async def count_error(self, ctx, error):
+        if isinstance(error, commands.BotMissingPermissions):
+            em = discord.Embed(title = f'<:fail:761292267360485378> {ctx.command.name} Failed!', color = discord.Color.random(), description = "<:Coder_Hammer:826315685142462474> Ladies and gentlemen we got ||...||")
+            em.add_field(name = 'Reason', value = 'I don\'t have the perms to do that-')
+            em.add_field(name = 'What to do:', value = "Give me perms when?")
+            em.set_footer(text = "-_-", icon_url = ctx.author.avatar_url)
+            await ctx.send(embed = em)
 
 def setup(client):
     client.add_cog(Moderation(client))

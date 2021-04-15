@@ -31,6 +31,6 @@ class TopGG(commands.Cog):
     async def on_dbl_vote(self, data):
         # print(data)
         return
-    
+        
 def setup(client):
     client.add_cog(TopGG(client))

@@ -12,7 +12,7 @@ class Minecraft(commands.Cog):
 
     """
     I stole this from the examples cuz why not lmao
-    Huge credit to capslock for doing this
+    Huge credit to capslock for doing this. 
     """    
     @commands.command(aliases=["minecraftstats", "statsminecraft", "mcstats"])  # Get information on a player.
     async def mojang(self, ctx, player: str):
