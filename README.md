@@ -1,5 +1,6 @@
 ## TheImperialGod 
 TheImperialGod is an awesome discord.py bot which has plenty of features!
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 **If you like TheImperialGod as a discord bot, starring the repo is the best that you can do and is very much appreciated. 
 This is because starring the repo, brings it higher in search results and makes the repo more popular.**
 Plus if you star the repo your message of starring will be pinned in the support server!
