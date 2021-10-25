@@ -1,4 +1,5 @@
 {
+    "topToken":"your top.gg token"
     "token" : "The token.",
     "clientId" : "The client ID.",
     "clientSecret" : "The client secret.",
