@@ -1,10 +1,10 @@
 {
     "topToken":"your top.gg token"
-    "token" : "The token.",
+    "token" : "OTA3NTE5MzgzMTEzNDQ5NDcy.YYoXSQ.qVuldKHS8a8kklzrSKzr5rRFUBY",
     "clientId" : "The client ID.",
     "clientSecret" : "The client secret.",
-    "publicKey" : "The public key.",
-    "prefix" : "The prefix.",
+    "publicKey" : "124e41cdef121fb1cb73ce79dac279aeb402452c8724a4b3faaec0fefb2ead03",
+    "prefix" : "=",
     "reddit" : {
         "clientId" : "clientId",
         "clientSecret" : "",
@@ -13,7 +13,7 @@
         "userAgent" : "canBeAnything"
     },
     "IDs" : {
-        "ownerId" : "Bot Owner ID",
-        "serverLogId" : "new server log ID"
+        "ownerId" : "806738477713719306",
+        "serverLogId" : "907524936623616083"
     }
 }
